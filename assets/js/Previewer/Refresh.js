@@ -1,5 +1,5 @@
 import $ from 'jquery'
-const refreshIcon = require('svg-url-loader?noquotes!../images/refresh.svg');
+const refreshIcon = require('svg-url-loader?noquotes!../../images/refresh.svg');
 
 export default class {
 

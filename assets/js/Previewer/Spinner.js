@@ -1,5 +1,5 @@
 import $ from 'jquery'
-const spinner = require('svg-url-loader?noquotes!../images/spinner.svg');
+const spinner = require('svg-url-loader?noquotes!../../images/spinner.svg');
 
 export default class {
 

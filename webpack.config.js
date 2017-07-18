@@ -12,7 +12,7 @@ const extractSass = new ExtractTextPlugin({
 
 module.exports = {
   entry: {
-    'js/previewer': './assets/js/main.previewer.js',
+    'js/previewer': './assets/js/main.js',
   },
   output: {
     path: __dirname + '/dist/',

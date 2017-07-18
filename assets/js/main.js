@@ -1,6 +1,6 @@
 import $ from 'jquery'
-import PdfPreviewGenerator from './Generator'
-import PdfPreviewViewer from './Viewer'
+import PdfPreviewGenerator from './Previewer/Generator'
+import PdfPreviewViewer from './Previewer/Viewer'
 
 require('../scss/previewer.scss')
 
