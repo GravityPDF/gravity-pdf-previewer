@@ -1,0 +1,11 @@
+/bin                export-ignore
+/tests 				export-ignore
+/.gitattributes 	export-ignore
+/.gitignore 		export-ignore
+/phpunit.xml 		export-ignore
+/README.md      	export-ignore
+/CONTRIBUTING.md   	export-ignore
+/.travis.yml	 	export-ignore
+/.editorconfig      export-ignore
+
+*.sh eol=lf

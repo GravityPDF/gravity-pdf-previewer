@@ -1,0 +1,28 @@
+<phpunit
+        bootstrap="./bootstrap.php"
+        backupGlobals="false"
+        colors="true"
+        convertErrorsToExceptions="true"
+        convertNoticesToExceptions="true"
+        convertWarningsToExceptions="true"
+        verbose="true"
+>
+    <testsuites>
+        <testsuite name="Gravity PDF Test Suite">
+            <directory suffix=".php">./unit-tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>../../</directory>
+            <exclude>
+                <directory suffix=".php">../../tests/</directory>
+                <directory suffix=".php">../../tmp/</directory>
+                <directory suffix=".php">../../vendor/</directory>
+                <directory suffix=".php">../../bower_components/</directory>
+                <directory suffix=".php">../../node_modules/</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>

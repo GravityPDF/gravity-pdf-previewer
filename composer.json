@@ -1,0 +1,25 @@
+{
+  "name": "gravity-pdf/previewer",
+  "type": "project",
+  "license": "GPLv2",
+  "require": {
+    "php": ">=5.4"
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "~4.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "GFPDF\\Plugins\\Previewer\\": "src/"
+    }
+  },
+  "scripts": {
+    "post-update-cmd": [
+      "yarn global add gulp-cli",
+      "yarn && gulp"
+    ]
+  }
+}
