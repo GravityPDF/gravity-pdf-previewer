@@ -68,8 +68,14 @@ class GFormFieldPreviewer extends GF_Field {
 	 */
 	public function get_field_input( $form, $value = '', $entry = null ) {
 
+		$pdf_id = ( isset( $this->{'pdf-preview'} ) ) ? $this->{'pdf-preview'} : 0;
+
 		/* @TODO - dynamic height */
-		$content = '<div class="gpdf-previewer-wrapper" style="min-height: 600px"><!-- Placeholder --></div>';
+		$content = '<div class="gpdf-previewer-wrapper" 
+						 style="min-height: 600px" 
+						 data-pdf-id="' . esc_attr( $pdf_id ) . '">
+							<!-- Placeholder -->
+						</div>';
 
 		if ( $this->is_entry_detail() || $this->is_form_editor() ) {
 			$content = '<div class="gf-html-container">
@@ -95,6 +101,7 @@ class GFormFieldPreviewer extends GF_Field {
 			'css_class_setting',
 			'label_setting',
 			'description_setting',
+			'pdf_selector_setting',
 		];
 	}
 

@@ -4,10 +4,10 @@ namespace GFPDF\Plugins\Previewer;
 
 use GFPDF\Plugins\Previewer\API\PDFViewerApiResponse;
 use GFPDF\Plugins\Previewer\Field\RegisterPreviewerField;
+use GFPDF\Plugins\Previewer\Field\RegisterPreviewerCustomFields;
 use GFPDF\Plugins\Previewer\API\RegisterPdfGeneratorAPIEndpoint;
 use GFPDF\Plugins\Previewer\API\RegisterPdfViewerAPIEndpoint;
 use GFPDF\Plugins\Previewer\API\PDFGeneratorApiResponse;
-
 
 use GFPDF\Helper\Licensing\EDD_SL_Plugin_Updater;
 use GFPDF\Helper\Helper_Abstract_Addon;
@@ -72,6 +72,7 @@ class Bootstrap extends Helper_Abstract_Addon {
 
 		/* Register our classes and pass back up to the parent initialiser */
 		$classes = array_merge( $classes, [
+			new RegisterPreviewerCustomFields(),
 			new RegisterPreviewerField(),
 
 			new RegisterPdfGeneratorAPIEndpoint(
