@@ -109,6 +109,7 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 		try {
 			$form  = $this->get_form( $form_id );
 			$entry = $this->create_entry( $form );
+			$entry = $this->add_upload_support( $entry, $form );
 
 			$settings = $this->get_pdf_config( $form_id, $pdf_id );
 			$settings = $this->override_security_settings( $settings );
@@ -249,9 +250,7 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 		$form = apply_filters( 'gform_pre_render', $form, false, [] );
 		$form = apply_filters( 'gform_pre_render_' . $form['id'], $form, false, [] );
 
-		/* @TODO - add support for uploads */
 		$ignore_types = [
-			'fileupload',
 			'creditcard',
 		];
 
@@ -301,5 +300,49 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	 */
 	protected function create_entry( $form ) {
 		return GFFormsModel::create_lead( $form );
+	}
+
+	/**
+	 * Handle upload fields so they show up in the PDF (mostly) correctly
+	 *
+	 * @Internal The filename will be incorrect as its stored in a tmp directory
+	 *
+	 * @param array $entry
+	 *
+	 * @return array
+	 *
+	 * @since 0.1
+	 */
+	protected function add_upload_support( $entry ) {
+
+		if ( isset( $_POST['gform_uploaded_files'] ) ) {
+			$tmp_path = GFFormsModel::get_upload_path( $entry['form_id'] ) . '/tmp/';
+			$tmp_url  = GFFormsModel::get_upload_url( $entry['form_id'] ) . '/tmp/';
+
+			$field_files_array = (array) json_decode( stripslashes( $_POST['gform_uploaded_files'] ), true );
+
+			foreach ( $field_files_array as $key => $field_files ) {
+				$field_id = explode( '_', $key )[1];
+
+				if ( is_array( $field_files ) ) {
+					$files = [];
+					foreach ( $field_files as $file ) {
+						if ( is_file( $tmp_path . $file['temp_filename'] ) ) {
+							$files[] = $tmp_url . $file['temp_filename'];
+						}
+					}
+
+					$entry[ $field_id ] = json_encode( $files );
+				} else {
+					$single_image_tmp_name = $_POST['gform_unique_id'] . '_' . $key . '.' . pathinfo( $field_files, PATHINFO_EXTENSION );
+
+					if ( is_file( $tmp_path . $single_image_tmp_name ) ) {
+						$entry[ $field_id ] = $tmp_url . $single_image_tmp_name;
+					}
+				}
+			}
+		}
+
+		return $entry;
 	}
 }
