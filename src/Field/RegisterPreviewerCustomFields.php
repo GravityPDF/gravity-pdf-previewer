@@ -78,12 +78,9 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	 * @since 0.1
 	 */
 	public function add_tooltips( $tooltips ) {
-
-		/* @TODO */
-		$tooltips['pdf_selector_setting']  = '<h6>' . esc_html__( 'PDFs', 'gravity-pdf-previewer' ) . '</h6>' . esc_html__( 'Add Description', 'gravity-pdf-previewer' );
-		$tooltips['pdf_preview_height']    = '<h6>' . esc_html__( 'Preview Height', 'gravity-pdf-previewer' ) . '</h6>' . esc_html__( 'Add Description', 'gravity-pdf-previewer' );
-		$tooltips['pdf_watermark_setting'] = '<h6>' . esc_html__( 'Watermark', 'gravity-pdf-previewer' ) . '</h6>' . esc_html__( 'Add Description', 'gravity-pdf-previewer' );
-		$tooltips['pdf_watermark_text']    = '<h6>' . esc_html__( 'Watermark', 'gravity-pdf-previewer' ) . '</h6>' . esc_html__( 'Add Description', 'gravity-pdf-previewer' );
+		$tooltips['pdf_selector_setting']  = '<h6>' . esc_html__( 'PDF to Preview', 'gravity-pdf-previewer' ) . '</h6>' . esc_html__( 'Select one of the active PDFs you want the end-user to preview before the form is submitted.', 'gravity-pdf-previewer' );
+		$tooltips['pdf_preview_height']    = '<h6>' . esc_html__( 'Preview Height', 'gravity-pdf-previewer' ) . '</h6>' . esc_html__( 'Set the PDF Preview height the document will be displayed at (in pixels). The default height is 600px.', 'gravity-pdf-previewer' );
+		$tooltips['pdf_watermark_setting'] = '<h6>' . esc_html__( 'Watermark', 'gravity-pdf-previewer' ) . '</h6>' . esc_html__( 'Add a diagonal text-based watermark to each page of the PDF Preview and control the font type used.', 'gravity-pdf-previewer' );
 
 		return $tooltips;
 	}

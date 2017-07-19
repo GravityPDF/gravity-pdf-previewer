@@ -58,12 +58,25 @@ export default class {
       let response = await this.callEndpoint()
 
       if (response.error) {
-        console.error(response.error)
+        this.handlePdfDisplayError(response.error)
         return
       }
 
       this.displayPreview(response.id)
     }
+  }
+
+  handlePdfDisplayError (error) {
+    console.error(error)
+
+    this.spinner.showLoadingError()
+
+    const manualLoader = new Refresh()
+    manualLoader.init(this.spinner.$spinner, () => {
+      this.updateInProgress = false
+      this.generatePreview()
+      return false
+    }, 'white')
   }
 
   displayPreview (id) {

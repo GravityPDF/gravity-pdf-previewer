@@ -2,11 +2,11 @@
 
 namespace GFPDF\Plugins\Previewer\API;
 
-use GFPDF\Helper\Helper_Data;
 use GFPDF\Model\Model_PDF;
 use GFPDF\Plugins\Previewer\Exceptions\FieldNotFound;
 use GFPDF\Plugins\Previewer\Exceptions\FormNotFound;
 use GFPDF\Plugins\Previewer\Exceptions\PDFConfigNotFound;
+use GFPDF\Plugins\Previewer\Exceptions\PDFNotActive;
 
 use WP_REST_Request;
 use GFFormsModel;
@@ -121,6 +121,8 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 		} catch ( FormNotFound $e ) {
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
 		} catch ( PDFConfigNotFound $e ) {
+			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
+		} catch ( PDFNotActive $e ) {
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
 		} catch ( Exception $e ) {
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
@@ -278,6 +280,10 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 
 		if ( is_wp_error( $pdf_config ) ) {
 			throw new PDFConfigNotFound( $pdf_id );
+		}
+
+		if ( $pdf_config['active'] !== true ) {
+			throw new PDFNotActive( $pdf_id );
 		}
 
 		return $pdf_config;

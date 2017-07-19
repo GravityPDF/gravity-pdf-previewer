@@ -70,8 +70,7 @@ class GFormFieldPreviewer extends GF_Field {
 		$pdf_id         = ( isset( $this->pdfpreview ) ) ? $this->pdfpreview : 0;
 		$preview_height = ( isset( $this->pdfpreviewheight ) && (int) $this->pdfpreviewheight > 0 ) ? (int) $this->pdfpreviewheight : 600;
 
-		$content = '<div class="gpdf-previewer-wrapper" 
-						 style="min-height: ' . $preview_height . 'px" 
+		$content = '<div class="gpdf-previewer-wrapper" 						 
 						 data-field-id="' . esc_attr( $this->id ) . '"
 						 data-pdf-id="' . esc_attr( $pdf_id ) . '"
 						 data-previewer-height="' . esc_attr( $preview_height ) . '">
@@ -85,7 +84,7 @@ class GFormFieldPreviewer extends GF_Field {
 			           esc_html__( 'PDF Document', 'gravity-pdf-previewer' ) . '
 							</span>
 							<span>' .
-			           esc_html__( 'This is a content placeholder. The PDF Preview is not displayed in the form admin. Preview this form to view the content.', 'gravity-pdf-previewer' ) .
+			           esc_html__( 'This is a content placeholder. The PDF Preview is not displayed in the form admin. View the form to preview the PDF.', 'gravity-pdf-previewer' ) .
 			           '</span>
 						</div>';
 		}

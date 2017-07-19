@@ -10,10 +10,16 @@ $(document).bind('gform_post_render', function (e, formId) {
   /* Find each PDF Preview container in the form and initialise */
   $form.find('.gpdf-previewer-wrapper').each(function () {
 
-    let fId = $(this).data('field-id')
+    let fId = parseInt($(this).data('field-id'))
     let pdfId = $(this).data('pdf-id')
-    let previewerHeight = $(this).data('previewer-height')
-    
+    let previewerHeight = parseInt($(this).data('previewer-height'))
+
+    if (pdfId == 0) {
+      return true
+    }
+
+    $(this).css('min-height', previewerHeight + 'px')
+
     let viewer = new PdfPreviewViewer({
       viewerHeight: previewerHeight + 'px',
       viewer: PdfPreviewerConstants.viewerUrl,

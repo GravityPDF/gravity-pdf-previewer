@@ -31,10 +31,17 @@
 
   .gpdf-spinner {
     color: #FFF;
+    text-align: center;
 
     img {
       display: block;
       margin: 5px auto;
+    }
+
+    .gpdf-manually-load-preview {
+      display: block;
+      margin: 0;
+      float: none;
     }
   }
 

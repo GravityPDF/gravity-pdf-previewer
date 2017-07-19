@@ -1,9 +1,10 @@
 import $ from 'jquery'
-const refreshIcon = require('svg-url-loader?noquotes!../../images/refresh.svg');
 
 export default class {
 
-  init ($container, callback) {
+  init ($container, callback, type) {
+    const refreshIcon = (type === 'white') ? require('svg-url-loader?noquotes!../../images/refresh-white.svg') : require('svg-url-loader?noquotes!../../images/refresh.svg')
+
     this.$refresh = $('<div>')
       .addClass('gpdf-manually-load-preview')
 

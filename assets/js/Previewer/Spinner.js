@@ -12,7 +12,7 @@ export default class {
       .attr('src', spinner)
       .height(50))
 
-    this.$spinner.append('Loading PDF Preview')
+    this.$spinner.append(PdfPreviewerConstants.loadingMessage)
 
     $elm.append(this.$spinner)
   }
@@ -20,6 +20,12 @@ export default class {
   removeSpinner () {
     if (this.$spinner) {
       this.$spinner.remove()
+    }
+  }
+
+  showLoadingError () {
+    if (this.$spinner) {
+      this.$spinner.html(PdfPreviewerConstants.errorMessage)
     }
   }
 }

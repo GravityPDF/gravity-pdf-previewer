@@ -86,7 +86,9 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 					'documentUrl'          => rest_url( 'gravity-pdf-previewer/v1/pdf/' ),
 					'pdfGeneratorEndpoint' => rest_url( 'gravity-pdf-previewer/v1/preview/' ),
 
-					'refreshTitle' => __( 'Refresh PDF', 'gravity-pdf-previewer' ),
+					'refreshTitle'   => __( 'Refresh PDF', 'gravity-pdf-previewer' ),
+					'loadingMessage' => __( 'Loading PDF Preview', 'gravity-pdf-previewer' ),
+					'errorMessage'   => sprintf( __( 'There was a problem%sloading the preview.', 'gravity-pdf-previewer' ), '<br>' ),
 				]
 			);
 
