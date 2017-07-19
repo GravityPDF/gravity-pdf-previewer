@@ -127,7 +127,7 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 		?>
         <script type="text/javascript">
 
-            /* Setup defaul values for our PDF Preview field */
+            /* Setup default values for our PDF Preview field */
             function SetDefaultValues_pdfpreview (field) {
               field['label'] = <?php echo json_encode( utf8_encode( __( 'PDF Preview', 'gravity-pdf-previewer' ) ) ); ?>;
               field['pdfpreviewheight'] = "600"
