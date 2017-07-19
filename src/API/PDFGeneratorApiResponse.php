@@ -109,7 +109,6 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 		try {
 			$form  = $this->get_form( $form_id );
 			$entry = $this->create_entry( $form );
-			$entry = $this->add_upload_support( $entry, $form );
 
 			$settings = $this->get_pdf_config( $form_id, $pdf_id );
 			$settings = $this->override_security_settings( $settings );
@@ -299,7 +298,12 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	 * @since 0.1
 	 */
 	protected function create_entry( $form ) {
-		return GFFormsModel::create_lead( $form );
+		$entry = GFFormsModel::create_lead( $form );
+		$entry = $this->add_upload_support( $entry, $form );
+
+		$entry['date_created'] = current_time( 'mysql', true );
+
+		return $entry;
 	}
 
 	/**
@@ -311,7 +315,7 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	 *
 	 * @return array
 	 *
-	 * @since 0.1
+	 * @since    0.1
 	 */
 	protected function add_upload_support( $entry ) {
 
