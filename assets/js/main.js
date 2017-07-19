@@ -10,19 +10,20 @@ $(document).bind('gform_post_render', function (e, formId) {
   /* Find each PDF Preview container in the form and initialise */
   $form.find('.gpdf-previewer-wrapper').each(function () {
 
-    let pdf_id = $(this).data('pdf-id')
-
-    /* @TODO */
+    let fId = $(this).data('field-id')
+    let pdfId = $(this).data('pdf-id')
+    let previewerHeight = $(this).data('previewer-height')
+    
     let viewer = new PdfPreviewViewer({
-      viewerHeight: '600px',
-      viewer: 'http://local.wordpress.dev/wp-content/plugins/gravity-pdf-previewer/dist/viewer/web/viewer.html?file=',
-      documentUrl: 'http://local.wordpress.dev/wp-json/gravity-pdf-previewer/v1/pdf/'
+      viewerHeight: previewerHeight + 'px',
+      viewer: PdfPreviewerConstants.viewerUrl,
+      documentUrl: PdfPreviewerConstants.documentUrl
     })
 
     let previewer = new PdfPreviewGenerator({
       form: $form,
       container: $(this),
-      endpoint: 'http://local.wordpress.dev/wp-json/gravity-pdf-previewer/v1/preview/' + pdf_id,
+      endpoint: PdfPreviewerConstants.pdfGeneratorEndpoint + pdfId + '/' + fId + '/',
       viewer: viewer
     })
 

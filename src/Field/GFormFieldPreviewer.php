@@ -46,7 +46,7 @@ class GFormFieldPreviewer extends GF_Field {
 	 *
 	 * @since 0.1
 	 */
-	public $type = 'pdf-preview';
+	public $type = 'pdfpreview';
 
 	/**
 	 * @return string
@@ -67,13 +67,14 @@ class GFormFieldPreviewer extends GF_Field {
 	 * @since 0.1
 	 */
 	public function get_field_input( $form, $value = '', $entry = null ) {
+		$pdf_id         = ( isset( $this->pdfpreview ) ) ? $this->pdfpreview : 0;
+		$preview_height = ( isset( $this->pdfpreviewheight ) && (int) $this->pdfpreviewheight > 0 ) ? (int) $this->pdfpreviewheight : 600;
 
-		$pdf_id = ( isset( $this->{'pdf-preview'} ) ) ? $this->{'pdf-preview'} : 0;
-
-		/* @TODO - dynamic height */
 		$content = '<div class="gpdf-previewer-wrapper" 
-						 style="min-height: 600px" 
-						 data-pdf-id="' . esc_attr( $pdf_id ) . '">
+						 style="min-height: ' . $preview_height . 'px" 
+						 data-field-id="' . esc_attr( $this->id ) . '"
+						 data-pdf-id="' . esc_attr( $pdf_id ) . '"
+						 data-previewer-height="' . esc_attr( $preview_height ) . '">
 							<!-- Placeholder -->
 						</div>';
 
@@ -102,6 +103,8 @@ class GFormFieldPreviewer extends GF_Field {
 			'label_setting',
 			'description_setting',
 			'pdf_selector_setting',
+			'pdf_preview_height_setting',
+			'pdf_watermark_setting',
 		];
 	}
 

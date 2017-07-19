@@ -14,7 +14,7 @@ export default class {
     this.$refresh.append(
       $('<a>')
         .attr('href', '#')
-        .attr('title', 'Refresh PDF') /* @TODO */
+        .attr('title', PdfPreviewerConstants.refreshTitle)
         .click(callback)
         .append($refresh)
     )

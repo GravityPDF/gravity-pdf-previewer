@@ -70,11 +70,32 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 	 */
 	public function gravityform_scripts( $form ) {
 		if ( $this->has_previewer_field( $form ) ) {
-			wp_enqueue_script( 'gfpdf_previewer', plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/js/previewer.min.js', [
-				'jquery',
-			], 0.1, true );
+			wp_enqueue_script(
+				'gfpdf_previewer',
+				plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/js/previewer.min.js',
+				[ 'jquery' ],
+				0.1,
+				true
+			);
 
-			wp_enqueue_style( 'gfpdf_previewer', plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/css/previewer.min.css', [], 0.1 );
+			wp_localize_script(
+				'gfpdf_previewer',
+				'PdfPreviewerConstants',
+				[
+					'viewerUrl'            => plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/viewer/web/viewer.html?file=',
+					'documentUrl'          => rest_url( 'gravity-pdf-previewer/v1/pdf/' ),
+					'pdfGeneratorEndpoint' => rest_url( 'gravity-pdf-previewer/v1/preview/' ),
+
+					'refreshTitle' => __( 'Refresh PDF', 'gravity-pdf-previewer' ),
+				]
+			);
+
+			wp_enqueue_style(
+				'gfpdf_previewer',
+				plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/css/previewer.min.css',
+				[],
+				0.1
+			);
 		}
 	}
 
@@ -89,7 +110,7 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 	 */
 	protected function has_previewer_field( $form ) {
 		foreach ( $form['fields'] as $field ) {
-			if ( $field->get_input_type() === 'pdf-preview' ) {
+			if ( $field->get_input_type() === 'pdfpreview' ) {
 				return true;
 			}
 		}

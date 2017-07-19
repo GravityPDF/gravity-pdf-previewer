@@ -4,6 +4,7 @@ namespace GFPDF\Plugins\Previewer\API;
 
 use GFPDF\Helper\Helper_Data;
 use GFPDF\Model\Model_PDF;
+use GFPDF\Plugins\Previewer\Exceptions\FieldNotFound;
 use GFPDF\Plugins\Previewer\Exceptions\FormNotFound;
 use GFPDF\Plugins\Previewer\Exceptions\PDFConfigNotFound;
 
@@ -97,9 +98,10 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	public function response( WP_REST_Request $request ) {
 
 		/* Get the user form data sent via the body params, the form ID and the PDF ID */
-		$input   = $request->get_body_params();
-		$form_id = ( isset( $input['gform_submit'] ) ) ? (int) $input['gform_submit'] : 0;
-		$pdf_id  = $request->get_param( 'pid' );
+		$input    = $request->get_body_params();
+		$form_id  = ( isset( $input['gform_submit'] ) ) ? (int) $input['gform_submit'] : 0;
+		$pdf_id   = $request->get_param( 'pid' );
+		$field_id = (int) $request->get_param( 'fid' );
 
 		/* Assign a unique ID to this request */
 		$this->unique_id = uniqid();
@@ -110,6 +112,7 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 
 			$settings = $this->get_pdf_config( $form_id, $pdf_id );
 			$settings = $this->override_security_settings( $settings );
+			$settings = $this->setup_watermark_support( $settings, $form, $field_id );
 
 			$this->generate_pdf( $entry, $settings );
 
@@ -136,7 +139,7 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	 */
 	protected function generate_pdf( $entry, $settings ) {
 		add_filter( 'gfpdf_pdf_generator_pre_processing', [ $this, 'change_pdf_save_location' ] );
-		add_filter( 'gfpdf_mpdf_init_class', [ $this, 'add_watermark' ] );
+		add_filter( 'gfpdf_mpdf_init_class', [ $this, 'add_watermark' ], 10, 4 );
 
 		$pdf = $this->pdf_model->generate_and_save_pdf( $entry, $settings );
 
@@ -173,15 +176,37 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	 *
 	 * @since 0.1
 	 */
-	public function add_watermark( $mpdf ) {
-
-		/* @TODO */
-		if ( true ) {
+	public function add_watermark( $mpdf, $form, $entry, $settings ) {
+		if ( isset( $settings['enable_watermark'] ) && $settings['enable_watermark'] ) {
 			$mpdf->showWatermarkText = true;
-			$mpdf->SetWatermarkText( 'SAMPLE' );
+			$mpdf->watermark_font    = $settings['watermark_font'];
+			$mpdf->SetWatermarkText( $settings['watermark_text'] );
 		}
 
 		return $mpdf;
+	}
+
+	protected function setup_watermark_support( $settings, $form, $field_id ) {
+		try {
+			$field                        = $this->get_pdf_preview_field( $form, $field_id );
+			$settings['enable_watermark'] = ( isset( $field['pdfwatermarktoggle'] ) && $field['pdfwatermarktoggle'] ) ? true : false;
+			$settings['watermark_text']   = $field['pdfwatermarktext'];
+			$settings['watermark_font']   = $field['pdfwatermarkfont'];
+		} catch ( FieldNotFound $e ) {
+			/* do nothing */
+		}
+
+		return $settings;
+	}
+
+	protected function get_pdf_preview_field( $form, $field_id ) {
+		foreach ( $form['fields'] as $field ) {
+			if ( $field->id === $field_id && $field->get_input_type() === 'pdfpreview' ) {
+				return $field;
+			}
+		}
+
+		throw new FieldNotFound( sprintf( 'PDF Preview field "%s" not found in form "%s"', $field_id, $form['id'] ) );
 	}
 
 	/**

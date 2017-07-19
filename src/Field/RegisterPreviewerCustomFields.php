@@ -58,6 +58,8 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	 */
 	public function add_actions() {
 		add_action( 'gform_field_standard_settings_25', [ $this, 'add_pdf_selector' ] );
+		add_action( 'gform_field_standard_settings_25', [ $this, 'add_pdf_preview_height' ] );
+		add_action( 'gform_field_standard_settings_25', [ $this, 'add_pdf_watermark_support' ] );
 		add_action( 'gform_editor_js', [ $this, 'editor_js' ] );
 	}
 
@@ -78,7 +80,10 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	public function add_tooltips( $tooltips ) {
 
 		/* @TODO */
-		$tooltips['pdf_selector_setting'] = '<h6>' . esc_html__( 'PDFs', 'gravity-pdf-previewer' ) . '</h6>' . esc_html__( 'Add Description', 'gravity-pdf-previewer' );
+		$tooltips['pdf_selector_setting']  = '<h6>' . esc_html__( 'PDFs', 'gravity-pdf-previewer' ) . '</h6>' . esc_html__( 'Add Description', 'gravity-pdf-previewer' );
+		$tooltips['pdf_preview_height']    = '<h6>' . esc_html__( 'Preview Height', 'gravity-pdf-previewer' ) . '</h6>' . esc_html__( 'Add Description', 'gravity-pdf-previewer' );
+		$tooltips['pdf_watermark_setting'] = '<h6>' . esc_html__( 'Watermark', 'gravity-pdf-previewer' ) . '</h6>' . esc_html__( 'Add Description', 'gravity-pdf-previewer' );
+		$tooltips['pdf_watermark_text']    = '<h6>' . esc_html__( 'Watermark', 'gravity-pdf-previewer' ) . '</h6>' . esc_html__( 'Add Description', 'gravity-pdf-previewer' );
 
 		return $tooltips;
 	}
@@ -89,41 +94,49 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	 * @since 0.1
 	 */
 	public function add_pdf_selector( $form_id ) {
+		$pdfs              = $this->get_pdfs( $form_id );
+		$form_pdf_settings = network_admin_url( 'admin.php?page=gf_edit_forms&view=settings&subview=pdf&id=' . $form_id );
+		include __DIR__ . '/markup/pdf-selector-setting.php';
+	}
+
+	protected function get_pdfs( $form_id ) {
 		$pdfs = GPDFAPI::get_form_pdfs( $form_id );
 
 		if ( is_wp_error( $pdfs ) ) {
 			return;
 		}
 
-		?>
-        <li class="pdf_selector_setting field_setting">
-            <label for="pdf_selector" class="section_label">
-				<?php esc_html_e( 'PDF to Preview', 'gravity-pdf-previewer' ); ?>
-				<?php gform_tooltip( 'pdf_selector_setting' ) ?>
-            </label>
+		/* Filter the inactive PDFs */
+		$pdfs = array_filter( $pdfs, function( $pdf ) {
+			return $pdf['active'];
+		} );
 
-            <select id="pdf_selector" onchange="SetFieldProperty('pdf-preview', this.value)">
-				<?php foreach ( $pdfs as $pdf ):
-					if ( $pdf['active'] === true ): ?>
-                        <option value="<?php echo $pdf['id']; ?>">
-							<?php echo $pdf['name']; ?>
-                        </option>
-					<?php endif;
-				endforeach; ?>
-            </select>
+		return $pdfs;
+	}
 
-        </li>
-		<?php
+	public function add_pdf_preview_height( $form_id ) {
+		include __DIR__ . '/markup/preview-height-setting.php';
+	}
+
+	public function add_pdf_watermark_support( $form_id ) {
+		$font_stack = GPDFAPI::get_pdf_fonts();
+		include __DIR__ . '/markup/pdf-watermark-setting.php';
 	}
 
 	public function editor_js() {
 		?>
-        <script type='text/javascript'>
-          jQuery(document).bind("gform_load_field_settings", function (event, field) {
-            if (field.type === 'pdf-preview') {
-              jQuery("#pdf_selector").val(field['pdf-preview'])
+        <script type="text/javascript">
+
+            /* Setup defaul values for our PDF Preview field */
+            function SetDefaultValues_pdfpreview (field) {
+              field['label'] = "<?php _e( 'PDF Preview', 'gravity-pdf-previewer' ); ?>"
+              field['pdfpreviewheight'] = "600"
+              field['pdfwatermarktext'] = "<?php _e( 'SAMPLE', 'gravity-pdf-previewer' ); ?>"
+              field['pdfwatermarkfont'] = "<?php echo GPDFAPI::get_plugin_option( 'default_font', 'dejavusanscondensed' ); ?>"
+              return field
             }
-          })
+
+			<?php echo file_get_contents( __DIR__ . '/markup/editor.js' ); ?>
         </script>
 		<?php
 	}

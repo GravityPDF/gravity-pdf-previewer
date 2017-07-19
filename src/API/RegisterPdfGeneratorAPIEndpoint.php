@@ -82,5 +82,10 @@ class RegisterPdfGeneratorAPIEndpoint implements Helper_Interface_Actions {
 			'methods'  => WP_REST_Server::EDITABLE,
 			'callback' => [ $this->response, 'response' ],
 		] );
+
+		register_rest_route( 'gravity-pdf-previewer/v1', '/preview/(?P<pid>[a-zA-Z0-9]+)/(?P<fid>\d+)', [
+			'methods'  => WP_REST_Server::EDITABLE,
+			'callback' => [ $this->response, 'response' ],
+		] );
 	}
 }
