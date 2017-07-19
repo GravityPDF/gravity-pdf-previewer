@@ -274,6 +274,7 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	 * @return array
 	 *
 	 * @throws PDFConfigNotFound
+	 * @throws PDFNotActive
 	 */
 	protected function get_pdf_config( $form_id, $pdf_id ) {
 		$pdf_config = GPDFAPI::get_pdf( $form_id, $pdf_id );
