@@ -55,7 +55,13 @@ export default class {
       this.$container.addClass('gfpdf-loading')
       this.spinner.addSpinner(this.$container)
 
-      let response = await this.callEndpoint()
+      try {
+        var response = await this.callEndpoint()
+      } catch (error) {
+        response = {
+          error: 'PDF Generation Error'
+        }
+      }
 
       if (response.error) {
         this.handlePdfDisplayError(response.error)
