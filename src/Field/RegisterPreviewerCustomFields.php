@@ -71,6 +71,8 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	}
 
 	/**
+	 * Add tooltip support for our new PDF Preview form editor fields
+	 *
 	 * @param array $tooltips
 	 *
 	 * @return array
@@ -86,6 +88,8 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	}
 
 	/**
+	 * Add support for a PDF selector field in the Form Editor
+	 *
 	 * @param int $form_id
 	 *
 	 * @since 0.1
@@ -96,11 +100,20 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 		include __DIR__ . '/markup/pdf-selector-setting.php';
 	}
 
+	/**
+	 * Return a list of active PDFs for our form
+	 *
+	 * @param int $form_id
+	 *
+	 * @return array
+	 *
+	 * @since 0.1
+	 */
 	protected function get_pdfs( $form_id ) {
 		$pdfs = GPDFAPI::get_form_pdfs( $form_id );
 
 		if ( is_wp_error( $pdfs ) ) {
-			return;
+			return [];
 		}
 
 		/* Filter the inactive PDFs */
@@ -111,29 +124,48 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 		return $pdfs;
 	}
 
+	/**
+	 * Add support for a PDF Height field in the Form Editor
+	 *
+	 * @param int $form_id
+	 *
+	 * @since 0.1
+	 */
 	public function add_pdf_preview_height( $form_id ) {
 		include __DIR__ . '/markup/preview-height-setting.php';
 	}
 
+	/**
+	 * Add support for PDF Watermark fields in the Form Editor
+	 *
+	 * @param int $form_id
+	 *
+	 * @since 0.1
+	 */
 	public function add_pdf_watermark_support( $form_id ) {
 		$font_stack = GPDFAPI::get_pdf_fonts();
 		include __DIR__ . '/markup/pdf-watermark-setting.php';
 	}
 
+	/**
+	 * Load our custom form editor JS to ensure our custom PDF Preview fields save and update correctly
+	 *
+	 * @since 0.1
+	 */
 	public function editor_js() {
 		?>
         <script type="text/javascript">
 
-            /* Setup default values for our PDF Preview field */
-            function SetDefaultValues_pdfpreview (field) {
-              field['label'] = <?php echo json_encode( utf8_encode( __( 'PDF Preview', 'gravity-pdf-previewer' ) ) ); ?>;
-              field['pdfpreviewheight'] = "600"
-              field['pdfwatermarktext'] = <?php echo json_encode( utf8_encode( __( 'SAMPLE', 'gravity-pdf-previewer' ) ) ); ?>;
-              field['pdfwatermarkfont'] = <?php echo json_encode( utf8_encode( GPDFAPI::get_plugin_option( 'default_font', 'dejavusanscondensed' ) ) ); ?>;
-              return field;
-            }
+          /* Setup default values for our PDF Preview field */
+          function SetDefaultValues_pdfpreview (field) {
+            field['label'] = <?php echo json_encode( utf8_encode( __( 'PDF Preview', 'gravity-pdf-previewer' ) ) ); ?>;
+            field['pdfpreviewheight'] = "600"
+            field['pdfwatermarktext'] = <?php echo json_encode( utf8_encode( __( 'SAMPLE', 'gravity-pdf-previewer' ) ) ); ?>;
+            field['pdfwatermarkfont'] = <?php echo json_encode( utf8_encode( GPDFAPI::get_plugin_option( 'default_font', 'dejavusanscondensed' ) ) ); ?>;
+            return field;
+          }
 
-			<?php echo file_get_contents( __DIR__ . '/markup/editor.js' ); ?>
+		  <?php echo file_get_contents( __DIR__ . '/markup/editor.js' ); ?>
         </script>
 		<?php
 	}

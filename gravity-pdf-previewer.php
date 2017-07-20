@@ -65,7 +65,7 @@ class GPDF_Previewer_Checks {
 	 *
 	 * @since 0.1
 	 */
-	private $required_gravitypdf_version = '4.2.0-beta1';
+	private $required_gravitypdf_version = '4.3.0-beta1';
 
 	/**
 	 * Run our pre-checks and if it passes bootstrap the plugin

@@ -87,7 +87,7 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	}
 
 	/**
-	 * Generate our sample PDF and return the unique ID assigned to it
+	 * Generate our sample PDF and return the unique ID assigned to it for use with the PDFViewerApiResponse request
 	 *
 	 * @param WP_REST_Request $request
 	 *
@@ -107,17 +107,14 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 		$this->unique_id = uniqid();
 
 		try {
-			$form  = $this->get_form( $form_id );
-			$entry = $this->create_entry( $form );
+			$form     = $this->get_form( $form_id );
+			$entry    = $this->create_entry( $form );
+			$settings = $this->get_pdf_config( $form, $pdf_id, $field_id );
 
-			$settings = $this->get_pdf_config( $form_id, $pdf_id );
-			$settings = $this->override_security_settings( $settings );
-			$settings = $this->setup_watermark_support( $settings, $form, $field_id );
-
+			/* Try create our PDF and return the Unique ID we assigned to the preview if successful */
 			$this->generate_pdf( $entry, $settings );
 
-			return rest_ensure_response( [ 'id' => $this->unique_id ] ); /* Return the Unique ID for our PDF */
-
+			return rest_ensure_response( [ 'id' => $this->unique_id ] );
 		} catch ( FormNotFound $e ) {
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
 		} catch ( PDFConfigNotFound $e ) {
@@ -130,14 +127,14 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	}
 
 	/**
-	 * Save the PDF to disk
+	 * Save the PDF Preview to disk
 	 *
 	 * @param array $entry
 	 * @param array $settings
 	 *
-	 * @return string
+	 * @return string The path to the generated PDF file
 	 *
-	 * @throw Exception
+	 * @throw Exception If problem occured while generating PDF
 	 */
 	protected function generate_pdf( $entry, $settings ) {
 		add_filter( 'gfpdf_pdf_generator_pre_processing', [ $this, 'change_pdf_save_location' ] );
@@ -153,8 +150,8 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	}
 
 	/**
-	 * Change the location the PDF is saved into so the temporary documents are easier to manage
-	 * and limit the potential for conflict with completed PDFs
+	 * Change the location the PDF is saved into so the temporary documents are easier to manage,
+	 * limit the potential for conflict with completed PDFs, and reduce security risks
 	 *
 	 * @param Helper_PDF $pdf_generator
 	 *
@@ -170,9 +167,12 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	}
 
 	/**
-	 * Enable a Watermark on the PDF, if the user wants it
+	 * Enable a Watermark on the PDF, if the user has set this
 	 *
-	 * @param Mpdf $mpdf
+	 * @param Mpdf  $mpdf
+	 * @param array $form
+	 * @param array $entry
+	 * @param array $settings
 	 *
 	 * @return Mpdf
 	 *
@@ -188,6 +188,17 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 		return $mpdf;
 	}
 
+	/**
+	 * Check the PDF Preview form field for Watermark settings and assign to our PDF Settings
+	 *
+	 * @param array $settings
+	 * @param array $form
+	 * @param int   $field_id
+	 *
+	 * @return array
+	 *
+	 * @since 0.1
+	 */
 	protected function setup_watermark_support( $settings, $form, $field_id ) {
 		try {
 			$field                        = $this->get_pdf_preview_field( $form, $field_id );
@@ -201,6 +212,18 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 		return $settings;
 	}
 
+	/**
+	 * Find the current form's PDF Preview field object based on the field ID
+	 *
+	 * @param array $form
+	 * @param int   $field_id
+	 *
+	 * @return GF_FIeld
+	 *
+	 * @throws FieldNotFound
+	 *
+	 * @since 0.1
+	 */
 	protected function get_pdf_preview_field( $form, $field_id ) {
 		foreach ( $form['fields'] as $field ) {
 			if ( $field->id === $field_id && $field->get_input_type() === 'pdfpreview' ) {
@@ -212,11 +235,13 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	}
 
 	/**
-	 * Setup security so end user's cannot do anything with the documents in Adobe Reader
+	 * Setup security so end user's cannot do anything with the documents (in Adobe Reader anyway)
 	 *
 	 * @param array $settings
 	 *
 	 * @return array
+	 *
+	 * @since 0.1
 	 */
 	protected function override_security_settings( $settings ) {
 		$settings['security']        = 'Yes';
@@ -236,6 +261,8 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	 * @return array
 	 *
 	 * @throws FormNotFound
+	 *
+	 * @since 0.1
 	 */
 	protected function get_form( $form_id ) {
 
@@ -266,16 +293,19 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	/**
 	 * Get the PDF configuration based off the form ID and the PDF ID
 	 *
-	 * @param int    $form_id
+	 * @param array  $form
 	 * @param string $pdf_id
+	 * @param int    $field_id
 	 *
 	 * @return array
 	 *
 	 * @throws PDFConfigNotFound
 	 * @throws PDFNotActive
+	 *
+	 * @since 0.1
 	 */
-	protected function get_pdf_config( $form_id, $pdf_id ) {
-		$pdf_config = GPDFAPI::get_pdf( $form_id, $pdf_id );
+	protected function get_pdf_config( $form, $pdf_id, $field_id = 0 ) {
+		$pdf_config = GPDFAPI::get_pdf( $form['id'], $pdf_id );
 
 		if ( is_wp_error( $pdf_config ) ) {
 			throw new PDFConfigNotFound( $pdf_id );
@@ -284,6 +314,9 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 		if ( $pdf_config['active'] !== true ) {
 			throw new PDFNotActive( $pdf_id );
 		}
+
+		$pdf_config = $this->override_security_settings( $pdf_config );
+		$pdf_config = $this->setup_watermark_support( $pdf_config, $form, $field_id );
 
 		return $pdf_config;
 	}

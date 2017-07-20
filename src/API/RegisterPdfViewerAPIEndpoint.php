@@ -78,6 +78,10 @@ class RegisterPdfViewerAPIEndpoint implements Helper_Interface_Actions {
 	}
 
 	/**
+	 * Register our PDF Streaming endpoint
+	 *
+	 * @Internal Use this endpoint instead of giving users a direct link to the PDF document
+	 *
 	 * @since 0.1
 	 */
 	public function register_endpoint() {

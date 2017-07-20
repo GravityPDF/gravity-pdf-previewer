@@ -34,6 +34,12 @@ if ( ! defined( 'ABSPATH' ) ) {
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
+/**
+ * Class FieldNotFound
+ *
+ * @package GFPDF\Plugins\Previewer\Exceptions
+ *
+ * @since   0.1
+ */
 class FieldNotFound extends Exception {
 }

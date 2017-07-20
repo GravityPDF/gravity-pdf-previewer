@@ -35,7 +35,20 @@ if ( ! defined( 'ABSPATH' ) ) {
 */
 
 
+/**
+ * Class FormNotFound
+ *
+ * @package GFPDF\Plugins\Previewer\Exceptions
+ *
+ * @since   0.1
+ */
 class FormNotFound extends Exception {
+
+	/**
+	 * @var string
+	 *
+	 * @since 0.1
+	 */
 	protected $message = 'Could not find Gravity Form';
 
 	/**

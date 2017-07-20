@@ -38,6 +38,8 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Class GFormFieldPreviewer
  *
  * @package GFPDF\Plugins\Previewer\Field
+ *
+ * @since   0.1
  */
 class GFormFieldPreviewer extends GF_Field {
 
@@ -58,6 +60,8 @@ class GFormFieldPreviewer extends GF_Field {
 	}
 
 	/**
+	 *
+	 *
 	 * @param array  $form
 	 * @param string $value
 	 * @param null   $entry
@@ -67,32 +71,26 @@ class GFormFieldPreviewer extends GF_Field {
 	 * @since 0.1
 	 */
 	public function get_field_input( $form, $value = '', $entry = null ) {
-		$pdf_id         = ( isset( $this->pdfpreview ) ) ? $this->pdfpreview : 0;
-		$preview_height = ( isset( $this->pdfpreviewheight ) && (int) $this->pdfpreviewheight > 0 ) ? (int) $this->pdfpreviewheight : 600;
-
-		$content = '<div class="gpdf-previewer-wrapper" 						 
-						 data-field-id="' . esc_attr( $this->id ) . '"
-						 data-pdf-id="' . esc_attr( $pdf_id ) . '"
-						 data-previewer-height="' . esc_attr( $preview_height ) . '">
-							<!-- Placeholder -->
-						</div>';
+		ob_start();
 
 		if ( $this->is_entry_detail() || $this->is_form_editor() ) {
-			$content = '<div class="gf-html-container">
-							<span class="gf_blockheader">
-								<i class="fa fa-file-pdf-o"></i> ' .
-			           esc_html__( 'PDF Document', 'gravity-pdf-previewer' ) . '
-							</span>
-							<span>' .
-			           esc_html__( 'This is a content placeholder. The PDF Preview is not displayed in the form admin. View the form to preview the PDF.', 'gravity-pdf-previewer' ) .
-			           '</span>
-						</div>';
+			include __DIR__ . '/markup/previewer-placeholder.php';
+		} else {
+			$field_id       = $this->id;
+			$pdf_id         = ( isset( $this->pdfpreview ) ) ? $this->pdfpreview : 0;
+			$preview_height = ( isset( $this->pdfpreviewheight ) && (int) $this->pdfpreviewheight > 0 ) ? (int) $this->pdfpreviewheight : 600;
+
+			include __DIR__ . '/markup/previewer-wrapper.php';
 		}
 
-		return $content;
+		return ob_get_clean();
 	}
 
 	/**
+	 * Enable supported settings for our custom field
+	 *
+	 * @return array
+	 *
 	 * @since 0.1
 	 */
 	public function get_form_editor_field_settings() {
@@ -108,6 +106,8 @@ class GFormFieldPreviewer extends GF_Field {
 	}
 
 	/**
+	 * Add field to the Advanced group
+	 *
 	 * @return array
 	 *
 	 * @since 0.1
@@ -120,6 +120,8 @@ class GFormFieldPreviewer extends GF_Field {
 	}
 
 	/**
+	 * Enable Conditional Logic
+	 *
 	 * @return bool
 	 *
 	 * @since 0.1

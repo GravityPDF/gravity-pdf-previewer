@@ -149,7 +149,6 @@ class Bootstrap extends Helper_Abstract_Addon {
                 </div>
             </td>
         </tr>
-
 		<?php
 	}
 
@@ -165,6 +164,7 @@ class Bootstrap extends Helper_Abstract_Addon {
 	 */
 	public function plugin_row_meta( $links, $file ) {
 
+	    /* @TODO */
 		if ( $file === plugin_basename( GFPDF_PDF_PREVIEWER_FILE ) ) {
 			$row_meta = [
 				'docs'    => '<a href="' . esc_url( '%s' ) . '" title="' . esc_attr__( 'View plugin Documentation', 'gravity-pdf-previewer' ) . '">' . esc_html__( 'Docs', 'gravity-forms-pdf-extended' ) . '</a>',

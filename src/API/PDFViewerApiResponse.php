@@ -2,15 +2,7 @@
 
 namespace GFPDF\Plugins\Previewer\API;
 
-use GFPDF\Helper\Helper_Data;
-use GFPDF\Model\Model_PDF;
-use GFPDF\Plugins\Previewer\Exceptions\FormNotFound;
-use GFPDF\Plugins\Previewer\Exceptions\PDFConfigNotFound;
-
 use WP_REST_Request;
-use GFFormsModel;
-use GFAPI;
-use GPDFAPI;
 
 /**
  * @package     Gravity PDF Previewer
@@ -68,8 +60,9 @@ class PDFViewerApiResponse implements CallableApiResponse {
 	}
 
 	/**
-	 * Locate the PDF on the server and stream it to the client
+	 * Locate the PDF on the server using a temporary ID and stream it to the client
 	 *
+	 * @Internal The temp ID is provided using the PDFGeneratorApiResponse endpoint
 	 *
 	 * @param WP_REST_Request $request
 	 *
@@ -109,7 +102,7 @@ class PDFViewerApiResponse implements CallableApiResponse {
 	}
 
 	/**
-	 * Remove file after it has been streamed
+	 * Remove file /folder after it has been streamed
 	 *
 	 * @param string $file Path to PDF file
 	 *

@@ -62,14 +62,18 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 	}
 
 	/**
-	 * Load our Previewer script when our custom field is in the form
+	 * Load our Previewer script/styles when our custom field is in the form
 	 *
 	 * @param array $form
 	 *
 	 * @since 0.1
 	 */
 	public function gravityform_scripts( $form ) {
+
+		/* Only include where our preview field is detected */
 		if ( $this->has_previewer_field( $form ) ) {
+
+			/* Add our custom JS */
 			wp_enqueue_script(
 				'gfpdf_previewer',
 				plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/js/previewer.min.js',
@@ -84,7 +88,7 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 				[
 					'viewerUrl'            => plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/viewer/web/viewer.html?file=',
 					'documentUrl'          => rest_url( 'gravity-pdf-previewer/v1/pdf/' ),
-					'pdfGeneratorEndpoint' => rest_url( 'gravity-pdf-previewer/v1/preview/' ),
+					'pdfGeneratorEndpoint' => rest_url( 'gravity-pdf-previewer/v1/generator/' ),
 
 					'refreshTitle'   => __( 'Refresh PDF', 'gravity-pdf-previewer' ),
 					'loadingMessage' => __( 'Loading PDF Preview', 'gravity-pdf-previewer' ),
@@ -92,6 +96,7 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 				]
 			);
 
+			/* Add our custom CSS */
 			wp_enqueue_style(
 				'gfpdf_previewer',
 				plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/css/previewer.min.css',

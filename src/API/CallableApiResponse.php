@@ -37,7 +37,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /**
  * Interface CallableApiResponse
  *
- * For use in a class that handles the REST API callback
+ * For use in a class that handles the REST API callback which takes the WP_REST_Request class as a single argument
  *
  * @package GFPDF\Plugins\Previewer\API
  *

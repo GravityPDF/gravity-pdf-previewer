@@ -34,8 +34,20 @@ if ( ! defined( 'ABSPATH' ) ) {
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-
+/**
+ * Class PDFConfigNotFound
+ *
+ * @package GFPDF\Plugins\Previewer\Exceptions
+ *
+ * @since   0.1
+ */
 class PDFConfigNotFound extends Exception {
+
+	/**
+	 * @var string
+	 *
+	 * @since 0.1
+	 */
 	protected $message = 'Could not find PDF Configuration';
 
 	/**
