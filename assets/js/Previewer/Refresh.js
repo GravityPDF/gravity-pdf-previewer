@@ -39,7 +39,7 @@ export default class {
    *
    * @since 0.1
    */
-  init ($container, callback, type = 'black') {
+  add ($container, callback, type = 'black') {
 
     /* Get the correct icon */
     const refreshIcon = (type === 'white') ? require('svg-url-loader?noquotes!../../images/refresh-white.svg') : require('svg-url-loader?noquotes!../../images/refresh.svg')
@@ -64,5 +64,11 @@ export default class {
 
     /* Append the wrapper to the $container */
     $container.append(this.$refresh)
+  }
+
+  remove () {
+    if (this.$refresh) {
+      this.$refresh.remove()
+    }
   }
 }

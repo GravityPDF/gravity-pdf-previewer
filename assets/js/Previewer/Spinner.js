@@ -39,10 +39,10 @@ export default class {
    *
    * @since 0.1
    */
-  addSpinner ($container) {
+  add ($container) {
     const spinner = require('svg-url-loader?noquotes!../../images/spinner.svg')
 
-    this.removeSpinner()
+    this.remove()
 
     this.$spinner = $('<div>').addClass('gpdf-spinner')
 
@@ -60,7 +60,7 @@ export default class {
    *
    * @since 0.1
    */
-  removeSpinner () {
+  remove () {
     if (this.$spinner) {
       this.$spinner.remove()
     }

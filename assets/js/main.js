@@ -1,6 +1,6 @@
 import $ from 'jquery'
-import PdfPreviewGenerator from './Previewer/Generator'
-import PdfPreviewViewer from './Previewer/Viewer'
+import Generator from './Previewer/Generator'
+import Viewer from './Previewer/Viewer'
 
 require('../scss/previewer.scss')
 
@@ -53,13 +53,13 @@ $(document).bind('gform_post_render', function (e, formId) {
     $(this).css('min-height', previewerHeight + 'px')
 
     /* Initialise our Viewer / Generator classes */
-    let viewer = new PdfPreviewViewer({
+    let viewer = new Viewer({
       viewerHeight: previewerHeight + 'px',
       viewer: PdfPreviewerConstants.viewerUrl,
       documentUrl: PdfPreviewerConstants.documentUrl
     })
 
-    let previewer = new PdfPreviewGenerator({
+    let previewer = new Generator({
       form: $form,
       container: $(this),
       endpoint: PdfPreviewerConstants.pdfGeneratorEndpoint + pdfId + '/' + fieldId + '/',

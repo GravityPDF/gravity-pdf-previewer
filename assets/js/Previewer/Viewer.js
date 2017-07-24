@@ -56,8 +56,8 @@ export default class {
    *
    * @since 0.1
    */
-  generateIframe (id) {
-    this.removeIframe()
+  create (id) {
+    this.remove()
     this.$iframe = $('<iframe>')
       .attr('src', this.viewerUrl + this.documentUrl + id)
       .attr('frameborder', 0)
@@ -72,7 +72,7 @@ export default class {
    *
    * @since 0.1
    */
-  removeIframe () {
+  remove () {
     if (this.doesViewerExist()) {
       this.$iframe.remove()
       this.$iframe = undefined

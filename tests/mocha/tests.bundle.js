@@ -2,7 +2,9 @@ import $ from 'jquery'
 
 // setup global defaults that our tests expect is present
 window.PdfPreviewerConstants = {
-
+  loadingMessage: 'Loading',
+  errorMessage: 'loading error',
+  refreshTitle: 'refresh_title'
 }
 
 // setup global before and after code

@@ -52,6 +52,7 @@ export default class {
     this.spinner = new Spinner()
 
     this.formUpdated = false
+    this.updateInProgress = false
 
     this.endpoint = args.endpoint
   }
@@ -68,7 +69,7 @@ export default class {
 
     /* Register our manual PDF previewer loader */
     const manualLoader = new Refresh()
-    manualLoader.init(this.$container, () => {
+    manualLoader.add(this.$container, () => {
       this.generatePreview()
       return false
     })
@@ -84,7 +85,7 @@ export default class {
    *
    * @since 0.1
    */
-  isContainerinViewpoint () {
+  isContainerInViewpoint () {
     return inViewport(this.$container[0])
   }
 
@@ -100,7 +101,7 @@ export default class {
      * the form has been updated AND the previewer container is in the browser viewpoint
      * then we'll generate a new preview
      */
-    if (!this.viewer.doesViewerExist() || ( this.formUpdated && this.isContainerinViewpoint() )) {
+    if (!this.viewer.doesViewerExist() || ( this.formUpdated && this.isContainerInViewpoint() )) {
       this.generatePreview()
     }
   }
@@ -128,12 +129,12 @@ export default class {
      */
     if (this.$container.is(':visible') && !this.updateInProgress) {
       /* Remove old PDF Preview */
-      this.viewer.removeIframe()
+      this.viewer.remove()
 
       /* Setup our loading environment */
       this.updateInProgress = true
       this.$container.addClass('gfpdf-loading')
-      this.spinner.addSpinner(this.$container)
+      this.spinner.add(this.$container)
 
       /* Call our endpoint and catch any promise-related errors that might occur */
       try {
@@ -172,7 +173,7 @@ export default class {
 
     /* Add a manual loader below the error so the user can try again */
     const manualLoader = new Refresh()
-    manualLoader.init(this.spinner.$spinner, () => {
+    manualLoader.add(this.spinner.$spinner, () => {
       this.updateInProgress = false
       this.generatePreview()
       return false
@@ -187,13 +188,13 @@ export default class {
    * @since 0.1
    */
   displayPreview (id) {
-    let $iframe = this.viewer.generateIframe(id)
+    let $iframe = this.viewer.create(id)
 
     /* When the iFrame finishes loading we'll remove the AJAX loading environment */
     $iframe.on('load', () => {
       this.updateInProgress = false
       $iframe.show()
-      this.spinner.removeSpinner()
+      this.spinner.remove()
       this.$container.removeClass('gfpdf-loading')
       this.formUpdated = false
     })
