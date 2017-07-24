@@ -3,6 +3,7 @@
 namespace GFPDF\Plugins\Previewer\API;
 
 use GFPDF\Model\Model_PDF;
+use GFPDF\Helper\Helper_PDF;
 use GFPDF\Plugins\Previewer\Exceptions\FieldNotFound;
 use GFPDF\Plugins\Previewer\Exceptions\FormNotFound;
 use GFPDF\Plugins\Previewer\Exceptions\PDFConfigNotFound;
@@ -12,6 +13,7 @@ use WP_REST_Request;
 use GFFormsModel;
 use GFAPI;
 use GPDFAPI;
+use Exception;
 
 /**
  * @package     Gravity PDF Previewer
@@ -104,7 +106,7 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 		$field_id = (int) $request->get_param( 'fid' );
 
 		/* Assign a unique ID to this request */
-		$this->unique_id = uniqid();
+		$this->set_unique_id();
 
 		try {
 			$form     = $this->get_form( $form_id );
@@ -114,7 +116,7 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 			/* Try create our PDF and return the Unique ID we assigned to the preview if successful */
 			$this->generate_pdf( $entry, $settings );
 
-			return rest_ensure_response( [ 'id' => $this->unique_id ] );
+			return rest_ensure_response( [ 'id' => $this->get_unique_id() ] );
 		} catch ( FormNotFound $e ) {
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
 		} catch ( PDFConfigNotFound $e ) {
@@ -127,6 +129,24 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	}
 
 	/**
+	 *
+	 *
+	 * @return string
+	 *
+	 * @since 0.1
+	 */
+	public function get_unique_id() {
+		return $this->unique_id;
+	}
+
+	/**
+	 * @since 0.1
+	 */
+	public function set_unique_id() {
+		$this->unique_id = uniqid();
+	}
+
+	/**
 	 * Save the PDF Preview to disk
 	 *
 	 * @param array $entry
@@ -134,7 +154,7 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	 *
 	 * @return string The path to the generated PDF file
 	 *
-	 * @throw Exception If problem occured while generating PDF
+	 * @throws Exception If problem occured while generating PDF
 	 */
 	protected function generate_pdf( $entry, $settings ) {
 		add_filter( 'gfpdf_pdf_generator_pre_processing', [ $this, 'change_pdf_save_location' ] );
@@ -159,9 +179,9 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	 *
 	 * @since 0.1
 	 */
-	public function change_pdf_save_location( $pdf_generator ) {
-		$pdf_generator->set_path( $this->pdf_path . $this->unique_id . '/' );
-		$pdf_generator->set_filename( $this->unique_id );
+	public function change_pdf_save_location( Helper_PDF $pdf_generator ) {
+		$pdf_generator->set_path( $this->pdf_path . $this->get_unique_id() . '/' );
+		$pdf_generator->set_filename( $this->get_unique_id() );
 
 		return $pdf_generator;
 	}
@@ -304,7 +324,7 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	 *
 	 * @since 0.1
 	 */
-	protected function get_pdf_config( $form, $pdf_id, $field_id = 0 ) {
+	public function get_pdf_config( $form, $pdf_id, $field_id = 0 ) {
 		$pdf_config = GPDFAPI::get_pdf( $form['id'], $pdf_id );
 
 		if ( is_wp_error( $pdf_config ) ) {
