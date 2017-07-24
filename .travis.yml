@@ -39,4 +39,4 @@ before_script:
 
 script:
  - if [[ $WP_MULTISITE = 1 ]]; then yarn run test; fi
- - vendor/bin/phpunit -c tests/phpunit/phpunit.xml.dist
+ - vendor/bin/phpunit -c phpunit.xml
