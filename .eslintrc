@@ -1,0 +1,29 @@
+{
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "impliedStrict": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "env": {
+    "browser": true,
+    "es6": true,
+    "jquery": true
+  },
+  "globals": {
+    "PdfPreviewerConstants": false
+  },
+  "rules": {
+    "semi": [
+      "error",
+      "never"
+    ]
+  },
+  "plugins": [
+  ],
+  "extends": [
+    "eslint:recommended"
+  ]
+}
