@@ -66,9 +66,9 @@ class PDFViewerApiResponse implements CallableApiResponse {
 	 *
 	 * @param WP_REST_Request $request
 	 *
-	 * @return \WP_REST_Response
+	 * @return WP_REST_Response
 	 *
-	 * @since 0.1
+	 * @since    0.1
 	 */
 	public function response( WP_REST_Request $request ) {
 		$temp_id  = $request->get_param( 'temp_id' );
@@ -81,8 +81,7 @@ class PDFViewerApiResponse implements CallableApiResponse {
 
 		$this->stream_pdf( $temp_pdf );
 		$this->delete_pdf( $temp_pdf );
-
-		exit;
+		$this->end();
 	}
 
 	/**
@@ -111,5 +110,16 @@ class PDFViewerApiResponse implements CallableApiResponse {
 	protected function delete_pdf( $file ) {
 		unlink( $file );
 		rmdir( dirname( $file ) );
+	}
+
+	/**
+	 * Exit the process after streaming the PDF
+	 *
+	 * @Interal In it's own method so we can easily mock it for unit testing
+	 *
+	 * @since 0.1
+	 */
+	protected function end() {
+		exit;
 	}
 }
