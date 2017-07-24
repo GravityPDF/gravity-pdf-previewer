@@ -4,7 +4,7 @@ namespace GFPDF\Plugins\Previewer\Field;
 
 use GFPDF\Helper\Helper_Interface_Actions;
 use GF_Fields;
-
+use Exception;
 
 /**
  * @package     Gravity PDF Previewer
@@ -49,7 +49,11 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 	 * @since 0.1
 	 */
 	public function init() {
-		GF_Fields::register( new GFormFieldPreviewer() );
+		try {
+			GF_Fields::register( new GFormFieldPreviewer() );
+		} catch( Exception $e ) {
+			/* Log Error */
+		}
 
 		$this->add_actions();
 	}
@@ -115,7 +119,7 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 	 *
 	 * @since 0.1
 	 */
-	protected function has_previewer_field( $form ) {
+	public function has_previewer_field( $form ) {
 		foreach ( $form['fields'] as $field ) {
 			if ( $field->get_input_type() === 'pdfpreview' ) {
 				return true;
