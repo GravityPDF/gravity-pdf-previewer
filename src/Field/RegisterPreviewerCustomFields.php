@@ -95,7 +95,7 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	 * @since 0.1
 	 */
 	public function add_pdf_selector( $form_id ) {
-		$pdfs              = $this->get_pdfs( $form_id );
+		$pdfs              = $this->get_active_pdfs( $form_id );
 		$form_pdf_settings = network_admin_url( 'admin.php?page=gf_edit_forms&view=settings&subview=pdf&id=' . $form_id );
 		include __DIR__ . '/markup/pdf-selector-setting.php';
 	}
@@ -109,7 +109,7 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	 *
 	 * @since 0.1
 	 */
-	protected function get_pdfs( $form_id ) {
+	protected function get_active_pdfs( $form_id ) {
 		$pdfs = GPDFAPI::get_form_pdfs( $form_id );
 
 		if ( is_wp_error( $pdfs ) ) {
