@@ -46,11 +46,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 */
 
 /**
- * Class PDFGeneratorApiResponse
+ * Class PdfGeneratorApiResponse
  *
  * @package GFPDF\Plugins\Previewer\API
  */
-class PDFGeneratorApiResponse implements CallableApiResponse {
+class PdfGeneratorApiResponse implements CallableApiResponse {
 
 	/**
 	 * @var Model_PDF
@@ -76,7 +76,7 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	protected $unique_id;
 
 	/**
-	 * PDFGeneratorApiResponse constructor.
+	 * PdfGeneratorApiResponse constructor.
 	 *
 	 * @param \GFPDF\Model\Model_PDF
 	 * @param string
@@ -89,7 +89,7 @@ class PDFGeneratorApiResponse implements CallableApiResponse {
 	}
 
 	/**
-	 * Generate our sample PDF and return the unique ID assigned to it for use with the PDFViewerApiResponse request
+	 * Generate our sample PDF and return the unique ID assigned to it for use with the PdfViewerApiResponse request
 	 *
 	 * @param WP_REST_Request $request
 	 *

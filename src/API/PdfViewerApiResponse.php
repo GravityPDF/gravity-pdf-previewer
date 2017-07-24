@@ -35,11 +35,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 */
 
 /**
- * Class PDFViewerApiResponse
+ * Class PdfViewerApiResponse
  *
  * @package GFPDF\Plugins\Previewer\API
  */
-class PDFViewerApiResponse implements CallableApiResponse {
+class PdfViewerApiResponse implements CallableApiResponse {
 
 	/**
 	 * @var string
@@ -49,7 +49,7 @@ class PDFViewerApiResponse implements CallableApiResponse {
 	protected $pdf_path;
 
 	/**
-	 * PDFViewerApiResponse constructor.
+	 * PdfViewerApiResponse constructor.
 	 *
 	 * @param string $pdf_path
 	 *
@@ -62,7 +62,7 @@ class PDFViewerApiResponse implements CallableApiResponse {
 	/**
 	 * Locate the PDF on the server using a temporary ID and stream it to the client
 	 *
-	 * @Internal The temp ID is provided using the PDFGeneratorApiResponse endpoint
+	 * @Internal The temp ID is provided using the PdfGeneratorApiResponse endpoint
 	 *
 	 * @param WP_REST_Request $request
 	 *
@@ -117,7 +117,7 @@ class PDFViewerApiResponse implements CallableApiResponse {
 	 *
 	 * @Interal In it's own method so we can easily mock it for unit testing
 	 *
-	 * @since 0.1
+	 * @since   0.1
 	 */
 	protected function end() {
 		exit;

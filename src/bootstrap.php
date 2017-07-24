@@ -2,12 +2,12 @@
 
 namespace GFPDF\Plugins\Previewer;
 
-use GFPDF\Plugins\Previewer\API\PDFViewerApiResponse;
+use GFPDF\Plugins\Previewer\API\PdfViewerApiResponse;
 use GFPDF\Plugins\Previewer\Field\RegisterPreviewerField;
 use GFPDF\Plugins\Previewer\Field\RegisterPreviewerCustomFields;
 use GFPDF\Plugins\Previewer\API\RegisterPdfGeneratorAPIEndpoint;
 use GFPDF\Plugins\Previewer\API\RegisterPdfViewerAPIEndpoint;
-use GFPDF\Plugins\Previewer\API\PDFGeneratorApiResponse;
+use GFPDF\Plugins\Previewer\API\PdfGeneratorApiResponse;
 
 use GFPDF\Helper\Licensing\EDD_SL_Plugin_Updater;
 use GFPDF\Helper\Helper_Abstract_Addon;
@@ -63,7 +63,7 @@ class Bootstrap extends Helper_Abstract_Addon {
 	 *
 	 * @param array $classes An array of classes to store in our singleton
 	 *
-	 * 0.1
+	 * since 0.1
 	 */
 	public function init( $classes = [] ) {
 
@@ -76,17 +76,20 @@ class Bootstrap extends Helper_Abstract_Addon {
 			new RegisterPreviewerField(),
 
 			new RegisterPdfGeneratorAPIEndpoint(
-				new PDFGeneratorApiResponse(
+				new PdfGeneratorApiResponse(
 					GPDFAPI::get_mvc_class( 'Model_PDF' ),
 					$pdf_save_path
 				)
 			),
 
-			new RegisterPdfViewerAPIEndpoint( new PDFViewerApiResponse( $pdf_save_path ) ),
+			new RegisterPdfViewerAPIEndpoint( new PdfViewerApiResponse( $pdf_save_path ) ),
 		] );
 
 		/* Include links on plugin page */
-		add_action( 'after_plugin_row_' . plugin_basename( GFPDF_PDF_PREVIEWER_FILE ), [ $this,	 'license_registration' ] );
+		add_action( 'after_plugin_row_' . plugin_basename( GFPDF_PDF_PREVIEWER_FILE ), [
+			$this,
+			'license_registration',
+		] );
 		add_filter( 'plugin_row_meta', [ $this, 'plugin_row_meta' ], 10, 2 );
 
 		/* Run the setup */
@@ -96,7 +99,7 @@ class Bootstrap extends Helper_Abstract_Addon {
 	/**
 	 * Check the plugin's license is active and initialise the EDD Updater
 	 *
-	 * 0.1
+	 * since 0.1
 	 */
 	public function plugin_updater() {
 
@@ -122,7 +125,7 @@ class Bootstrap extends Helper_Abstract_Addon {
 	}
 
 	/**
-	 * 0.1
+	 * since 0.1
 	 */
 	public function license_registration() {
 
@@ -164,7 +167,7 @@ class Bootstrap extends Helper_Abstract_Addon {
 	 */
 	public function plugin_row_meta( $links, $file ) {
 
-	    /* @TODO */
+		/* @TODO */
 		if ( $file === plugin_basename( GFPDF_PDF_PREVIEWER_FILE ) ) {
 			$row_meta = [
 				'docs'    => '<a href="' . esc_url( '%s' ) . '" title="' . esc_attr__( 'View plugin Documentation', 'gravity-pdf-previewer' ) . '">' . esc_html__( 'Docs', 'gravity-forms-pdf-extended' ) . '</a>',

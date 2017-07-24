@@ -3,7 +3,7 @@
 namespace GFPDF\Tests\Previewer;
 
 use GFPDF\Helper\Helper_PDF;
-use GFPDF\Plugins\Previewer\API\PDFGeneratorApiResponse;
+use GFPDF\Plugins\Previewer\API\PdfGeneratorApiResponse;
 
 use WP_UnitTestCase;
 use WP_REST_Request;
@@ -53,7 +53,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 
 	/**
-	 * @var PDFGeneratorApiResponse
+	 * @var PdfGeneratorApiResponse
 	 *
 	 * @since 0.1
 	 */
@@ -63,7 +63,7 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 	 * @since 0.1
 	 */
 	public function setUp() {
-		$this->class = new PDFGeneratorApiResponse(
+		$this->class = new PdfGeneratorApiResponse(
 			GPDFAPI::get_mvc_class( 'Model_PDF' ),
 			dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/'
 		);
