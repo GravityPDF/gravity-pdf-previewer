@@ -19,6 +19,8 @@ tar -zxf ${PACKAGE_DIR}/package.tar.gz --directory ${PACKAGE_DIR} && rm ${PACKAG
 # Run Composer
 composer install --quiet --no-dev  --prefer-dist --optimize-autoloader --working-dir ${PACKAGE_DIR}
 
+
+
 # Cleanup Node JS
 rm -R ${PACKAGE_DIR}/node_modules
 
@@ -29,6 +31,10 @@ FILES=(
 "${PACKAGE_DIR}/package.json"
 "${PACKAGE_DIR}/yarn.lock"
 "${PACKAGE_DIR}/gulpfile.js"
+"${PACKAGE_DIR}/.babelrc"
+"${PACKAGE_DIR}/.eslintrc"
+"${PACKAGE_DIR}/karma.conf.js"
+"${PACKAGE_DIR}/webpack.config.js"
 )
 
 for i in "${FILES[@]}"

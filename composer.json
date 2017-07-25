@@ -19,7 +19,8 @@
   "scripts": {
     "post-update-cmd": [
       "yarn global add gulp-cli",
-      "yarn && gulp"
+      "yarn && gulp",
+      "yarn run build"
     ]
   }
 }
