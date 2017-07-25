@@ -57,9 +57,9 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	 * @since 0.1
 	 */
 	public function add_actions() {
-		add_action( 'gform_field_standard_settings_25', [ $this, 'add_pdf_selector' ] );
-		add_action( 'gform_field_standard_settings_25', [ $this, 'add_pdf_preview_height' ] );
-		add_action( 'gform_field_standard_settings_25', [ $this, 'add_pdf_watermark_support' ] );
+		add_action( 'gform_field_standard_settings', [ $this, 'add_pdf_selector' ], 10, 2 );
+		add_action( 'gform_field_standard_settings', [ $this, 'add_pdf_preview_height' ] );
+		add_action( 'gform_field_standard_settings', [ $this, 'add_pdf_watermark_support' ] );
 		add_action( 'gform_editor_js', [ $this, 'editor_js' ] );
 	}
 
@@ -90,14 +90,17 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	/**
 	 * Add support for a PDF selector field in the Form Editor
 	 *
+	 * @param init $position
 	 * @param int $form_id
 	 *
 	 * @since 0.1
 	 */
-	public function add_pdf_selector( $form_id ) {
-		$pdfs              = $this->get_active_pdfs( $form_id );
-		$form_pdf_settings = network_admin_url( 'admin.php?page=gf_edit_forms&view=settings&subview=pdf&id=' . $form_id );
-		include __DIR__ . '/markup/pdf-selector-setting.php';
+	public function add_pdf_selector( $position, $form_id ) {
+		if ( $position === 25 ) {
+			$pdfs              = $this->get_active_pdfs( $form_id );
+			$form_pdf_settings = network_admin_url( 'admin.php?page=gf_edit_forms&view=settings&subview=pdf&id=' . $form_id );
+			include __DIR__ . '/markup/pdf-selector-setting.php';
+		}
 	}
 
 	/**
@@ -127,24 +130,28 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	/**
 	 * Add support for a PDF Height field in the Form Editor
 	 *
-	 * @param int $form_id
+	 * @param init $position
 	 *
 	 * @since 0.1
 	 */
-	public function add_pdf_preview_height( $form_id ) {
-		include __DIR__ . '/markup/preview-height-setting.php';
+	public function add_pdf_preview_height( $position ) {
+		if ( $position === 25 ) {
+			include __DIR__ . '/markup/preview-height-setting.php';
+		}
 	}
 
 	/**
 	 * Add support for PDF Watermark fields in the Form Editor
 	 *
-	 * @param int $form_id
+	 * @param init $position
 	 *
 	 * @since 0.1
 	 */
-	public function add_pdf_watermark_support( $form_id ) {
-		$font_stack = GPDFAPI::get_pdf_fonts();
-		include __DIR__ . '/markup/pdf-watermark-setting.php';
+	public function add_pdf_watermark_support( $position ) {
+		if ( $position === 25 ) {
+			$font_stack = GPDFAPI::get_pdf_fonts();
+			include __DIR__ . '/markup/pdf-watermark-setting.php';
+		}
 	}
 
 	/**
