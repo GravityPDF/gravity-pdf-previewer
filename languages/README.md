@@ -3,10 +3,10 @@
 Don't place any .mo / .po files in this directory. They will be overridden when the plugin is updated. 
 Instead, put them in your language directory – by default this is /wp-content/languages/plugins/. 
 
-Make sure you name your .mo files `gravity-pdf-core-booster-{:wp_locale}.mo`, where {:wp_locale} is the ID found 
+Make sure you name your .mo files `gravity-pdf-previewer-{:wp_locale}.mo`, where {:wp_locale} is the ID found 
  in this list: https://make.wordpress.org/polyglots/teams/. 
  
-For example, if you had a translation for Bengali you would name the file `gravity-pdf-core-booster-bn_BD.mo`
+For example, if you had a translation for Bengali you would name the file `gravity-pdf-previewer-bn_BD.mo`
  
 The same naming convension applies to .po files.
  
