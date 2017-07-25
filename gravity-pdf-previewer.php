@@ -3,7 +3,7 @@
 /**
  * Plugin Name:     Gravity PDF Previewer
  * Plugin URI:      https://gravitypdf.com/shop/previewer-add-on/
- * Description:
+ * Description:     Allow Gravity PDF documents to be previewed before a Gravity Form has been submitted. Includes live reloading of preview and watermark support.
  * Author:          Gravity PDF
  * Author URI:      https://gravitypdf.com
  * Text Domain:     gravity-pdf-previewer

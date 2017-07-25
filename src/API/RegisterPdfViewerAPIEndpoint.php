@@ -82,7 +82,7 @@ class RegisterPdfViewerAPIEndpoint implements Helper_Interface_Actions {
 	 *
 	 * @Internal Use this endpoint instead of giving users a direct link to the PDF document
 	 *
-	 * @since 0.1
+	 * @since    0.1
 	 */
 	public function register_endpoint() {
 		register_rest_route( 'gravity-pdf-previewer/v1', '/pdf/(?P<temp_id>[a-zA-Z0-9]+)', [

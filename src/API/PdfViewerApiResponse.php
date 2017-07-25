@@ -115,7 +115,7 @@ class PdfViewerApiResponse implements CallableApiResponse {
 	/**
 	 * Exit the process after streaming the PDF
 	 *
-	 * @Interal In it's own method so we can easily mock it for unit testing
+	 * @Interal In its own method so we can easily mock it for unit testing
 	 *
 	 * @since   0.1
 	 */

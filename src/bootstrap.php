@@ -146,7 +146,7 @@ class Bootstrap extends Helper_Abstract_Addon {
 							'gravity-forms-pdf-extended'
 						),
 						'<a href="' . admin_url( 'admin.php?page=gf_settings&subview=PDF&tab=license' ) . '">', '</a>',
-						'<a href="' . esc_url( '%' ) . '">', '</a>'
+						'<a href="' . esc_url( 'https://gravitypdf.com/checkout/?edd_action=add_to_cart&download_id=14971' ) . '">', '</a>'
 					)
 					?>
                 </div>
@@ -167,10 +167,9 @@ class Bootstrap extends Helper_Abstract_Addon {
 	 */
 	public function plugin_row_meta( $links, $file ) {
 
-		/* @TODO */
 		if ( $file === plugin_basename( GFPDF_PDF_PREVIEWER_FILE ) ) {
 			$row_meta = [
-				'docs'    => '<a href="' . esc_url( '%s' ) . '" title="' . esc_attr__( 'View plugin Documentation', 'gravity-pdf-previewer' ) . '">' . esc_html__( 'Docs', 'gravity-forms-pdf-extended' ) . '</a>',
+				'docs'    => '<a href="' . esc_url( 'https://gravitypdf.com/documentation/v4/shop-plugin-previewer-add-on/' ) . '" title="' . esc_attr__( 'View plugin Documentation', 'gravity-pdf-previewer' ) . '">' . esc_html__( 'Docs', 'gravity-forms-pdf-extended' ) . '</a>',
 				'support' => '<a href="' . esc_url( 'https://gravitypdf.com/support/#contact-support' ) . '" title="' . esc_attr__( 'Get Help and Support', 'gravity-forms-pdf-extended' ) . '">' . esc_html__( 'Support', 'gravity-forms-pdf-extended' ) . '</a>',
 			];
 

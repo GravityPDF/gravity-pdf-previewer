@@ -51,8 +51,8 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 	public function init() {
 		try {
 			GF_Fields::register( new GFormFieldPreviewer() );
-		} catch( Exception $e ) {
-			/* Log Error */
+		} catch ( Exception $e ) {
+			/* @TODO Log Error */
 		}
 
 		$this->add_actions();

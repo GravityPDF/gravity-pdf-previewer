@@ -114,7 +114,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 *
 	 * @param WP_REST_Request $request
 	 *
-	 * @return \WP_REST_Response
+	 * @return WP_REST_Response
 	 *
 	 * @since 0.1
 	 */
@@ -150,7 +150,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	}
 
 	/**
-	 *
+	 * Get the randomly-generated ID for the current entry
 	 *
 	 * @return string
 	 *
@@ -161,6 +161,8 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	}
 
 	/**
+	 * Set a randomly-generated ID for the current entry
+	 *
 	 * @since 0.1
 	 */
 	public function set_unique_id() {
