@@ -76,6 +76,27 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	protected $unique_id;
 
 	/**
+	 * @var array
+	 *
+	 * @since 0.1
+	 */
+	protected $form;
+
+	/**
+	 * @var array
+	 *
+	 * @since 0.1
+	 */
+	protected $entry;
+
+	/**
+	 * @var array
+	 *
+	 * @since 0.1
+	 */
+	protected $settings;
+
+	/**
 	 * PdfGeneratorApiResponse constructor.
 	 *
 	 * @param \GFPDF\Model\Model_PDF
@@ -109,12 +130,12 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		$this->set_unique_id();
 
 		try {
-			$form     = $this->get_form( $form_id );
-			$entry    = $this->create_entry( $form );
-			$settings = $this->get_pdf_config( $form, $pdf_id, $field_id );
+			$this->form     = $this->get_form( $form_id );
+			$this->entry    = $this->create_entry( $this->form );
+			$this->settings = $this->get_pdf_config( $this->form, $pdf_id, $field_id );
 
 			/* Try create our PDF and return the Unique ID we assigned to the preview if successful */
-			$this->generate_pdf( $entry, $settings );
+			$this->generate_pdf( $this->entry, $this->settings );
 
 			return rest_ensure_response( [ 'id' => $this->get_unique_id() ] );
 		} catch ( FormNotFound $e ) {
@@ -157,9 +178,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 * @throws Exception If problem occured while generating PDF
 	 */
 	protected function generate_pdf( $entry, $settings ) {
-		add_filter( 'gfpdf_pdf_generator_pre_processing', [ $this, 'change_pdf_save_location' ] );
-		add_filter( 'gfpdf_mpdf_init_class', [ $this, 'add_watermark' ], 10, 4 );
-
+		$this->add_previewer_filters();
 		$pdf = $this->pdf_model->generate_and_save_pdf( $entry, $settings );
 
 		if ( is_wp_error( $pdf ) ) {
@@ -167,6 +186,23 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		}
 
 		return $pdf;
+	}
+
+	/**
+	 * Change the PDF save location and add watermark support to modern templates
+	 * Also add backwards compatibility support for legacy templates
+	 *
+	 * @since 0.1
+	 */
+	protected function add_previewer_filters() {
+		add_filter( 'gfpdf_pdf_generator_pre_processing', [ $this, 'change_pdf_save_location' ] );
+		add_filter( 'gfpdf_mpdf_init_class', [ $this, 'add_watermark' ], 10, 4 );
+
+		/* Handle Legacy Tier 2 templates */
+		add_filter( 'gfpdf_legacy_save_path', [ $this, 'change_legacy_pdf_save_location' ] );
+		add_filter( 'gform_form_post_get_meta_' . $this->form['id'], [ $this, 'override_form_meta' ] );
+		add_filter( 'gfpdf_entry_pre_form_data', [ $this, 'override_entry' ] );
+		add_filter( 'mpdf_import_use', [ $this, 'add_watermark_to_legacy_pdf' ] );
 	}
 
 	/**
@@ -184,6 +220,19 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		$pdf_generator->set_filename( $this->get_unique_id() );
 
 		return $pdf_generator;
+	}
+
+	/**
+	 * Change the PDF save location for legacy PDF templates
+	 *
+	 * @param $path
+	 *
+	 * @return string
+	 *
+	 * @since 0.1
+	 */
+	public function change_legacy_pdf_save_location( $path ) {
+		return $this->pdf_path . $this->get_unique_id() . '/';
 	}
 
 	/**
@@ -206,6 +255,19 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		}
 
 		return $mpdf;
+	}
+
+	/**
+	 * Add watermark support to legacy Tier 2 PDF templates
+	 *
+	 * @param $mpdf
+	 *
+	 * @since 0.1
+	 */
+	public function add_watermark_to_legacy_pdf( $mpdf ) {
+		if ( class_exists( 'gfpdfe_business_plus' ) ) {
+			$this->add_watermark( $mpdf, $this->form, $this->entry, $this->settings );
+		}
 	}
 
 	/**
@@ -355,6 +417,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		$entry = $this->add_upload_support( $entry, $form );
 
 		$entry['date_created'] = current_time( 'mysql', true );
+		$entry['id']           = $this->get_unique_id();
 
 		return $entry;
 	}
@@ -401,5 +464,31 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		}
 
 		return $entry;
+	}
+
+	/**
+	 * Used to set the current preview form when getting the form
+	 *
+	 * @param $form
+	 *
+	 * @return array
+	 *
+	 * @since 0.1
+	 */
+	public function override_form_meta( $form ) {
+		return $this->form;
+	}
+
+	/**
+	 * Used to set the current preview entry when processing the $form_data array
+	 *
+	 * @param $entry
+	 *
+	 * @return array
+	 *
+	 * @since 0.1
+	 */
+	public function override_entry( $entry ) {
+		return $this->entry;
 	}
 }
