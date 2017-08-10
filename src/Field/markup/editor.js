@@ -5,9 +5,11 @@
 
     if (field['pdfwatermarktoggle'] != true) {
       $('#pdf_watermark_container').hide()
+    } else {
+      $('#pdf_watermark_container').show()
     }
 
-    $('#pdf-watermark-setting').click(function () {
+    $('#pdf-watermark-setting').unbind('click').click(function () {
       $('#pdf_watermark_container').slideToggle()
     })
   }
