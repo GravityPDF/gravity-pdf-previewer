@@ -77,13 +77,32 @@ class GFormFieldPreviewer extends GF_Field {
 			include __DIR__ . '/markup/previewer-placeholder.php';
 		} else {
 			$field_id       = $this->id;
-			$pdf_id         = ( isset( $this->pdfpreview ) ) ? $this->pdfpreview : 0;
+			$pdf_id         = ( isset( $this->pdfpreview ) ) ? $this->pdfpreview : $this->get_pdf_id_if_any( $form );
 			$preview_height = ( isset( $this->pdfpreviewheight ) && (int) $this->pdfpreviewheight > 0 ) ? (int) $this->pdfpreviewheight : 600;
 
 			include __DIR__ . '/markup/previewer-wrapper.php';
 		}
 
 		return ob_get_clean();
+	}
+
+	/**
+	 * Returns the first PDF ID, if it exists
+	 *
+	 * @param array $form
+	 *
+	 * @return string
+	 *
+	 * @since 0.2
+	 */
+	protected function get_pdf_id_if_any( $form ) {
+		if ( isset( $form['gfpdf_form_settings'] ) && count( $form['gfpdf_form_settings'] ) > 0 ) {
+			$pdf = reset( $form['gfpdf_form_settings'] );
+
+			return $pdf['id'];
+		}
+
+		return 0;
 	}
 
 	/**
