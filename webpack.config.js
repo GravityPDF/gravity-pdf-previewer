@@ -80,7 +80,8 @@ module.exports = {
 
     new CopyWebpackPlugin([{
       from: 'node_modules/pdfjs-dist-viewer-min/build/minified/',
-      to: __dirname + '/dist/viewer/'
+      to: __dirname + '/dist/viewer/',
+      ignore: [ '*.pdf' ]
     },
       {
         from: 'assets/viewer.html',
