@@ -7,7 +7,6 @@ use GFPDF\Plugins\Previewer\API\PdfGeneratorApiResponse;
 
 use WP_UnitTestCase;
 use WP_REST_Request;
-use GPDFAPI;
 use GFAPI;
 use stdClass;
 
@@ -64,9 +63,11 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 	 */
 	public function setUp() {
 		$this->class = new PdfGeneratorApiResponse(
-			GPDFAPI::get_mvc_class( 'Model_PDF' ),
+			\GPDFAPI::get_mvc_class( 'Model_PDF' ),
 			dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/'
 		);
+
+		$this->class->set_logger( \GPDFAPI::get_log_class() );
 	}
 
 	/**
@@ -148,10 +149,10 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 		$helper_pdf = new Helper_PDF(
 			[ 'id' => 0, 'form_id' => 0 ],
 			[],
-			GPDFAPI::get_form_class(),
-			GPDFAPI::get_data_class(),
-			GPDFAPI::get_misc_class(),
-			GPDFAPI::get_templates_class()
+			\GPDFAPI::get_form_class(),
+			\GPDFAPI::get_data_class(),
+			\GPDFAPI::get_misc_class(),
+			\GPDFAPI::get_templates_class()
 		);
 
 		$this->class->set_unique_id();

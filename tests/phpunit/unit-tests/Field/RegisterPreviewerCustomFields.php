@@ -64,6 +64,7 @@ class TestRegisterPreviewerCustomFields extends WP_UnitTestCase {
 		require_once( GFCommon::get_base_path() . '/tooltips.php' );
 
 		$this->class = new RegisterPreviewerCustomFields();
+		$this->class->set_logger( \GPDFAPI::get_log_class() );
 		$this->class->init();
 	}
 
@@ -88,7 +89,7 @@ class TestRegisterPreviewerCustomFields extends WP_UnitTestCase {
 		$form_id                    = GFAPI::add_form( $form );
 
 		ob_start();
-		$this->class->add_pdf_selector( $form_id );
+		$this->class->add_pdf_selector( 25, $form_id );
 		$html = ob_get_clean();
 
 		$qp     = new Helper_QueryPath();
@@ -110,7 +111,7 @@ class TestRegisterPreviewerCustomFields extends WP_UnitTestCase {
 		$form_id                    = GFAPI::add_form( $form );
 
 		ob_start();
-		$this->class->add_pdf_preview_height( $form_id );
+		$this->class->add_pdf_preview_height( 25 );
 		$html = ob_get_clean();
 
 		$qp     = new Helper_QueryPath();
@@ -131,7 +132,7 @@ class TestRegisterPreviewerCustomFields extends WP_UnitTestCase {
 		$form_id                    = GFAPI::add_form( $form );
 
 		ob_start();
-		$this->class->add_pdf_watermark_support( $form_id );
+		$this->class->add_pdf_watermark_support( 25 );
 		$html = ob_get_clean();
 
 		$qp     = new Helper_QueryPath();

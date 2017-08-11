@@ -65,6 +65,8 @@ class TestPDFViewerApiResponse extends WP_UnitTestCase {
 		                    ->setConstructorArgs( [ dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/' ] )
 		                    ->setMethods( [ 'stream_pdf', 'end' ] )
 		                    ->getMock();
+
+		$this->class->set_logger( \GPDFAPI::get_log_class() );
 	}
 
 	/**

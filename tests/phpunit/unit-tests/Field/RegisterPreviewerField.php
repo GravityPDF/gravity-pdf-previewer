@@ -61,6 +61,7 @@ class TestRegisterPreviewerField extends WP_UnitTestCase {
 	 */
 	public function setUp() {
 		$this->class = new RegisterPreviewerField();
+		$this->class->set_logger( \GPDFAPI::get_log_class() );
 	}
 
 	/**
