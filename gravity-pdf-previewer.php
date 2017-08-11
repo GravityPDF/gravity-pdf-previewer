@@ -8,7 +8,7 @@
  * Author URI:      https://gravitypdf.com
  * Text Domain:     gravity-pdf-previewer
  * Domain Path:     /languages
- * Version:         0.1
+ * Version:         0.2
  */
 
 /**
@@ -42,7 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 */
 
 define( 'GFPDF_PDF_PREVIEWER_FILE', __FILE__ );
-define( 'GFPDF_PDF_PREVIEWER_VERSION', '0.1' );
+define( 'GFPDF_PDF_PREVIEWER_VERSION', '0.2' );
 
 /**
  * Class GPDF_Previewer_Checks
