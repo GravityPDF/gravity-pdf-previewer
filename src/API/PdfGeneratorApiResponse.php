@@ -4,6 +4,7 @@ namespace GFPDF\Plugins\Previewer\API;
 
 use GFPDF\Model\Model_PDF;
 use GFPDF\Helper\Helper_PDF;
+use GFPDF\Helper\Helper_Trait_Logger;
 use GFPDF\Plugins\Previewer\Exceptions\FieldNotFound;
 use GFPDF\Plugins\Previewer\Exceptions\FormNotFound;
 use GFPDF\Plugins\Previewer\Exceptions\PDFConfigNotFound;
@@ -51,6 +52,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package GFPDF\Plugins\Previewer\API
  */
 class PdfGeneratorApiResponse implements CallableApiResponse {
+
+	/*
+	 * Add logging support
+	 *
+	 * @since 0.2
+	 */
+	use Helper_Trait_Logger;
 
 	/**
 	 * @var Model_PDF
@@ -126,6 +134,13 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		$pdf_id   = $request->get_param( 'pid' );
 		$field_id = (int) $request->get_param( 'fid' );
 
+		$this->get_logger()->addNotice( 'Begin generating sample PDF', [
+			'input'    => $input,
+			'form_id'  => $form_id,
+			'pdf_id'   => $pdf_id,
+			'field_id' => $field_id,
+		] );
+
 		/* Assign a unique ID to this request */
 		$this->set_unique_id();
 
@@ -138,13 +153,34 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 			$this->generate_pdf( $this->entry, $this->settings );
 
 			return rest_ensure_response( [ 'id' => $this->get_unique_id() ] );
+
 		} catch ( FormNotFound $e ) {
+			$this->get_logger()->addError( 'Gravity Form not found', [
+				'code'    => $e->getCode(),
+				'message' => $e->getMessage(),
+			] );
+
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
 		} catch ( PDFConfigNotFound $e ) {
+			$this->get_logger()->addError( 'PDF Configuration Not Found', [
+				'code'    => $e->getCode(),
+				'message' => $e->getMessage(),
+			] );
+
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
 		} catch ( PDFNotActive $e ) {
+			$this->get_logger()->addError( 'PDF Configuration Not Active', [
+				'code'    => $e->getCode(),
+				'message' => $e->getMessage(),
+			] );
+
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
 		} catch ( Exception $e ) {
+			$this->get_logger()->addError( 'Generic Error', [
+				'code'    => $e->getCode(),
+				'message' => $e->getMessage(),
+			] );
+
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
 		}
 	}
@@ -221,6 +257,11 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		$pdf_generator->set_path( $this->pdf_path . $this->get_unique_id() . '/' );
 		$pdf_generator->set_filename( $this->get_unique_id() );
 
+		$this->get_logger()->addNotice( 'Change PDF Location / Filename', [
+			'path' => $this->pdf_path,
+			'name' => $this->get_unique_id(),
+		] );
+
 		return $pdf_generator;
 	}
 
@@ -254,6 +295,8 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 			$mpdf->showWatermarkText = true;
 			$mpdf->watermark_font    = $settings['watermark_font'];
 			$mpdf->SetWatermarkText( $settings['watermark_text'] );
+
+			$this->get_logger()->addNotice( 'Enable PDF Watermark Support' );
 		}
 
 		return $mpdf;
@@ -291,6 +334,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 			$settings['watermark_font']   = $field['pdfwatermarkfont'];
 		} catch ( FieldNotFound $e ) {
 			/* do nothing */
+			$this->get_logger()->addWarning( $e->getMessage() );
 		}
 
 		return $settings;

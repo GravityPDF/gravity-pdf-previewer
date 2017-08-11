@@ -2,6 +2,7 @@
 
 namespace GFPDF\Plugins\Previewer\API;
 
+use GFPDF\Helper\Helper_Trait_Logger;
 use WP_REST_Request;
 
 /**
@@ -41,6 +42,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class PdfViewerApiResponse implements CallableApiResponse {
 
+	/*
+	 * Add logging support
+	 *
+	 * @since 0.2
+	 */
+	use Helper_Trait_Logger;
+
 	/**
 	 * @var string
 	 *
@@ -74,8 +82,14 @@ class PdfViewerApiResponse implements CallableApiResponse {
 		$temp_id  = $request->get_param( 'temp_id' );
 		$temp_pdf = $this->pdf_path . $temp_id . '/' . $temp_id . '.pdf';
 
+		$this->get_logger()->addNotice( 'Begin streaming Preview PDF', [
+			'id'  => $temp_id,
+			'pdf' => $temp_pdf,
+		] );
+
 		/* No file found. Trigger error */
 		if ( ! is_file( $temp_pdf ) ) {
+			$this->get_logger()->addError( 'PDF Not Found' );
 			return rest_ensure_response( [ 'error' => 'Requested PDF could not be found' ] );
 		}
 

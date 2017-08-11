@@ -4,6 +4,7 @@ namespace GFPDF\Plugins\Previewer\Field;
 
 use GFPDF\Helper\Helper_Interface_Actions;
 use GFPDF\Helper\Helper_Interface_Filters;
+use GFPDF\Helper\Helper_Trait_Logger;
 use GPDFAPI;
 
 /**
@@ -42,6 +43,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @package GFPDF\Plugins\Previewer\Field
  */
 class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_Interface_Filters {
+
+	/*
+     * Add logging support
+     *
+     * @since 0.2
+     */
+	use Helper_Trait_Logger;
 
 	/**
 	 * Initialise our module
@@ -91,12 +99,14 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	 * Add support for a PDF selector field in the Form Editor
 	 *
 	 * @param init $position
-	 * @param int $form_id
+	 * @param int  $form_id
 	 *
 	 * @since 0.1
 	 */
 	public function add_pdf_selector( $position, $form_id ) {
 		if ( $position === 25 ) {
+			$this->get_logger()->addNotice( 'Add PDF Selector field to form editor' );
+
 			$pdfs              = $this->get_active_pdfs( $form_id );
 			$form_pdf_settings = network_admin_url( 'admin.php?page=gf_edit_forms&view=settings&subview=pdf&id=' . $form_id );
 			include __DIR__ . '/markup/pdf-selector-setting.php';
@@ -124,6 +134,10 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 			return $pdf['active'];
 		} );
 
+		$this->get_logger()->addNotice( 'Active PDFs on form', [
+			'pdfs' => $pdfs,
+		] );
+
 		return $pdfs;
 	}
 
@@ -136,6 +150,8 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	 */
 	public function add_pdf_preview_height( $position ) {
 		if ( $position === 25 ) {
+			$this->get_logger()->addNotice( 'Add PDF Height selector to form editor' );
+
 			include __DIR__ . '/markup/preview-height-setting.php';
 		}
 	}
@@ -149,6 +165,8 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	 */
 	public function add_pdf_watermark_support( $position ) {
 		if ( $position === 25 ) {
+			$this->get_logger()->addNotice( 'Add PDF Watermark fields to form editor' );
+
 			$font_stack = GPDFAPI::get_pdf_fonts();
 			include __DIR__ . '/markup/pdf-watermark-setting.php';
 		}
@@ -160,15 +178,18 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	 * @since 0.1
 	 */
 	public function editor_js() {
+		$this->get_logger()->addNotice( 'Load PDF Preview Editor Javascript' );
+
 		?>
         <script type="text/javascript">
 
           /* Setup default values for our PDF Preview field */
           function SetDefaultValues_pdfpreview (field) {
             field['label'] = <?php echo json_encode( utf8_encode( __( 'PDF Preview', 'gravity-pdf-previewer' ) ) ); ?>;
-            field['pdfpreviewheight'] = "600"
+            field['pdfpreviewheight'] = "600";
             field['pdfwatermarktext'] = <?php echo json_encode( utf8_encode( __( 'SAMPLE', 'gravity-pdf-previewer' ) ) ); ?>;
             field['pdfwatermarkfont'] = <?php echo json_encode( utf8_encode( GPDFAPI::get_plugin_option( 'default_font', 'dejavusanscondensed' ) ) ); ?>;
+
             return field;
           }
 

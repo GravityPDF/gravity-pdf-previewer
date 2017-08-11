@@ -71,18 +71,16 @@ class Bootstrap extends Helper_Abstract_Addon {
 		$pdf_save_path = $data->template_tmp_location . 'previewer/';
 
 		/* Register our classes and pass back up to the parent initialiser */
+		$pdf_generator_api = new PdfGeneratorApiResponse( GPDFAPI::get_mvc_class( 'Model_PDF' ), $pdf_save_path );
+		$pdf_viewer_api    = new PdfViewerApiResponse( $pdf_save_path );
+
 		$classes = array_merge( $classes, [
+			$pdf_generator_api,
+			$pdf_viewer_api,
 			new RegisterPreviewerCustomFields(),
 			new RegisterPreviewerField(),
-
-			new RegisterPdfGeneratorAPIEndpoint(
-				new PdfGeneratorApiResponse(
-					GPDFAPI::get_mvc_class( 'Model_PDF' ),
-					$pdf_save_path
-				)
-			),
-
-			new RegisterPdfViewerAPIEndpoint( new PdfViewerApiResponse( $pdf_save_path ) ),
+			new RegisterPdfGeneratorAPIEndpoint( $pdf_generator_api ),
+			new RegisterPdfViewerAPIEndpoint( $pdf_viewer_api ),
 		] );
 
 		/* Run the setup */
