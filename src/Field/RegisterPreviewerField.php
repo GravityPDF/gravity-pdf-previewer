@@ -2,7 +2,9 @@
 
 namespace GFPDF\Plugins\Previewer\Field;
 
+use GFPDF\Helper\Helper_Trait_Logger;
 use GFPDF\Helper\Helper_Interface_Actions;
+
 use GF_Fields;
 use Exception;
 
@@ -43,6 +45,13 @@ if ( ! defined( 'ABSPATH' ) ) {
  */
 class RegisterPreviewerField implements Helper_Interface_Actions {
 
+	/*
+	 * Add logging support
+	 *
+	 * @since 0.2
+	 */
+	use Helper_Trait_Logger;
+
 	/**
 	 * Initialise our module
 	 *
@@ -52,7 +61,10 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 		try {
 			GF_Fields::register( new GFormFieldPreviewer() );
 		} catch ( Exception $e ) {
-			/* @TODO Log Error */
+			$this->get_logger()->addError( 'Could not register Previewer field with Gravity Forms', [
+				'code'    => $e->getCode(),
+				'message' => $e->getMessage(),
+			] );
 		}
 
 		$this->add_actions();
@@ -76,6 +88,8 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 
 		/* Only include where our preview field is detected */
 		if ( $this->has_previewer_field( $form ) ) {
+
+			$this->get_logger()->addNotice( 'Including Previewer scripts and styles' );
 
 			/* Add our custom JS */
 			wp_enqueue_script(
