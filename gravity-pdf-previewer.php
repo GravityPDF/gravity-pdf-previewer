@@ -86,7 +86,9 @@ class GPDF_Previewer_Checks {
 			return null;
 		}
 
-		require_once __DIR__ . '/src/bootstrap.php';
+		add_action( 'gfpdf_fully_loaded', function() {
+			require_once __DIR__ . '/src/bootstrap.php';
+        } );
 	}
 
 	/**
@@ -106,7 +108,7 @@ class GPDF_Previewer_Checks {
 		}
 
 		/* Throw error */
-		$this->notices[] = sprintf( esc_html__( 'Gravity PDF Version %s or higher is required to use this add-on. Please upgrade Gravity PDF to the latest version.', 'gravity-pdf-previewer' ), $this->required_gravitypdf_version );
+		$this->notices[] = sprintf( esc_html__( 'Gravity PDF Version %s or higher is required to use this add-on. Please install/upgrade Gravity PDF to the latest version.', 'gravity-pdf-previewer' ), $this->required_gravitypdf_version );
 	}
 
 	/**
@@ -136,4 +138,4 @@ class GPDF_Previewer_Checks {
 
 /* Initialise the software */
 $gravitypdf_previewer = new GPDF_Previewer_Checks();
-add_action( 'gfpdf_fully_loaded', [ $gravitypdf_previewer, 'init' ] );
+$gravitypdf_previewer->init();
