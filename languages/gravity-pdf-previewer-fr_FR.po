@@ -1,0 +1,84 @@
+# Copyright (C) 2017 Gravity PDF Previewer
+# This file is distributed under the same license as the Gravity PDF Previewer package.
+msgid ""
+msgstr "Project-Id-Version: Gravity PDF Previewer\nMIME-Version: 1.0\nContent-Type: text/plain; charset=UTF-8\nContent-Transfer-Encoding: 8bit\nX-Poedit-Basepath: ..\nX-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\nX-Poedit-SearchPath-0: .\nX-Poedit-SearchPathExcluded-0: *.js\nX-Poedit-SourceCharset: UTF-8\nPlural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: gravity-pdf-previewer.php:111
+msgid "Gravity PDF Version %s or higher is required to use this add-on. Please install/upgrade Gravity PDF to the latest version."
+msgstr "La version %s ou ultérieure de Gravity PDF est nécessaire pour utiliser cet ajout. Veuillez installer / mettre à jour la version la plus récente de Gravity PDF."
+
+#: gravity-pdf-previewer.php:125
+msgid "Gravity PDF Previewer Installation Problem"
+msgstr "Problème d'installation de la prévisualisation de Gravity PDF"
+
+#: gravity-pdf-previewer.php:128
+msgid "The minimum requirements for the Gravity PDF Previewer plugin have not been met. Please fix the issue(s) below to continue:"
+msgstr "Les conditions minimales nécessaires pour le plugin de prévisualisation de Gravity PDF ne sont pas réunies. Veuillez régler le(s) problème(s) ci-dessous avant de poursuivre :"
+
+#: src/Field/GFormFieldPreviewer.php:59, src/Field/RegisterPreviewerCustomFields.php:188
+msgid "PDF Preview"
+msgstr "Prévisualisation PDF"
+
+#: src/Field/RegisterPreviewerCustomFields.php:91, src/Field/markup/pdf-selector-setting.php:3
+msgid "PDF to Preview"
+msgstr "PDF à prévisualiser "
+
+#: src/Field/RegisterPreviewerCustomFields.php:91
+msgid "Select one of the active PDFs you want the end-user to preview before the form is submitted."
+msgstr "Choisissez l'un des PDF actifs que vous voulez que l'utilisateur final prévisualise avant que le formulaire soit envoyé."
+
+#: src/Field/RegisterPreviewerCustomFields.php:92, src/Field/markup/preview-height-setting.php:3
+msgid "Preview Height"
+msgstr "Hauteur de prévisualisation "
+
+#: src/Field/RegisterPreviewerCustomFields.php:92
+msgid "Set the PDF Preview height the document will be displayed at (in pixels). The default height is 600px."
+msgstr "Fixer la hauteur à laquelle sera affichée la prévisualisation du PDF (en pixels). La hauteur par défaut est de 600 px."
+
+#: src/Field/RegisterPreviewerCustomFields.php:93, src/Field/markup/pdf-watermark-setting.php:2
+msgid "Watermark"
+msgstr "Filigrane"
+
+#: src/Field/RegisterPreviewerCustomFields.php:93
+msgid "Add a diagonal text-based watermark to each page of the PDF Preview and control the font type used."
+msgstr "Ajoutez un filigrane en diagonale à base de texte sur chaque page de la prévisualisation du PDF et contrôlez le type de police utilisé."
+
+#: src/Field/RegisterPreviewerCustomFields.php:190
+msgid "SAMPLE"
+msgstr "ÉCHANTILLON "
+
+#: src/Field/RegisterPreviewerField.php:111
+msgid "Refresh PDF"
+msgstr "Actualiser le PDF"
+
+#: src/Field/RegisterPreviewerField.php:112
+msgid "Loading PDF Preview"
+msgstr "Chargement de prévisualisation du PDF"
+
+#: src/Field/RegisterPreviewerField.php:113
+msgid "There was a problem%sloading the preview."
+msgstr "Il y a eu un problème%sde chargement de la prévisualisation."
+
+#: src/Field/markup/pdf-selector-setting.php:17
+msgid "To use this field you %sneed to create/active a PDF for this form%s."
+msgstr "Pour utiliser ce champ, vous %sdevez créer / activer un PDF pour ce formulaire%s."
+
+#: src/Field/markup/pdf-watermark-setting.php:8
+msgid "Enable Watermark in Preview"
+msgstr "Activer le filigrane dans la prévisualisation"
+
+#: src/Field/markup/pdf-watermark-setting.php:15
+msgid "Watermark Text"
+msgstr "Texte du filigrane"
+
+#: src/Field/markup/pdf-watermark-setting.php:24
+msgid "Watermark Font"
+msgstr "Police du filigrane"
+
+#: src/Field/markup/previewer-placeholder.php:4
+msgid "PDF Document"
+msgstr "Document PDF"
+
+#: src/Field/markup/previewer-placeholder.php:8
+msgid "This is a content placeholder. The PDF Preview is not displayed in the form admin. View the form to preview the PDF."
+msgstr "Ceci est un espace pour du contenu. La prévisualisation du PDF n'est pas affichée dans l'admin du formulaire. Affichez le formulaire pour prévisualiser le PDF."
