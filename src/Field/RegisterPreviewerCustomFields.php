@@ -185,10 +185,10 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 
           /* Setup default values for our PDF Preview field */
           function SetDefaultValues_pdfpreview (field) {
-            field['label'] = <?php echo json_encode( utf8_encode( __( 'PDF Preview', 'gravity-pdf-previewer' ) ) ); ?>;
+            field['label'] = <?php echo json_encode( __( 'PDF Preview', 'gravity-pdf-previewer' ) ); ?>;
             field['pdfpreviewheight'] = "600";
-            field['pdfwatermarktext'] = <?php echo json_encode( utf8_encode( __( 'SAMPLE', 'gravity-pdf-previewer' ) ) ); ?>;
-            field['pdfwatermarkfont'] = <?php echo json_encode( utf8_encode( GPDFAPI::get_plugin_option( 'default_font', 'dejavusanscondensed' ) ) ); ?>;
+            field['pdfwatermarktext'] = <?php echo json_encode( __( 'SAMPLE', 'gravity-pdf-previewer' ) ); ?>;
+            field['pdfwatermarkfont'] = <?php echo json_encode( GPDFAPI::get_plugin_option( 'default_font', 'dejavusanscondensed' ) ); ?>;
 
             return field;
           }
