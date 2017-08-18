@@ -74,9 +74,10 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 	 * @since 1.0
 	 */
 	public function test_response() {
-		echo dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/';
-		touch( dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/test' );
-		$this->assertTrue( is_file( touch( dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/test' ) ) );
+
+		echo dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/test.txt';
+		touch( dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/test.txt' );
+		$this->assertTrue( is_file( dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/test.txt' ) );
 
 		/* Setup test */
 		$_SERVER['HTTP_USER_AGENT'] = 'cli';
