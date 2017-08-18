@@ -137,5 +137,7 @@ class GPDF_Previewer_Checks {
 }
 
 /* Initialise the software */
-$gravitypdf_previewer = new GPDF_Previewer_Checks();
-$gravitypdf_previewer->init();
+add_action( 'plugins_loaded', function() {
+	$gravitypdf_previewer = new GPDF_Previewer_Checks();
+	$gravitypdf_previewer->init();
+} );
