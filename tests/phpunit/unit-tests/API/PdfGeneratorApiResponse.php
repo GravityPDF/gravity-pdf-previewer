@@ -74,6 +74,10 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 	 * @since 1.0
 	 */
 	public function test_response() {
+		echo dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/';
+		touch( dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/test' );
+		$this->assertTrue( is_file( touch( dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/test' ) ) );
+
 		/* Setup test */
 		$_SERVER['HTTP_USER_AGENT'] = 'cli';
 		$form                       = json_decode( trim( file_get_contents( dirname( __FILE__ ) . '/../../json/all-form-fields.json' ) ), true );
@@ -107,8 +111,6 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 		/* Test PDF actually generates */
 		$request->set_param( 'pid', '555ad84787d7e' );
 		$response = $this->class->response( $request );
-
-		print_r($response->data);
 
 		$this->assertArrayHasKey( 'id', $response->data );
 
