@@ -107,6 +107,9 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 		/* Test PDF actually generates */
 		$request->set_param( 'pid', '555ad84787d7e' );
 		$response = $this->class->response( $request );
+
+		print_r($response->data);
+
 		$this->assertArrayHasKey( 'id', $response->data );
 
 		/* Cleanup */
