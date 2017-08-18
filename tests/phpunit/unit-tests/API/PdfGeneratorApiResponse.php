@@ -75,10 +75,6 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 	 */
 	public function test_response() {
 
-		echo dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/test.txt';
-		touch( dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/test.txt' );
-		$this->assertTrue( is_file( dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/test.txt' ) );
-
 		/* Setup test */
 		$_SERVER['HTTP_USER_AGENT'] = 'cli';
 		$form                       = json_decode( trim( file_get_contents( dirname( __FILE__ ) . '/../../json/all-form-fields.json' ) ), true );
@@ -117,6 +113,8 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 
 		/* Cleanup */
 		GFAPI::delete_form( $form_id );
+		@unlink( dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/' . $response->data['id'] . '/' . $response->data['id'] . '.pdf' );
+		@rmdir( dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/' . $response->data['id'] );
 	}
 
 	/**

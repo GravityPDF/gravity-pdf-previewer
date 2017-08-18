@@ -12,6 +12,8 @@ DB_HOST=${4-localhost}
 WP_VERSION=${5-latest}
 SKIP_DB_CREATE=${6-false}
 
+chmod 777 ${PWD}/tmp/
+
 WP_TESTS_DIR="${PWD}/tmp/wordpress-tests-lib"
 WP_CORE_DIR="${PWD}/tmp/wordpress/"
 
