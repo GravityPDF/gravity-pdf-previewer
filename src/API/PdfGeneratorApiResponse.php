@@ -459,6 +459,9 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 * @since 0.1
 	 */
 	protected function create_entry( $form ) {
+		do_action( 'gform_pre_submission', $form );
+		do_action( 'gform_pre_submission_' . $form['id'], $form );
+
 		$entry = GFFormsModel::create_lead( $form );
 		$entry = $this->add_upload_support( $entry, $form );
 
