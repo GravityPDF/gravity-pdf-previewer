@@ -480,6 +480,8 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		$entry['date_created'] = current_time( 'mysql', true );
 		$entry['id']           = $this->get_unique_id();
 
+		gform_delete_meta( $entry['id'] );
+
 		return $entry;
 	}
 
