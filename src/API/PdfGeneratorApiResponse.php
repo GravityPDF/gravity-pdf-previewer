@@ -366,7 +366,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 */
 	protected function get_pdf_preview_field( $form, $field_id ) {
 		foreach ( $form['fields'] as $field ) {
-			if ( $field->id === $field_id && $field->get_input_type() === 'pdfpreview' ) {
+			if ( $field->id === $field_id && $field->type === 'pdfpreview' ) {
 				return $field;
 			}
 		}
