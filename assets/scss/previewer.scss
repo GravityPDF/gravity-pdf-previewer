@@ -59,12 +59,12 @@
     text-align: center;
 
     img {
-      display: block;
+      display: block !important;
       margin: 5px auto;
     }
 
     .gpdf-manually-load-preview {
-      display: block;
+      display: block !important;
       margin: 0;
       float: none;
     }
