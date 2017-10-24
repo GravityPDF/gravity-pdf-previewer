@@ -128,6 +128,8 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 */
 	public function response( WP_REST_Request $request ) {
 
+		ob_start();
+
 		/* Get the user form data sent via the body params, the form ID and the PDF ID */
 		$input    = $request->get_body_params();
 		$form_id  = ( isset( $input['gform_submit'] ) ) ? (int) $input['gform_submit'] : 0;
@@ -152,6 +154,8 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 			/* Try create our PDF and return the Unique ID we assigned to the preview if successful */
 			$this->generate_pdf( $this->entry, $this->settings );
 
+			ob_end_clean();
+
 			return rest_ensure_response( [ 'id' => $this->get_unique_id() ] );
 
 		} catch ( FormNotFound $e ) {
@@ -160,12 +164,16 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 				'message' => $e->getMessage(),
 			] );
 
+			ob_end_clean();
+
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
 		} catch ( PDFConfigNotFound $e ) {
 			$this->get_logger()->addError( 'PDF Configuration Not Found', [
 				'code'    => $e->getCode(),
 				'message' => $e->getMessage(),
 			] );
+
+			ob_end_clean();
 
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
 		} catch ( PDFNotActive $e ) {
@@ -174,12 +182,16 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 				'message' => $e->getMessage(),
 			] );
 
+			ob_end_clean();
+
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
 		} catch ( Exception $e ) {
 			$this->get_logger()->addError( 'Generic Error', [
 				'code'    => $e->getCode(),
 				'message' => $e->getMessage(),
 			] );
+
+			ob_end_clean();
 
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
 		}
@@ -459,6 +471,9 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 * @since 0.1
 	 */
 	protected function create_entry( $form ) {
+		do_action( 'gform_pre_submission', $form );
+		do_action( 'gform_pre_submission_' . $form['id'], $form );
+
 		$entry = GFFormsModel::create_lead( $form );
 		$entry = $this->add_upload_support( $entry, $form );
 
