@@ -51,6 +51,26 @@ class GFormFieldPreviewer extends GF_Field {
 	public $type = 'pdfpreview';
 
 	/**
+	 * Mark this is a displayOnly field to prevent display in some of the settings
+	 *
+	 * @var bool
+	 *
+	 * @since 1.1
+	 */
+	public $displayOnly = true;
+
+	/**
+	 * Mask this field as a HTML field to prevent public display
+	 *
+	 * @return string
+	 *
+	 * @since 1.1
+	 */
+	public function get_input_type() {
+		return 'html';
+	}
+
+	/**
 	 * @return string
 	 *
 	 * @since 0.1
@@ -136,16 +156,5 @@ class GFormFieldPreviewer extends GF_Field {
 			'group' => 'advanced_fields',
 			'text'  => $this->get_form_editor_field_title(),
 		];
-	}
-
-	/**
-	 * Enable Conditional Logic
-	 *
-	 * @return bool
-	 *
-	 * @since 0.1
-	 */
-	public function is_conditional_logic_supported() {
-		return true;
 	}
 }
