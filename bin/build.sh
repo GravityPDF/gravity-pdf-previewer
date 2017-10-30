@@ -6,7 +6,7 @@ if [ $# -lt 1 ]; then
 fi
 
 VERSION=$1
-BRANCH=${2-master}
+BRANCH=${2-development}
 PACKAGE_DIR="./tmp/package/${VERSION}"
 
 # Create the working directory
