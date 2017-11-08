@@ -422,7 +422,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 
 		/* Remove ignored fields and display-only fields */
 		$form['fields'] = array_filter( $form['fields'], function( $field ) use ( $ignore_types ) {
-			return ! ( $field->displayOnly || in_array( $field->get_input_type(), $ignore_types ) );
+			return ! ( in_array( $field->get_input_type(), $ignore_types ) );
 		} );
 
 		$form['fields'] = array_values( $form['fields'] );
