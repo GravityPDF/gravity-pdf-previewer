@@ -43,6 +43,11 @@
   }
 }
 
+/* Fix Gravity Flow display issue */
+.gravityflow_workflow_wrap .gpdf-previewer-wrapper .gpdf-manually-load-preview {
+  margin-top: 5px;
+}
+
 /*
  * The Previewer Styles used when the PDF is being loaded
  */
