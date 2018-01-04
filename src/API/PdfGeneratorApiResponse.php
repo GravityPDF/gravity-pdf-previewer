@@ -13,6 +13,7 @@ use GFPDF\Plugins\Previewer\Exceptions\PDFNotActive;
 use WP_REST_Request;
 use GFFormsModel;
 use GFAPI;
+use GFCache;
 use GPDFAPI;
 use Exception;
 
@@ -130,11 +131,15 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 
 		ob_start();
 
+		do_action( 'gfpdf_previewer_start_pdf_generation', $request );
+
 		/* Get the user form data sent via the body params, the form ID and the PDF ID */
 		$input    = $request->get_body_params();
-		$form_id  = ( isset( $input['gform_submit'] ) ) ? (int) $input['gform_submit'] : 0;
 		$pdf_id   = $request->get_param( 'pid' );
 		$field_id = (int) $request->get_param( 'fid' );
+
+		$form_id = ( isset( $input['gform_submit'] ) ) ? (int) $input['gform_submit'] : 0;
+		$form_id = apply_filters( 'gfpdf_previewer_form_id', $form_id, $input, $request );
 
 		$this->get_logger()->addNotice( 'Begin generating sample PDF', [
 			'input'    => $input,
@@ -148,11 +153,13 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 
 		try {
 			$this->form     = $this->get_form( $form_id );
-			$this->entry    = $this->create_entry( $this->form );
 			$this->settings = $this->get_pdf_config( $this->form, $pdf_id, $field_id );
+			$this->entry    = apply_filters( 'gfpdf_previewer_created_entry', $this->create_entry( $this->form ), $this->form, $this->settings, $input, $request );
 
 			/* Try create our PDF and return the Unique ID we assigned to the preview if successful */
 			$this->generate_pdf( $this->entry, $this->settings );
+
+			do_action( 'gfpdf_previewer_end_pdf_generation', $request, $this->form, $this->entry, $this->settings, $input );
 
 			ob_end_clean();
 
@@ -481,6 +488,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		$entry['id']           = $this->get_unique_id();
 
 		gform_delete_meta( $entry['id'] );
+		GFCache::flush();
 
 		return $entry;
 	}
