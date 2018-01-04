@@ -62,12 +62,35 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 	 * @since 0.1
 	 */
 	public function setUp() {
+		global $gfpdf;
+
 		$this->class = new PdfGeneratorApiResponse(
 			\GPDFAPI::get_mvc_class( 'Model_PDF' ),
 			dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/'
 		);
 
 		$this->class->set_logger( \GPDFAPI::get_log_class() );
+
+		$fonts = glob( dirname( __FILE__ ) . '/../../fonts/' . '*.[tT][tT][fF]' );
+		$fonts = ( is_array( $fonts ) ) ? $fonts : [];
+
+		foreach ( $fonts as $font ) {
+			$font_name = basename( $font );
+			@copy( $font, $gfpdf->data->template_font_location . $font_name );
+		}
+	}
+
+	public function tearDown() {
+		global $gfpdf;
+
+		$fonts = glob( $gfpdf->data->template_font_location . '*.[tT][tT][fF]' );
+		$fonts = ( is_array( $fonts ) ) ? $fonts : [];
+
+		foreach ( $fonts as $font ) {
+			@unlink( $font );
+		}
+
+		parent::tearDown();
 	}
 
 	/**
