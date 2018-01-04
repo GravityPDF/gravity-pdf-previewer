@@ -49,15 +49,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class GravityFlow implements Helper_Interface_Filters, Helper_Interface_Actions {
 
 	/**
-	 * Determine if the GraivtyFlow workflow is currently underway
-	 *
-	 * @var bool
-	 *
-	 * @since 1.1
-	 */
-	protected $doing_workflow = false;
-
-	/**
 	 * Holds the Gravity Flow Entry Editor once initialised
 	 *
 	 * @var null
