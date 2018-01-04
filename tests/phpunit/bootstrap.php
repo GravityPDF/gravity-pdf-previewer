@@ -65,6 +65,9 @@ class GravityPDF_Previewer_Unit_Tests_Bootstrap {
 	 * @since 4.0
 	 */
 	public function load() {
+		/* Disable deprecated warnings */
+		error_reporting(E_ALL ^ E_DEPRECATED);
+
 		require_once $this->plugin_dir . '/tmp/gravityforms/gravityforms.php';
 		require_once $this->plugin_dir . '/tmp/gravity-forms-pdf-extended/pdf.php';
 
