@@ -13,7 +13,7 @@
 
 /**
  * @package     Gravity PDF Previewer
- * @copyright   Copyright (c) 2017, Blue Liquid Designs
+ * @copyright   Copyright (c) 2018, Blue Liquid Designs
  * @license     https://opensource.org/licenses/GPL-3.0 GNU Public License
  * @since       0.1
  */
@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 /*
     This file is part of Gravity PDF Previewer.
 
-    Copyright (C) 2017, Blue Liquid Designs
+    Copyright (C) 2018, Blue Liquid Designs
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License version 3 as published
