@@ -234,7 +234,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 *
 	 * @throws Exception If problem occured while generating PDF
 	 */
-	protected function generate_pdf( $entry, $settings ) {
+	public function generate_pdf( $entry, $settings ) {
 		$this->add_previewer_filters();
 		$pdf = $this->pdf_model->generate_and_save_pdf( $entry, $settings );
 
@@ -371,7 +371,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 *
 	 * @since 0.1
 	 */
-	protected function get_pdf_preview_field( $form, $field_id ) {
+	public function get_pdf_preview_field( $form, $field_id ) {
 		foreach ( $form['fields'] as $field ) {
 			if ( $field->id === $field_id && $field->type === 'pdfpreview' ) {
 				return $field;
@@ -411,7 +411,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 *
 	 * @since 0.1
 	 */
-	protected function get_form( $form_id ) {
+	public function get_form( $form_id ) {
 
 		$form = GFAPI::get_form( $form_id );
 
@@ -477,7 +477,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 *
 	 * @since 0.1
 	 */
-	protected function create_entry( $form ) {
+	public function create_entry( $form ) {
 		do_action( 'gform_pre_submission', $form );
 		do_action( 'gform_pre_submission_' . $form['id'], $form );
 
