@@ -482,6 +482,8 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		do_action( 'gform_pre_submission_' . $form['id'], $form );
 
 		$entry = GFFormsModel::create_lead( $form );
+
+		$entry = $this->fix_upload_encoding( $entry, $form );
 		$entry = $this->add_upload_support( $entry, $form );
 
 		$entry['date_created'] = current_time( 'mysql', true );
@@ -494,47 +496,139 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	}
 
 	/**
-	 * Handle upload fields so they show up in the PDF (mostly) correctly
-	 *
-	 * @Internal The filename will be incorrect as its stored in a tmp directory
+	 * The file upload fields can be double json_encoded, so we'll decode the value if needed
 	 *
 	 * @param array $entry
+	 * @param array $form
 	 *
 	 * @return array
 	 *
-	 * @since    0.1
+	 * @since 1.1
 	 */
-	protected function add_upload_support( $entry ) {
-
-		if ( isset( $_POST['gform_uploaded_files'] ) ) {
-			$tmp_path = GFFormsModel::get_upload_path( $entry['form_id'] ) . '/tmp/';
-			$tmp_url  = GFFormsModel::get_upload_url( $entry['form_id'] ) . '/tmp/';
-
-			$field_files_array = (array) json_decode( stripslashes( $_POST['gform_uploaded_files'] ), true );
-
-			foreach ( $field_files_array as $key => $field_files ) {
-				$field_id = explode( '_', $key )[1];
-
-				if ( is_array( $field_files ) ) {
-					$files = [];
-					foreach ( $field_files as $file ) {
-						if ( is_file( $tmp_path . $file['temp_filename'] ) ) {
-							$files[] = $tmp_url . $file['temp_filename'];
-						}
-					}
-
-					$entry[ $field_id ] = json_encode( $files );
-				} else {
-					$single_image_tmp_name = $_POST['gform_unique_id'] . '_' . $key . '.' . pathinfo( $field_files, PATHINFO_EXTENSION );
-
-					if ( is_file( $tmp_path . $single_image_tmp_name ) ) {
-						$entry[ $field_id ] = $tmp_url . $single_image_tmp_name;
-					}
+	protected function fix_upload_encoding( $entry, $form ) {
+		foreach ( $form['fields'] as $field ) {
+			if ( $field->get_input_type() === 'fileupload' || $field->get_input_type() === 'post_image' ) {
+				$field_key = $field->id;
+				if ( isset( $entry[ $field_key ] ) && strpos( $entry[ $field_key ], '\\\\\\/' ) !== false ) {
+					$entry[ $field_key ] = json_decode( $entry[ $field_key ] );
 				}
 			}
 		}
 
 		return $entry;
+	}
+
+	/**
+	 * Handle upload fields so they show up in the PDF (mostly) correctly
+	 *
+	 * @Internal The filename will be incorrect as its stored in a tmp directory
+	 *
+	 * @param array $entry
+	 * @param array $form
+	 *
+	 * @return array
+	 *
+	 * @since    0.1
+	 */
+	protected function add_upload_support( $entry, $form ) {
+
+		if ( isset( $_POST['gform_uploaded_files'] ) ) {
+			$existing_entry_id = apply_filters( 'gfpdf_previewer_entry_id', rgpost( 'lid' ), $form, $entry );
+
+			$db_entry          = ( ! empty( $existing_entry_id ) ) ? GFAPI::get_entry( $existing_entry_id ) : null;
+			$field_files_array = (array) json_decode( stripslashes( $_POST['gform_uploaded_files'] ), true );
+
+			foreach ( $form['fields'] as $field ) {
+				if ( $field->get_input_type() === 'fileupload' || $field->get_input_type() === 'post_image' ) {
+					$method = ( ! $field->multipleFiles ) ? 'update_single_file_upload_field' : 'update_multi_file_upload_field';
+					$entry  = $this->$method( $entry, $field, $field_files_array, $db_entry );
+				}
+			}
+		}
+
+		return $entry;
+	}
+
+	/**
+	 * Updates the current entry with the correct single file upload information
+	 *
+	 * @param array      $entry    The Gravity Forms entry generated from $_POST data
+	 * @param array      $field    The current upload field being processed
+	 * @param array      $files    The newly-uploaded files
+	 * @param array|null $db_entry The existing DB entry, if any
+	 *
+	 * @return array
+	 *
+	 * @since 1.1
+	 */
+	protected function update_single_file_upload_field( $entry, $field, $files, $db_entry = null ) {
+		list( $tmp_path, $tmp_url ) = $this->get_tmp_info( $entry['form_id'] );
+
+		$input                 = 'input_' . $field->id;
+		$single_image_tmp_name = rgpost( 'gform_unique_id' ) . '_' . $input . '.' . pathinfo( $files[ $input ], PATHINFO_EXTENSION );
+
+		if ( is_file( $tmp_path . $single_image_tmp_name ) ) {
+			$entry[ $field->id ] = $tmp_url . $single_image_tmp_name;
+		} elseif ( ! empty( $db_entry ) && isset( $db_entry[ $field->id ] ) ) {
+			$entry[ $field->id ] = $db_entry[ $field->id ];
+		}
+
+		return $entry;
+	}
+
+	/**
+	 * Updates the current entry with the correct multi file upload information
+	 *
+	 * @param array      $entry    The Gravity Forms entry generated from $_POST data
+	 * @param array      $field    The current upload field being processed
+	 * @param array      $files    The newly-uploaded files
+	 * @param array|null $db_entry The existing DB entry, if any
+	 *
+	 * @return array
+	 *
+	 * @since 1.1
+	 */
+	protected function update_multi_file_upload_field( $entry, $field, $files, $db_entry = null ) {
+		list( $tmp_path, $tmp_url ) = $this->get_tmp_info( $entry['form_id'] );
+
+		$value = ( ! empty( $db_entry ) && isset( $db_entry[ $field->id ] ) ) ? $db_entry[ $field->id ] : '';
+
+		$input   = 'input_' . $field->id;
+		$uploads = [];
+
+		if ( isset( $files[ $input ] ) ) {
+			foreach ( $files[ $input ] as $file ) {
+				if ( is_file( $tmp_path . $file['temp_filename'] ) ) {
+					$uploads[] = $tmp_url . $file['temp_filename'];
+				}
+			}
+		}
+
+		/* Merge the DB upload field with the new uploaded files */
+		if ( ! empty( $value ) ) {
+			$value   = json_decode( $value, true );
+			$uploads = array_merge( $value, $uploads );
+		}
+
+		$entry[ $field->id ] = json_encode( $uploads );
+
+		return $entry;
+	}
+
+	/**
+	 * Returns the Gravity Forms tmp upload path and URL as an array
+	 *
+	 * @param int $form_id
+	 *
+	 * @return array
+	 *
+	 * @since 1.1
+	 */
+	protected function get_tmp_info( $form_id ) {
+		return [
+			GFFormsModel::get_upload_path( $form_id ) . '/tmp/',
+			GFFormsModel::get_upload_url( $form_id ) . '/tmp/',
+		];
 	}
 
 	/**
