@@ -84,6 +84,7 @@ class GravityFlow implements Helper_Interface_Filters, Helper_Interface_Actions 
 		add_filter( 'gform_entry_field_value', [ $this, 'generate_preview_markup' ], 10, 4 );
 		add_filter( 'gfpdf_previewer_created_entry', [ $this, 'merge_gravityflow_entry_data' ], 10, 4 );
 		add_filter( 'gfpdf_previewer_form_id', [ $this, 'set_form_id' ], 10, 2 );
+		add_filter( 'gfpdf_previewer_entry_id', [ $this, 'set_entry_id' ], 10, 3 );
 		add_filter( 'gravityflow_workflow_detail_display_field', [ $this, 'override_previewer_field_display' ], 10, 2 );
 	}
 
@@ -196,6 +197,24 @@ class GravityFlow implements Helper_Interface_Filters, Helper_Interface_Actions 
 		}
 
 		return $form_id;
+	}
+
+	/**
+	 * Use the correct entry ID when using Gravity Flow
+	 *
+	 * @param int|false $entry_id
+	 *
+	 * @return int
+	 *
+	 * @since 1.1
+	 */
+	public function set_entry_id( $entry_id ) {
+		if ( isset( $input['gravityflow_submit'] ) && isset( $_POST['gform_field_values'] ) ) {
+			parse_str( $_POST['gform_field_values'], $field_values );
+			$entry_id = ( isset( $field_values['id'] ) ) ? $field_values['id'] : '';
+		}
+
+		return $entry_id;
 	}
 
 	/**
