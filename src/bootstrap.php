@@ -8,6 +8,7 @@ use GFPDF\Plugins\Previewer\Field\RegisterPreviewerCustomFields;
 use GFPDF\Plugins\Previewer\API\RegisterPdfGeneratorAPIEndpoint;
 use GFPDF\Plugins\Previewer\API\RegisterPdfViewerAPIEndpoint;
 use GFPDF\Plugins\Previewer\API\PdfGeneratorApiResponse;
+use GFPDF\Plugins\Previewer\Field\SkipPdfPreviewerField;
 use GFPDF\Plugins\Previewer\ThirdParty\GravityFlow;
 
 use GFPDF\Helper\Licensing\EDD_SL_Plugin_Updater;
@@ -82,6 +83,7 @@ class Bootstrap extends Helper_Abstract_Addon {
 			new RegisterPreviewerField(),
 			new RegisterPdfGeneratorAPIEndpoint( $pdf_generator_api ),
 			new RegisterPdfViewerAPIEndpoint( $pdf_viewer_api ),
+			new SkipPdfPreviewerField(),
 			new GravityFlow(),
 		] );
 
