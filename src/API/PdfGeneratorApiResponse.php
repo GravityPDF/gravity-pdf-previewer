@@ -567,7 +567,8 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		$input                 = 'input_' . $field->id;
 		$single_image_tmp_name = rgpost( 'gform_unique_id' ) . '_' . $input . '.' . pathinfo( $files[ $input ], PATHINFO_EXTENSION );
 
-		if ( is_file( $tmp_path . $single_image_tmp_name ) ) {
+		$override = apply_filters( 'gfpdf_previewer_skip_file_exists_check', false, $entry, $field, $files, $db_entry );
+		if ( $override || is_file( $tmp_path . $single_image_tmp_name ) ) {
 			$entry[ $field->id ] = $tmp_url . $single_image_tmp_name;
 		} elseif ( ! empty( $db_entry ) && isset( $db_entry[ $field->id ] ) ) {
 			$entry[ $field->id ] = $db_entry[ $field->id ];
@@ -595,10 +596,11 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 
 		$input   = 'input_' . $field->id;
 		$uploads = [];
+		$override = apply_filters( 'gfpdf_previewer_skip_file_exists_check', false, $entry, $field, $files, $db_entry );
 
 		if ( isset( $files[ $input ] ) ) {
 			foreach ( $files[ $input ] as $file ) {
-				if ( is_file( $tmp_path . $file['temp_filename'] ) ) {
+				if ( $override || is_file( $tmp_path . $file['temp_filename'] ) ) {
 					$uploads[] = $tmp_url . $file['temp_filename'];
 				}
 			}
