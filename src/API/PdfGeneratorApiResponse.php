@@ -152,6 +152,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		$this->set_unique_id();
 
 		try {
+			$this->setup_doing_previewer_constant();
 			$this->form     = $this->get_form( $form_id );
 			$this->settings = $this->get_pdf_config( $this->form, $pdf_id, $field_id );
 			$this->entry    = apply_filters( 'gfpdf_previewer_created_entry', $this->create_entry( $this->form ), $this->form, $this->settings, $input, $request );
@@ -631,6 +632,17 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 			GFFormsModel::get_upload_path( $form_id ) . '/tmp/',
 			GFFormsModel::get_upload_url( $form_id ) . '/tmp/',
 		];
+	}
+
+	/**
+	 * Developers to check for this constant to change their PDF template output
+	 *
+	 * @since 1.1
+	 */
+	protected function setup_doing_previewer_constant() {
+		if( ! defined( 'DOING_PDF_PREVIEWER' ) ) {
+			define( 'DOING_PDF_PREVIEWER', true );
+		}
 	}
 
 	/**
