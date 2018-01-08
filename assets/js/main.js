@@ -43,6 +43,8 @@ $(document).bind('gform_post_render', function (e, formId) {
     let fieldId = parseInt($(this).data('field-id'))
     let pdfId = $(this).data('pdf-id')
     let previewerHeight = parseInt($(this).data('previewer-height'))
+    let download = (typeof $(this).data('download') !== 'undefined') ? parseInt($(this).data('download')) : 0;
+    console.log(download)
 
     /* Continue to next matched element if no PDF ID exists */
     if (pdfId == 0) {
@@ -56,7 +58,8 @@ $(document).bind('gform_post_render', function (e, formId) {
     let viewer = new Viewer({
       viewerHeight: previewerHeight + 'px',
       viewer: PdfPreviewerConstants.viewerUrl,
-      documentUrl: PdfPreviewerConstants.documentUrl
+      documentUrl: PdfPreviewerConstants.documentUrl,
+      download
     })
 
     let previewer = new Generator({

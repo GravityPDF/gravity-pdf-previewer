@@ -38,6 +38,10 @@
     $("#pdf_watermark_font").trigger('change')
   }
 
+  function setupDownload (field) {
+    $('#pdf-download-setting').prop('checked', field['pdfdownload'] == true)
+  }
+
   $(document).bind("gform_load_field_settings", function (event, field) {
     if (field.type === 'pdfpreview') {
       setupPdfSelector(field)
@@ -45,6 +49,7 @@
       setupWatermarkToggle(field)
       setupWatermarkText(field)
       setupWatermarkFont(field)
+      setupDownload(field)
     }
   })
 })(jQuery)
