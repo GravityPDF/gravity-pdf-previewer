@@ -234,7 +234,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 *
 	 * @throws Exception If problem occured while generating PDF
 	 */
-	protected function generate_pdf( $entry, $settings ) {
+	public function generate_pdf( $entry, $settings ) {
 		$this->add_previewer_filters();
 		$pdf = $this->pdf_model->generate_and_save_pdf( $entry, $settings );
 
@@ -371,7 +371,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 *
 	 * @since 0.1
 	 */
-	protected function get_pdf_preview_field( $form, $field_id ) {
+	public function get_pdf_preview_field( $form, $field_id ) {
 		foreach ( $form['fields'] as $field ) {
 			if ( $field->id === $field_id && $field->type === 'pdfpreview' ) {
 				return $field;
@@ -411,7 +411,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 *
 	 * @since 0.1
 	 */
-	protected function get_form( $form_id ) {
+	public function get_form( $form_id ) {
 
 		$form = GFAPI::get_form( $form_id );
 
@@ -477,7 +477,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 *
 	 * @since 0.1
 	 */
-	protected function create_entry( $form ) {
+	public function create_entry( $form ) {
 		do_action( 'gform_pre_submission', $form );
 		do_action( 'gform_pre_submission_' . $form['id'], $form );
 
@@ -567,7 +567,8 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		$input                 = 'input_' . $field->id;
 		$single_image_tmp_name = rgpost( 'gform_unique_id' ) . '_' . $input . '.' . pathinfo( $files[ $input ], PATHINFO_EXTENSION );
 
-		if ( is_file( $tmp_path . $single_image_tmp_name ) ) {
+		$override = apply_filters( 'gfpdf_previewer_skip_file_exists_check', false, $entry, $field, $files, $db_entry );
+		if ( $override || is_file( $tmp_path . $single_image_tmp_name ) ) {
 			$entry[ $field->id ] = $tmp_url . $single_image_tmp_name;
 		} elseif ( ! empty( $db_entry ) && isset( $db_entry[ $field->id ] ) ) {
 			$entry[ $field->id ] = $db_entry[ $field->id ];
@@ -595,10 +596,11 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 
 		$input   = 'input_' . $field->id;
 		$uploads = [];
+		$override = apply_filters( 'gfpdf_previewer_skip_file_exists_check', false, $entry, $field, $files, $db_entry );
 
 		if ( isset( $files[ $input ] ) ) {
 			foreach ( $files[ $input ] as $file ) {
-				if ( is_file( $tmp_path . $file['temp_filename'] ) ) {
+				if ( $override || is_file( $tmp_path . $file['temp_filename'] ) ) {
 					$uploads[] = $tmp_url . $file['temp_filename'];
 				}
 			}

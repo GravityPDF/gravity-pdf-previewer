@@ -4,6 +4,7 @@ namespace GFPDF\Tests\Previewer;
 
 use GFPDF\Helper\Helper_PDF;
 use GFPDF\Plugins\Previewer\API\PdfGeneratorApiResponse;
+use GFPDF\Plugins\Previewer\Exceptions\FieldNotFound;
 
 use WP_UnitTestCase;
 use WP_REST_Request;
@@ -131,6 +132,100 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 		$request->set_param( 'pid', '555ad84787d7e' );
 		$response = $this->class->response( $request );
 		$this->assertArrayHasKey( 'id', $response->data );
+
+		/* Cleanup */
+		GFAPI::delete_form( $form_id );
+	}
+
+	/**
+	 * @since 1.1
+	 */
+	public function test_generate_pdf() {
+		$_SERVER['HTTP_USER_AGENT'] = 'cli';
+		$form_object                = json_decode( trim( file_get_contents( dirname( __FILE__ ) . '/../../json/all-form-fields.json' ) ), true );
+
+		$form_id = GFAPI::add_form( $form_object );
+		$form    = GFAPI::get_form( $form_id );
+
+		$entry    = $this->class->create_entry( $form );
+		$settings = $this->class->get_pdf_config( $form, '555ad84787d7e' );
+
+		$this->class->set_unique_id();
+		$pdf_path = $this->class->generate_pdf( $entry, $settings );
+
+		$this->assertSame(
+			$this->class->change_legacy_pdf_save_location( '' ) . $this->class->get_unique_id() . '.pdf',
+			$pdf_path
+		);
+
+		/* Cleanup */
+		GFAPI::delete_form( $form_id );
+	}
+
+	/**
+	 * @since 1.1
+	 */
+	public function test_get_pdf_preview_field() {
+		$_SERVER['HTTP_USER_AGENT'] = 'cli';
+		$form_object                = json_decode( trim( file_get_contents( dirname( __FILE__ ) . '/../../json/all-form-fields.json' ) ), true );
+
+		$form_id = GFAPI::add_form( $form_object );
+		$form    = GFAPI::get_form( $form_id );
+
+		/* Run a failed test */
+		try {
+			$this->class->get_pdf_preview_field( $form, 1 );
+		} catch ( FieldNotFound $e ) {
+
+		}
+
+		$this->assertEquals( 'PDF Preview field "1" not found in form "' . $form_id . '"', $e->getMessage() );
+
+		/* Run a successful test */
+		$field = $this->class->get_pdf_preview_field( $form, 73 );
+
+		$this->assertEquals( 'PDF Preview', $field->label );
+
+		/* Cleanup */
+		GFAPI::delete_form( $form_id );
+	}
+
+	/**
+	 * @since 1.1
+	 */
+	public function test_create_entry() {
+		$_SERVER['HTTP_USER_AGENT'] = 'cli';
+		$form_object                = json_decode( trim( file_get_contents( dirname( __FILE__ ) . '/../../json/post-data-form.json' ) ), true );
+
+		$form_id = GFAPI::add_form( $form_object );
+		$form    = GFAPI::get_form( $form_id );
+
+		$_POST = json_decode( trim( file_get_contents( dirname( __FILE__ ) . '/../../json/post-data.json' ) ), true );
+		add_filter( 'gfpdf_previewer_skip_file_exists_check', '__return_true' );
+		$entry = $this->class->create_entry( $form );
+		remove_filter( 'gfpdf_previewer_skip_file_exists_check', '__return_true' );
+
+		/* Check the results */
+		$this->assertEquals( 'First', $entry['9.3'] );
+		$this->assertEquals( 'Last', $entry['9.6'] );
+		$this->assertEquals( 'test@test.com', $entry['10'] );
+		$this->assertEquals( '123 Fake St', $entry['11.1'] );
+		$this->assertEquals( 'Line 2', $entry['11.2'] );
+		$this->assertEquals( 'City', $entry['11.3'] );
+		$this->assertEquals( 'State', $entry['11.4'] );
+		$this->assertEquals( '2441', $entry['11.5'] );
+
+		$this->assertNotFalse( strpos( $entry['5'], '/tmp/cefac404_input_5.jpg' ) );
+		$this->assertNotFalse( strpos( $entry['6'], '/tmp/cefac404_input_6.jpg' ) );
+
+		$files = json_decode( $entry[2], true );
+		$this->assertNotFalse( strpos( $files[0], '/tmp/cefac404_input_2_o_1c39narem17i3d0g1mbc1vt1ol8k.jpg' ) );
+		$this->assertNotFalse( strpos( $files[1], '/tmp/cefac404_input_2_o_1c39narem1sst199kfkvlsg111jj.jpg' ) );
+
+		$files = json_decode( $entry[7], true );
+		$this->assertNotFalse( strpos( $files[0], '/tmp/cefac404_input_7_o_1c39nb0k2dim1b481umii4c1ngj10.jpg' ) );
+		$this->assertNotFalse( strpos( $files[1], '/tmp/cefac404_input_7_o_1c39nb0k21ki3l7jhvrcs5jqnv.jpg' ) );
+		$this->assertNotFalse( strpos( $files[2], '/tmp/cefac404_input_7_o_1c39nb0k2tuj8m1p2s1b2gmksu.jpg' ) );
 
 		/* Cleanup */
 		GFAPI::delete_form( $form_id );
