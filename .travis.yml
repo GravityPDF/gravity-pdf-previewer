@@ -5,10 +5,10 @@ sudo: false
 addons:
   apt:
     sources:
-      - sourceline: 'deb https://dl.yarnpkg.com/debian/ stable main'
-        key_url: 'https://dl.yarnpkg.com/debian/pubkey.gpg'
+    - sourceline: 'deb https://dl.yarnpkg.com/debian/ stable main'
+      key_url: 'https://dl.yarnpkg.com/debian/pubkey.gpg'
     packages:
-      - yarn
+    - yarn
 
 cache:
   yarn: true
@@ -29,17 +29,22 @@ env:
 matrix:
   include:
   - php: 7.1
-    env: WP_VERSION=latest WP_MULTISITE=1
+    env: WP_VERSION=latest WP_MULTISITE=1 PHPUNIT_COVERAGE_TEST=1
   allow_failures:
     - php: 7.2
       env: WP_VERSION=latest WP_MULTISITE=0
 
 before_script:
+  - if [[ ! $PHPUNIT_COVERAGE_TEST ]]; then phpenv config-rm xdebug.ini; fi
   - if find . -name "*.php" -exec php -l {} \; | grep "unexpected $end"; then exit 1; fi
   - composer install --prefer-source --optimize-autoloader --no-scripts
   - bash tests/bin/install.sh gravitypdf_test root '' localhost $WP_VERSION
-  - if [[ $WP_MULTISITE = 1 ]]; then nvm install 6.10 && yarn global add karma-cli && yarn; fi
+  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then nvm install 6.10 && yarn global add karma-cli && yarn; fi
 
 script:
- - if [[ $WP_MULTISITE = 1 ]]; then yarn run test; fi
- - vendor/bin/phpunit -c phpunit.xml
+  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then yarn run test:coverage; fi
+  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then ./vendor/bin/phpunit --coverage-clover=coverage/php-coverage1.xml -c phpunit.xml; fi
+  - if [[ ! $PHPUNIT_COVERAGE_TEST ]]; then ./vendor/bin/phpunit -c phpunit.xml; fi
+
+after_success:
+  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then bash <(curl -s https://codecov.io/bash); fi
