@@ -86,6 +86,7 @@ class GravityFlow implements Helper_Interface_Filters, Helper_Interface_Actions 
 		add_filter( 'gfpdf_previewer_form_id', [ $this, 'set_form_id' ], 10, 2 );
 		add_filter( 'gfpdf_previewer_entry_id', [ $this, 'set_entry_id' ], 10, 3 );
 		add_filter( 'gravityflow_workflow_detail_display_field', [ $this, 'override_previewer_field_display' ], 10, 2 );
+		add_filter( 'gravityflow_display_field_choices', [ $this, 'remove_previewer_form_display_fields' ], 10, 3 );
 	}
 
 	/**
@@ -234,6 +235,42 @@ class GravityFlow implements Helper_Interface_Filters, Helper_Interface_Actions 
 		}
 
 		return $display;
+	}
+
+	/**
+	 * Filter our the Previewer fields when not on the User Input step
+	 *
+	 * @param array $choices
+	 * @param array $form
+	 * @param array|false $feed
+	 *
+	 * @return array
+	 *
+	 * @since 1.1
+	 */
+	public function remove_previewer_form_display_fields( $choices, $form, $feed ) {
+
+		$step_type = trim( rgpost( '_gaddon_setting_step_type' ) );
+		if ( empty( $step_type ) && $feed !== false && isset( $feed['meta']['step_type'] ) ) {
+			$step_type = $feed['meta']['step_type'];
+		}
+
+		/* Remove Previewer fields from Display Field list */
+		if ( $step_type !== 'user_input' && isset( $form['fields'] ) && is_array( $form['fields'] ) ) {
+			$previewer_field_ids = [];
+
+			foreach ( $form['fields'] as $field ) {
+				if ( $field->type === 'pdfpreview' ) {
+					$previewer_field_ids[] = $field->id;
+				}
+			}
+
+			$choices = array_filter( $choices, function( $choice ) use ( $previewer_field_ids ) {
+				return ! in_array( $choice['value'], $previewer_field_ids );
+			} );
+		}
+
+		return $choices;
 	}
 
 	/**

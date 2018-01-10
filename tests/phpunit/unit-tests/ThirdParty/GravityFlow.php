@@ -95,6 +95,14 @@ class TestGravityFlow extends WP_UnitTestCase {
 			$form['fields'][] = $field;
 		}
 
+		for ( $i = 9; $i < 11; $i++ ) {
+			$field       = new Field();
+			$field->id   = $i;
+			$field->type = 'pdfpreview';
+
+			$form['fields'][] = $field;
+		}
+
 		return $form;
 	}
 
@@ -209,12 +217,44 @@ class TestGravityFlow extends WP_UnitTestCase {
 		$this->assertSame( 8, $this->class->set_form_id( 5, [ 'gravityflow_submit' => 8 ] ) );
 	}
 
+	/**
+	 * @since 1.1
+	 */
 	public function test_override_previewer_field_display() {
 		$field = new Field();
 		$this->assertFalse( $this->class->override_previewer_field_display( false, $field ) );
 
 		$field->type = 'pdfpreview';
 		$this->assertTrue( $this->class->override_previewer_field_display( false, $field ) );
+	}
+
+	/**
+	 * @since 1.1
+	 */
+	public function test_remove_previewer_form_display_fields() {
+		$form = $this->mock_form_object();
+		$feed = [ 'meta' => [ 'step_type' => 'approval' ] ];
+
+		$choices = [];
+		foreach ( $form['fields'] as $field ) {
+			$choices[] = [
+				'label' => $field->type,
+				'value' => $field->id,
+			];
+		}
+
+		$num_of_choices = count( $choices );
+
+		/* Test previewer fields are removed */
+		$this->assertSame( $num_of_choices - 2, count( $this->class->remove_previewer_form_display_fields( $choices, $form, false ) ) );
+		$this->assertSame( $num_of_choices - 2, count( $this->class->remove_previewer_form_display_fields( $choices, $form, $feed ) ) );
+
+		/* Test previewer fields are not removed */
+		$feed['meta']['step_type'] = 'user_input';
+		$this->assertSame( $num_of_choices, count( $this->class->remove_previewer_form_display_fields( $choices, $form, $feed ) ) );
+
+		$_POST['_gaddon_setting_step_type'] = 'user_input';
+		$this->assertSame( $num_of_choices, count( $this->class->remove_previewer_form_display_fields( $choices, $form, false ) ) );
 	}
 }
 
