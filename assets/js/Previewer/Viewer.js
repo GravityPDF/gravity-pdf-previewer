@@ -45,6 +45,7 @@ export default class {
 
     this.viewerUrl = args.viewer
     this.documentUrl = args.documentUrl
+    this.download = args.download
   }
 
   /**
@@ -57,9 +58,15 @@ export default class {
    * @since 0.1
    */
   create (id) {
+    let pdfUrl = this.viewerUrl + this.documentUrl + id;
+
+    if(this.download === 1) {
+      pdfUrl = pdfUrl + '&download=1';
+    }
+
     this.remove()
     this.$iframe = $('<iframe>')
-      .attr('src', this.viewerUrl + this.documentUrl + id)
+      .attr('src', pdfUrl)
       .attr('frameborder', 0)
       .width('100%')
       .height(this.viewerHeight)

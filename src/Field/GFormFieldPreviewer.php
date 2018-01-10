@@ -99,6 +99,7 @@ class GFormFieldPreviewer extends GF_Field {
 			$field_id       = $this->id;
 			$pdf_id         = ( isset( $this->pdfpreview ) ) ? $this->pdfpreview : $this->get_pdf_id_if_any( $form );
 			$preview_height = ( isset( $this->pdfpreviewheight ) && (int) $this->pdfpreviewheight > 0 ) ? (int) $this->pdfpreviewheight : 600;
+			$download       = ( isset( $this->pdfdownload ) ) ? (int) $this->pdfdownload : 0;
 
 			include __DIR__ . '/markup/previewer-wrapper.php';
 		}
@@ -141,6 +142,7 @@ class GFormFieldPreviewer extends GF_Field {
 			'pdf_selector_setting',
 			'pdf_preview_height_setting',
 			'pdf_watermark_setting',
+			'pdf_download_setting'
 		];
 	}
 

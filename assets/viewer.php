@@ -50,10 +50,16 @@ See https://github.com/adobe-type-tools/cmap-resources
         #findbar,
         #secondaryToolbar,
         #sidebarToggle,
-        #toolbarViewerRight,
-        #viewFind {
+        #viewFind,
+        #toolbarViewerRight > *{
             display: none !important;
         }
+
+        <?php if ( isset( $_GET['download'] ) && (int) $_GET['download'] === 1 ): ?>
+            #toolbarViewerRight > #download {
+                display: block !important;
+            }
+        <?php endif; ?>
 
         #toolbarViewerMiddle {
             float: right;

@@ -84,8 +84,8 @@ module.exports = {
       ignore: [ '*.pdf' ]
     },
       {
-        from: 'assets/viewer.html',
-        to: __dirname + '/dist/viewer/web/viewer.html',
+        from: 'assets/viewer.php',
+        to: __dirname + '/dist/viewer/web/viewer.php',
         force: true
       }])
   ]

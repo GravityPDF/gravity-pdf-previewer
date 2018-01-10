@@ -106,10 +106,6 @@ class TestRegisterPreviewerCustomFields extends WP_UnitTestCase {
 	 * @since 0.1
 	 */
 	public function test_add_pdf_preview_height() {
-		$_SERVER['HTTP_USER_AGENT'] = 'cli';
-		$form                       = json_decode( trim( file_get_contents( dirname( __FILE__ ) . '/../../json/all-form-fields.json' ) ), true );
-		$form_id                    = GFAPI::add_form( $form );
-
 		ob_start();
 		$this->class->add_pdf_preview_height( 25 );
 		$html = ob_get_clean();
@@ -118,19 +114,12 @@ class TestRegisterPreviewerCustomFields extends WP_UnitTestCase {
 		$markup = $qp->html5( $html );
 
 		$this->assertEquals( 'input', $markup->find( '#pdf_preview_height' )->tag() );
-
-		/* Cleanup */
-		GFAPI::delete_form( $form_id );
 	}
 
 	/**
 	 * @since 0.1
 	 */
 	public function test_pdf_watermark_support() {
-		$_SERVER['HTTP_USER_AGENT'] = 'cli';
-		$form                       = json_decode( trim( file_get_contents( dirname( __FILE__ ) . '/../../json/all-form-fields.json' ) ), true );
-		$form_id                    = GFAPI::add_form( $form );
-
 		ob_start();
 		$this->class->add_pdf_watermark_support( 25 );
 		$html = ob_get_clean();
@@ -141,8 +130,19 @@ class TestRegisterPreviewerCustomFields extends WP_UnitTestCase {
 		$this->assertEquals( 'checkbox', $markup->find( '#pdf-watermark-setting' )->attr( 'type' ) );
 		$this->assertEquals( 'input', $markup->find( '#pdf_watermark_text' )->tag() );
 		$this->assertEquals( 'select', $markup->find( '#pdf_watermark_font' )->tag() );
+	}
 
-		/* Cleanup */
-		GFAPI::delete_form( $form_id );
+	/**
+	 * @since 1.1
+	 */
+	public function test_download_support() {
+		ob_start();
+		$this->class->add_pdf_download_support( 25 );
+		$html = ob_get_clean();
+
+		$qp     = new Helper_QueryPath();
+		$markup = $qp->html5( $html );
+
+		$this->assertEquals( 'checkbox', $markup->find( '#pdf-download-setting' )->attr( 'type' ) );
 	}
 }

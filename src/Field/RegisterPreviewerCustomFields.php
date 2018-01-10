@@ -67,6 +67,7 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	public function add_actions() {
 		add_action( 'gform_field_standard_settings', [ $this, 'add_pdf_selector' ], 10, 2 );
 		add_action( 'gform_field_standard_settings', [ $this, 'add_pdf_preview_height' ] );
+		add_action( 'gform_field_standard_settings', [ $this, 'add_pdf_download_support' ] );
 		add_action( 'gform_field_standard_settings', [ $this, 'add_pdf_watermark_support' ] );
 		add_action( 'gform_editor_js', [ $this, 'editor_js' ] );
 	}
@@ -169,6 +170,20 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 
 			$font_stack = GPDFAPI::get_pdf_fonts();
 			include __DIR__ . '/markup/pdf-watermark-setting.php';
+		}
+	}
+
+	/**
+	 * Add support for PDF Download Toggle in the Form Editor
+	 *
+	 * @param init $position
+	 *
+	 * @since 0.1
+	 */
+	public function add_pdf_download_support( $position ) {
+		if ( $position === 25 ) {
+			$this->get_logger()->addNotice( 'Add PDF Download toggle to form editor' );
+			include __DIR__ . '/markup/pdf-download-setting.php';
 		}
 	}
 
