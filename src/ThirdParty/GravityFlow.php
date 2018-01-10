@@ -209,7 +209,7 @@ class GravityFlow implements Helper_Interface_Filters, Helper_Interface_Actions 
 	 * @since 1.1
 	 */
 	public function set_entry_id( $entry_id ) {
-		if ( isset( $input['gravityflow_submit'] ) && isset( $_POST['gform_field_values'] ) ) {
+		if ( isset( $_POST['gravityflow_submit'] ) && isset( $_POST['gform_field_values'] ) ) {
 			parse_str( $_POST['gform_field_values'], $field_values );
 			$entry_id = ( isset( $field_values['id'] ) ) ? $field_values['id'] : '';
 		}
