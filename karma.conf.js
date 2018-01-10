@@ -5,10 +5,11 @@ webpackConfig.devtool = 'inline-source-map'
 webpackConfig.externals = {
   'jquery': 'jQuery',
 }
-//webpackConfig.plugins = []
+
+var doCodeCoverage = (process.env.ENABLE_CODE_COVERAGE)
 
 module.exports = function (config) {
-  config.set({
+  var _config = {
 
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
@@ -70,5 +71,20 @@ module.exports = function (config) {
     // Concurrency level
     // how many browser should be started simultaneous
     concurrency: Infinity
-  })
+  }
+
+  if (doCodeCoverage) {
+    _config.reporters.push('coverage')
+
+    _config.coverageReporter = {
+      dir: 'coverage/',
+      reporters: [{
+        type: 'json',
+        dir: 'coverage',
+        file: 'js-coverage.json'
+      }]
+    }
+  }
+
+  config.set(_config)
 }

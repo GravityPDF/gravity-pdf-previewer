@@ -3,7 +3,7 @@ Gravity PDF Previewer
 
 ![Previewer Artwork](https://resources.gravitypdf.com/uploads/edd/2017/08/cover-artwork-1.png)
 
-[![Build Status](https://travis-ci.org/GravityPDF/gravity-pdf-previewer.svg?branch=development)](https://travis-ci.org/GravityPDF/gravity-pdf-previewer)
+[![Build Status](https://travis-ci.org/GravityPDF/gravity-pdf-previewer.svg?branch=development)](https://travis-ci.org/GravityPDF/gravity-pdf-previewer) [![codecov](https://codecov.io/gh/GravityPDF/gravity-pdf-previewer/branch/development/graph/badge.svg)](https://codecov.io/gh/GravityPDF/gravity-pdf-previewer)
 
 Gravity PDF Previewer is a commercial plugin [available from GravityPDF.com](https://gravitypdf.com/shop/previewer-add-on/). The plugin is hosted here on a public GitHub repository in order to better facilitate community contributions from developers and users. If you have a suggestion, a bug report, or a patch for an issue, feel free to submit it here.
 
