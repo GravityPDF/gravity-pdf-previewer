@@ -158,7 +158,10 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 			$this->entry    = apply_filters( 'gfpdf_previewer_created_entry', $this->create_entry( $this->form ), $this->form, $this->settings, $input, $request );
 
 			/* Try create our PDF and return the Unique ID we assigned to the preview if successful */
-			$this->generate_pdf( $this->entry, $this->settings );
+			$pdf_path = $this->generate_pdf( $this->entry, $this->settings );
+
+			/* Set the last access time to the current hour for ad-hoc security in PdfViewerApiResponse */
+			touch( $pdf_path, time(), mktime( null, 0, 0 ) );
 
 			do_action( 'gfpdf_previewer_end_pdf_generation', $request, $this->form, $this->entry, $this->settings, $input );
 
