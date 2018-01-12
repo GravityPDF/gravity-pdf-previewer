@@ -22,7 +22,7 @@ describe('Viewer Class', () => {
 
     let $iframe = viewer.create('testID')
 
-    expect($iframe.attr('src')).to.equal('viewerUrldocumentUrltestID')
+    expect($iframe.attr('src')).to.equal('viewerUrl?file=documentUrltestID')
     expect($iframe.height()).to.equal(500)
   })
 

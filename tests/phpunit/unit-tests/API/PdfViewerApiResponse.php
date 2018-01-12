@@ -76,14 +76,31 @@ class TestPDFViewerApiResponse extends WP_UnitTestCase {
 		$pdf     = dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/12345/12345.pdf';
 		$request = new WP_REST_Request( 'GET' );
 
+		/* Test PDF not found */
 		$response = $this->class->response( $request );
 		$this->assertEquals( 'Requested PDF could not be found', $response->data['error'] );
 
+		/* Create a PDF and test it gets correctly cleaned up */
 		$request->set_param( 'temp_id', '12345' );
 		@mkdir( dirname( $pdf ) );
-		@touch( $pdf );
+		@touch( $pdf, time(), mktime( null, 0, 0 ) );
 		$this->class->response( $request );
 
+		$this->assertFileNotExists( $pdf );
+
+		/* Create a PDF and test it isn't removed initially when the download option is enabled */
+		$request->set_param( 'download', '1' );
+		@mkdir( dirname( $pdf ) );
+		@touch( $pdf, time(), mktime( null, 0, 0 ) );
+
+		clearstatcache();
+
+		$this->class->response( $request );
+		$this->assertFileExists( $pdf );
+
+		clearstatcache();
+
+		$this->class->response( $request );
 		$this->assertFileNotExists( $pdf );
 	}
 }

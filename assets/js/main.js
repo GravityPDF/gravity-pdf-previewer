@@ -44,7 +44,6 @@ $(document).bind('gform_post_render', function (e, formId) {
     let pdfId = $(this).data('pdf-id')
     let previewerHeight = parseInt($(this).data('previewer-height'))
     let download = (typeof $(this).data('download') !== 'undefined') ? parseInt($(this).data('download')) : 0;
-    console.log(download)
 
     /* Continue to next matched element if no PDF ID exists */
     if (pdfId == 0) {

@@ -79,8 +79,9 @@ class PdfViewerApiResponse implements CallableApiResponse {
 	 * @since    0.1
 	 */
 	public function response( WP_REST_Request $request ) {
-		$temp_id  = $request->get_param( 'temp_id' );
-		$temp_pdf = $this->pdf_path . $temp_id . '/' . $temp_id . '.pdf';
+		$temp_id        = $request->get_param( 'temp_id' );
+		$allow_download = $request->get_param( 'download' );
+		$temp_pdf       = $this->pdf_path . $temp_id . '/' . $temp_id . '.pdf';
 
 		$this->get_logger()->addNotice( 'Begin streaming Preview PDF', [
 			'id'  => $temp_id,
@@ -93,8 +94,21 @@ class PdfViewerApiResponse implements CallableApiResponse {
 			return rest_ensure_response( [ 'error' => 'Requested PDF could not be found' ] );
 		}
 
+		$access_number = $this->get_access_limit( $temp_pdf );
 		$this->stream_pdf( $temp_pdf );
-		$this->delete_pdf( $temp_pdf );
+		$access_number = $this->update_access_limit( $temp_pdf, $access_number );
+
+		/*
+		 * Some browsers will give users the cached copy of the PDF. Some will try download it from the source.
+		 * When the download setting is enabled we won't delete the PDF by default. Instead, we'll rely on a crude access
+		 * policy using the PDF's last accessed time, which we'll manually update.
+		 *
+		 * If the access policy doesn't work, the PDF will be cleaned up as part of our clean-up cron.
+		 */
+		if ( empty( $allow_download ) || $access_number === 2 ) {
+			$this->delete_pdf( $temp_pdf );
+		}
+
 		$this->end();
 	}
 
@@ -135,5 +149,36 @@ class PdfViewerApiResponse implements CallableApiResponse {
 	 */
 	protected function end() {
 		exit;
+	}
+
+	/**
+	 * Get the current access limit
+	 *
+	 * @internal We manually set the last access hour time to zero when we created the PDF
+	 *
+	 * @param string $path Full path to PDF
+	 *
+	 * @return int
+	 */
+	protected function get_access_limit( $path ) {
+		$access_limit = (int) date( 'i', fileatime( $path ) );
+
+		return ( in_array( $access_limit, [ 0, 1, 2 ] ) ) ? $access_limit : 0;
+	}
+
+	/**
+	 * Updates the access limit and stores it with the PDF file's last access time
+	 *
+	 * @param string $path  Full path to PDF
+	 * @param int    $limit The number of times the PDF has been downloaded
+	 *
+	 * @return int
+	 *
+	 * @since 1.1
+	 */
+	protected function update_access_limit( $path, $limit ) {
+		touch( $path, time(), mktime( null, ++$limit, 0 ) );
+
+		return $limit;
 	}
 }
