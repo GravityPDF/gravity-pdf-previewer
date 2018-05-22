@@ -10,7 +10,7 @@
     "autoloader-suffix": "GravityPDFPreviewerAddon"
   },
   "require-dev": {
-    "phpunit/phpunit": ">4.0"
+    "phpunit/phpunit": ">4.0 <7"
   },
   "autoload": {
     "psr-4": {
