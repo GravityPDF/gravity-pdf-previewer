@@ -16,6 +16,7 @@ use GFAPI;
 use GFCache;
 use GPDFAPI;
 use Exception;
+use GFCommon;
 
 /**
  * @package     Gravity PDF Previewer
@@ -423,6 +424,9 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 			/* Throw exception */
 			throw new FormNotFound( $form_id );
 		}
+
+		/* Add better compatibility for code that taps into gform_pre_render */
+		require_once( \GFCommon::get_base_path() . '/form_display.php' );
 
 		$form = apply_filters( 'gform_pre_render', $form, false, [] );
 		$form = apply_filters( 'gform_pre_render_' . $form['id'], $form, false, [] );
