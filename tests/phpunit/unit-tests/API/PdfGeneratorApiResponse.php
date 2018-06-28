@@ -240,14 +240,29 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 		$form_id                    = GFAPI::add_form( $form );
 		$form                       = GFAPI::get_form( $form_id );
 
+		/* Test with download option disabled */
 		$settings = $this->class->get_pdf_config( $form, '555ad84787d7e', 82 );
 
 		$this->assertTrue( $settings['enable_watermark'] );
 		$this->assertEquals( 'SAMPLE', $settings['watermark_text'] );
 		$this->assertEquals( 'dejavusanscondensed', $settings['watermark_font'] );
 		$this->assertEmpty( $settings['privileges'] );
+		$this->assertEquals( 'Yes', $settings['security'] );
+
+		/* Test with download option enabled */
+		$enableDownload = function( $field ) {
+			$field['pdfdownload'] = true;
+
+			return $field;
+		};
+
+		add_filter( 'gfpdf_previewer_field', $enableDownload );
+
+		$settings = $this->class->get_pdf_config( $form, '555ad84787d7e', 82 );
+		$this->assertEquals( 'No', $settings['security'] );
 
 		/* Cleanup */
+		remove_filter( 'gfpdf_previewer_field', $enableDownload );
 		GFAPI::delete_form( $form_id );
 	}
 

@@ -343,23 +343,16 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 * Check the PDF Preview form field for Watermark settings and assign to our PDF Settings
 	 *
 	 * @param array $settings
-	 * @param array $form
-	 * @param int   $field_id
+	 * @param array $field
 	 *
 	 * @return array
 	 *
 	 * @since 0.1
 	 */
-	protected function setup_watermark_support( $settings, $form, $field_id ) {
-		try {
-			$field                        = $this->get_pdf_preview_field( $form, $field_id );
-			$settings['enable_watermark'] = ( isset( $field['pdfwatermarktoggle'] ) && $field['pdfwatermarktoggle'] ) ? true : false;
-			$settings['watermark_text']   = $field['pdfwatermarktext'];
-			$settings['watermark_font']   = $field['pdfwatermarkfont'];
-		} catch ( FieldNotFound $e ) {
-			/* do nothing */
-			$this->get_logger()->addWarning( $e->getMessage() );
-		}
+	protected function setup_watermark_support( $settings, $field ) {
+		$settings['enable_watermark'] = ( isset( $field['pdfwatermarktoggle'] ) && $field['pdfwatermarktoggle'] ) ? true : false;
+		$settings['watermark_text']   = isset( $field['pdfwatermarktext'] ) ? $field['pdfwatermarktext'] : '';
+		$settings['watermark_font']   = isset( $field['pdfwatermarkfont'] ) ? $field['pdfwatermarkfont'] : '';
 
 		return $settings;
 	}
@@ -379,7 +372,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	public function get_pdf_preview_field( $form, $field_id ) {
 		foreach ( $form['fields'] as $field ) {
 			if ( $field->id === $field_id && $field->type === 'pdfpreview' ) {
-				return $field;
+				return apply_filters( 'gfpdf_previewer_field', $field, $form );
 			}
 		}
 
@@ -390,17 +383,29 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 * Setup security so end user's cannot do anything with the documents (in Adobe Reader anyway)
 	 *
 	 * @param array $settings
+	 * @param array $field
 	 *
 	 * @return array
 	 *
 	 * @since 0.1
 	 */
-	protected function override_security_settings( $settings ) {
-		$settings['security']        = 'Yes';
-		$settings['password']        = '';
-		$settings['master_password'] = '';
-		$settings['privileges']      = [];
-		$settings['format']          = 'Standard';
+	protected function override_security_settings( $settings, $field ) {
+
+		/* PDF security settings skipped if disabled via filter */
+		if ( ! apply_filters( 'gfpdf_previewer_enable_pdf_security', true, $settings, $field ) ) {
+			return $settings;
+		}
+
+		$allow_download = isset( $field['pdfdownload'] ) ? (bool) $field['pdfdownload'] : false;
+		if ( ! $allow_download ) {
+			$settings['security']        = 'Yes';
+			$settings['password']        = '';
+			$settings['master_password'] = '';
+			$settings['privileges']      = [];
+			$settings['format']          = 'Standard';
+		} else {
+			$settings['security']        = 'No';
+		}
 
 		return $settings;
 	}
@@ -470,8 +475,16 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 			throw new PDFNotActive( $pdf_id );
 		}
 
-		$pdf_config = $this->override_security_settings( $pdf_config );
-		$pdf_config = $this->setup_watermark_support( $pdf_config, $form, $field_id );
+		$field = [];
+		try {
+			$field = $this->get_pdf_preview_field( $form, $field_id );
+		} catch ( FieldNotFound $e ) {
+			/* do nothing */
+			$this->get_logger()->addWarning( $e->getMessage() );
+		}
+
+		$pdf_config = $this->override_security_settings( $pdf_config, $field );
+		$pdf_config = $this->setup_watermark_support( $pdf_config, $field );
 
 		return $pdf_config;
 	}
