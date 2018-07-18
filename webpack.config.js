@@ -1,14 +1,14 @@
 const webpack = require('webpack')
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 const PROD = (process.env.NODE_ENV === 'production')
 
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 const extractSass = new ExtractTextPlugin({
-  filename:  (getPath) => {
-    return getPath('css/[name].min.css').replace('css/js', 'css');
+  filename: (getPath) => {
+    return getPath('css/[name].min.css').replace('css/js', 'css')
   },
-});
+})
 
 module.exports = {
   entry: {
@@ -36,7 +36,7 @@ module.exports = {
         test: /\.scss$/,
         use: extractSass.extract({
           use: [{
-            loader: "css-loader",
+            loader: 'css-loader',
             options: {
               minimize: true,
               sourceMap: true,
@@ -46,7 +46,7 @@ module.exports = {
               },
             }
           }, {
-            loader: "sass-loader",
+            loader: 'sass-loader',
             options: {
               sourceMap: true
             }
@@ -60,12 +60,6 @@ module.exports = {
   },
 
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }
-    }),
-
     extractSass,
 
     new webpack.optimize.UglifyJsPlugin({
@@ -81,7 +75,7 @@ module.exports = {
     new CopyWebpackPlugin([{
       from: 'node_modules/pdfjs-dist-viewer-min/build/minified/',
       to: __dirname + '/dist/viewer/',
-      ignore: [ '*.pdf' ]
+      ignore: ['*.pdf']
     },
       {
         from: 'assets/viewer.php',

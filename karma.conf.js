@@ -1,9 +1,10 @@
-var webpack = require("webpack")
-
 var webpackConfig = require('./webpack.config.js')
-webpackConfig.devtool = 'inline-source-map'
-webpackConfig.externals = {
-  'jquery': 'jQuery',
+webpackConfig = {
+  ...webpackConfig,
+  devtool: 'inline-source-map',
+  externals: {
+    'jquery': 'jQuery',
+  }
 }
 
 var doCodeCoverage = (process.env.ENABLE_CODE_COVERAGE)
