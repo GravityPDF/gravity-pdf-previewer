@@ -285,7 +285,8 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 			\GPDFAPI::get_form_class(),
 			\GPDFAPI::get_data_class(),
 			\GPDFAPI::get_misc_class(),
-			\GPDFAPI::get_templates_class()
+			\GPDFAPI::get_templates_class(),
+			\GPDFAPI::get_log_class()
 		);
 
 		$this->class->set_unique_id();
