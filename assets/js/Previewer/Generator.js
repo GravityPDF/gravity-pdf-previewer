@@ -76,6 +76,11 @@ export default class {
 
     /* Add listener to the scroll event to trigger a reload */
     $(window).scroll(() => debounce(this.maybeReloadPreview(), 1000))
+
+    /* Trigger the viewer if there is no scrollbar */
+    if( window.innerWidth <= document.documentElement.clientWidth ) {
+      this.maybeReloadPreview()
+    }
   }
 
   /**
