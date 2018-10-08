@@ -212,7 +212,9 @@ export default class {
     return $.ajax({
       url: this.endpoint,
       method: "POST",
-      data: this.$form.serialize(),
+      data: this.$form.serializeArray().filter((item) => {
+        return $.inArray(item.name, ['_wpnonce', 'add-to-cart']) === -1
+      })
     })
   }
 }

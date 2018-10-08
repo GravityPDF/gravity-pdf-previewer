@@ -35,7 +35,12 @@ require('../scss/previewer.scss')
  * @since 0.1
  */
 $(document).bind('gform_post_render', function (e, formId) {
-  const $form = $('#gform_' + formId)
+  let $form = $('#gform_' + formId)
+
+  /* Try match a slightly different mark-up */
+  if ($form.length == 0) {
+    $form = $('#gform_wrapper_' + formId).closest('form')
+  }
 
   /* Find each PDF Preview container in the form and initialise */
   $form.find('.gpdf-previewer-wrapper').each(function () {
