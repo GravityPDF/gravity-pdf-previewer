@@ -214,6 +214,10 @@ export default class {
    * @since 0.1
    */
   callEndpoint () {
+    if (typeof(tinyMCE) != 'undefined') {
+      tinyMCE.triggerSave()
+    }
+
     return $.ajax({
       url: this.endpoint,
       method: "POST",
