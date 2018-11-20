@@ -8,6 +8,10 @@ User's with a valid, active license key can receive support for this plugin by f
 
 == Changelog ==
 
+= Version 1.2.2, November 21, 2018 =
+
+* Bug: Fix Plugin Update Nag when already on latest version
+
 = Version 1.2.1, November 20, 2018 =
 
 * Bug: Ensure Rich Text Field content displayed correctly in Previewer
