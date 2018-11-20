@@ -8,7 +8,12 @@ User's with a valid, active license key can receive support for this plugin by f
 
 == Changelog ==
 
+= Version 1.2.1, November 20, 2018 =
+
+* Bug: Ensure Rich Text Field content displayed correctly in Previewer
+
 = Version 1.2.0, October 8, 2018 =
+
 * Feature: Add support for the WooCommerce Gravity Forms Product add-on
 * Bug: Ensure the Preview is automatically loaded when there's no scroll bar on the page
 
