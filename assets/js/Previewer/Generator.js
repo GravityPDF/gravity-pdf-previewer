@@ -106,7 +106,7 @@ export default class {
      * the form has been updated AND the previewer container is in the browser viewpoint
      * then we'll generate a new preview
      */
-    if (!this.viewer.doesViewerExist() || ( this.formUpdated && this.isContainerInViewpoint() )) {
+    if (!this.viewer.doesViewerExist() || (window['gf_submitting_' + this.$form.data('fid')] == null && this.formUpdated && this.isContainerInViewpoint())) {
       this.generatePreview()
     }
   }
