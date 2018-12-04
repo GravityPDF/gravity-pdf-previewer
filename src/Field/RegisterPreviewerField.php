@@ -136,9 +136,11 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 	 * @since 0.1
 	 */
 	public function has_previewer_field( $form ) {
-		foreach ( $form['fields'] as $field ) {
-			if ( $field->type === 'pdfpreview' ) {
-				return true;
+		if ( isset( $form['fields'] ) && is_array( $form['fields'] ) ) {
+			foreach ( $form['fields'] as $field ) {
+				if ( $field->type === 'pdfpreview' ) {
+					return true;
+				}
 			}
 		}
 
