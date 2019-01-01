@@ -8,7 +8,12 @@ User's with a valid, active license key can receive support for this plugin by f
 
 == Changelog ==
 
+= Version 1.2.4, January 1, 2019 =
+
+* Bug: Fix regression in 1.2.3 that prevented the auto-refresh feature working on AJAX forms
+
 = Version 1.2.3, December 17, 2018 =
+
 * Bug: Fix Preview reload issue when submitting AJAX forms on a Mac [GH#45]
 * Bug: Fix PHP notice when $form variable isn't the expected object [GH#47]
 
