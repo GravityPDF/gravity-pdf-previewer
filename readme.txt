@@ -8,7 +8,7 @@ User's with a valid, active license key can receive support for this plugin by f
 
 == Changelog ==
 
-= Version 1.2.4, January 1, 2019 =
+= Version 1.2.4, February 1, 2019 =
 
 * Bug: Fix regression in 1.2.3 that prevented the auto-refresh feature working on AJAX forms
 
