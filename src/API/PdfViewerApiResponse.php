@@ -124,7 +124,7 @@ class PdfViewerApiResponse implements CallableApiResponse {
 		header( 'Content-type: application/pdf' );
 		header( 'Content-Disposition: inline; filename="' . basename( $file ) . '"' );
 		header( 'Content-Transfer-Encoding: binary' );
-		header( 'Accept-Ranges: bytes' );
+		header( 'Accept-Ranges: none' );
 		readfile( $file );
 	}
 
