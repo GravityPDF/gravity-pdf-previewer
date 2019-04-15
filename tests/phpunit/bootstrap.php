@@ -44,11 +44,6 @@ class GravityPDF_Previewer_Unit_Tests_Bootstrap {
 
 		tests_add_filter( 'after_setup_theme', [ $this, 'disable_deprecated_warnings' ], 20 );
 
-		/* Migration fixer for PHPUnit 6 when not included in the WP Test Environment */
-		if ( ! is_file( $this->wp_tests_dir . '/includes/phpunit6-compat.php' ) && class_exists( 'PHPUnit\Runner\Version' ) ) {
-			require_once dirname( __FILE__ ) . '/phpunit6-compat.php';
-		}
-
 		/* load the WP testing environment */
 		require_once( $this->wp_tests_dir . '/includes/bootstrap.php' );
 	}
