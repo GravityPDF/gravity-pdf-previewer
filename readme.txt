@@ -8,6 +8,9 @@ User's with a valid, active license key can receive support for this plugin by f
 
 == Changelog ==
 
+= Version 1.2.5, April 15, 2019 =
+* Bug: Fix display issue when browser downloaded PDF in chunks
+
 = Version 1.2.4, February 1, 2019 =
 
 * Bug: Fix regression in 1.2.3 that prevented the auto-refresh feature working on AJAX forms
