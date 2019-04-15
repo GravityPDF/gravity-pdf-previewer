@@ -8,6 +8,9 @@ User's with a valid, active license key can receive support for this plugin by f
 
 == Changelog ==
 
+= Version 1.2.5.1, April 16, 2019 =
+* Bug: Fix upgrade notice that won't disappear even when running the latest version
+
 = Version 1.2.5, April 15, 2019 =
 * Bug: Fix display issue when browser downloaded PDF in chunks
 
