@@ -688,6 +688,8 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 * @since 0.1
 	 */
 	public function override_entry( $entry ) {
+		remove_filter( 'gfpdf_entry_pre_form_data', [ $this, 'override_entry'] );
+
 		return $this->entry;
 	}
 }
