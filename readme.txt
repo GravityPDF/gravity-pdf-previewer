@@ -8,9 +8,10 @@ User's with a valid, active license key can receive support for this plugin by f
 
 == Changelog ==
 
-= Version 1.2.6, August 21, 2019 =
+= Version 1.2.6, September 18, 2019 =
 * Bug: Fix the file upload display in Core / Universal templates so the filenames are correctly displayed in the Previewer
 * Bug: Allow the GPDFAPI::get_form_data() API call to function correctly in Previewer-generated templates
+* Bug: Fix display issue with Gravity Perk's Nested Forms 1.0 plugin release
 
 = Version 1.2.5.1, April 16, 2019 =
 * Bug: Fix upgrade notice that won't disappear even when running the latest version
