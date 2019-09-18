@@ -11,6 +11,7 @@ use GFPDF\Plugins\Previewer\API\RegisterPdfViewerAPIEndpoint;
 use GFPDF\Plugins\Previewer\API\PdfGeneratorApiResponse;
 use GFPDF\Plugins\Previewer\Field\SkipPdfPreviewerField;
 use GFPDF\Plugins\Previewer\ThirdParty\GravityFlow;
+use GFPDF\Plugins\Previewer\ThirdParty\NestedFormsPerk;
 use GFPDF\Plugins\Previewer\ThirdParty\WooCommerceGravityForms;
 
 use GFPDF\Helper\Licensing\EDD_SL_Plugin_Updater;
@@ -88,7 +89,8 @@ class Bootstrap extends Helper_Abstract_Addon {
 			new SkipPdfPreviewerField(),
 			new GravityFlow(),
 			new WooCommerceGravityForms(),
-			new CorrectMultiUploadDisplayName()
+			new CorrectMultiUploadDisplayName(),
+			new NestedFormsPerk(),
 		] );
 
 		/* Run the setup */
