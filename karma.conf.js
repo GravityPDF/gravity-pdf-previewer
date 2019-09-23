@@ -1,16 +1,11 @@
-var webpack = require("webpack")
-
-var webpackConfig = require('./webpack.config.js')
+const webpackConfig = require('./webpack.config.js')
 webpackConfig.devtool = 'inline-source-map'
-webpackConfig.externals = {
-  'jquery': 'jQuery',
-}
+webpackConfig.externals = { 'jquery': 'jQuery' }
 
-var doCodeCoverage = (process.env.ENABLE_CODE_COVERAGE)
+const doCodeCoverage = (process.env.ENABLE_CODE_COVERAGE)
 
 module.exports = function (config) {
-  var _config = {
-
+  const _config = {
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
 
@@ -70,7 +65,11 @@ module.exports = function (config) {
 
     // Concurrency level
     // how many browser should be started simultaneous
-    concurrency: Infinity
+    concurrency: Infinity,
+
+    proxies: {
+      '/viewerUrl': '/viewerUrl'
+    }
   }
 
   if (doCodeCoverage) {
@@ -78,11 +77,7 @@ module.exports = function (config) {
 
     _config.coverageReporter = {
       dir: 'coverage/',
-      reporters: [{
-        type: 'json',
-        dir: 'coverage',
-        file: 'js-coverage.json'
-      }]
+      reporters: [{ type: 'json', dir: 'coverage', file: 'js-coverage.json' }]
     }
   }
 

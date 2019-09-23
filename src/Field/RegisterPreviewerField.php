@@ -78,7 +78,7 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 			/* Add our custom JS */
 			wp_enqueue_script(
 				'gfpdf_previewer',
-				plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/js/previewer.min.js',
+				plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/previewer.min.js',
 				[ 'jquery' ],
 				$version,
 				true
@@ -101,7 +101,7 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 			/* Add our custom CSS */
 			wp_enqueue_style(
 				'gfpdf_previewer',
-				plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/css/previewer.min.css',
+				plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/previewer.min.css',
 				[],
 				$version
 			);
