@@ -38,6 +38,9 @@ node_modules/*
 # Unit tests
 /tmp
 
+# Coverage report
+/coverage
+
 # Others
 _notes
 _notes/*
