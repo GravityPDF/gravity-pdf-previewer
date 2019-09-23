@@ -1,87 +1,64 @@
 const webpack = require('webpack')
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const PROD = (process.env.NODE_ENV === 'production')
-
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-
-const extractSass = new ExtractTextPlugin({
-  filename:  (getPath) => {
-    return getPath('css/[name].min.css').replace('css/js', 'css');
-  },
-});
+const chunkPath = __dirname + '/dist'
 
 module.exports = {
   entry: {
-    'js/previewer': './assets/js/main.js',
+    'previewer': './assets/js/main.js'
   },
   output: {
-    path: __dirname + '/dist/',
-    filename: '[name].min.js'
+    path: __dirname + '/dist/js/',
+    filename: '[name].min.js',
+    publicPath: chunkPath
   },
-  devtool: PROD ? 'source-map' : 'eval-cheap-module-source-map',
+  mode: PROD ? 'production' : 'development',
+  devtool: PROD ? false : 'eval-source-map',
   module: {
     rules: [
       {
         test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['env']
-          }
-        }
+        loader: 'babel-loader',
+        options: { babelrc: true }
       },
-
       {
-        test: /\.scss$/,
-        use: extractSass.extract({
-          use: [{
-            loader: "css-loader",
-            options: {
-              minimize: true,
-              sourceMap: true,
-              autoprefixer: {
-                add: true,
-                cascade: false,
-              },
-            }
-          }, {
-            loader: "sass-loader",
-            options: {
-              sourceMap: true
-            }
-          }]
-        })
+        test: /\.s?css$/,
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'sass-loader'
+        ]
       }
     ]
   },
   externals: {
-    'jquery': 'jQuery',
+    'jquery': 'jQuery'
   },
-
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify('production')
+        'NODE_ENV': JSON.stringify('production')
       }
     }),
-
-    extractSass,
-
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      },
-      output: {
-        comments: false
-      },
-      sourceMap: false
+    new MiniCssExtractPlugin({
+      filename: '../css/[name].min.css',
+      chunkFilename: '[id].css',
     }),
-
+    new UglifyJSPlugin({
+      parallel: true,
+      sourceMap: true,
+      uglifyOptions: {
+        output: {
+          comments: false
+        }
+      }
+    }),
     new CopyWebpackPlugin([{
       from: 'node_modules/pdfjs-dist-viewer-min/build/minified/',
       to: __dirname + '/dist/viewer/',
-      ignore: [ '*.pdf' ]
+      ignore: ['*.pdf']
     },
       {
         from: 'assets/viewer.php',
