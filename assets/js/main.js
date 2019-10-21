@@ -1,8 +1,9 @@
-import $ from 'jquery'
 import Generator from './Previewer/Generator'
 import Viewer from './Previewer/Viewer'
 
 require('../scss/previewer.scss')
+
+let $ = jQuery
 
 /**
  * @package     Gravity PDF Previewer
@@ -35,27 +36,17 @@ require('../scss/previewer.scss')
  * @since 0.1
  */
 $(document).bind('gform_post_render', function (e, formId) {
-  /* Don't run if currently submitting the form */
-  if (window['gf_submitting_' + formId]) {
-    return
-  }
-
-  let $form = $('#gform_' + formId)
-
-  /* Try match a slightly different mark-up */
-  if ($form.length == 0) {
-    $form = $('#gform_wrapper_' + formId).closest('form')
-  }
-
-  $form.data('fid', formId)
+  let form = document.getElementById('gform_' + formId)
 
   /* Find each PDF Preview container in the form and initialise */
-  $form.find('.gpdf-previewer-wrapper').each(function () {
+  const wrapper = form.getElementsByClassName('gpdf-previewer-wrapper')
+  const elem = [].slice.call(wrapper)
 
-    let fieldId = parseInt($(this).data('field-id'))
-    let pdfId = $(this).data('pdf-id')
-    let previewerHeight = parseInt($(this).data('previewer-height'))
-    let download = (typeof $(this).data('download') !== 'undefined') ? parseInt($(this).data('download')) : 0;
+  elem.map(item => {
+    let fieldId = parseInt(item.getAttribute('data-field-id'))
+    let pdfId = item.getAttribute('data-pdf-id')
+    let previewerHeight = parseInt(item.getAttribute('data-previewer-height'))
+    let download = item.getAttribute('data-download') != null ? parseInt(item.getAttribute('data-download')) : 0
 
     /* Continue to next matched element if no PDF ID exists */
     if (pdfId == 0) {
@@ -63,7 +54,7 @@ $(document).bind('gform_post_render', function (e, formId) {
     }
 
     /* Set the minimum wrapper height to the size of the PDF Previewer height */
-    $(this).css('min-height', previewerHeight + 'px')
+    wrapper[0].setAttribute('style', `min-height:${previewerHeight}px`)
 
     /* Initialise our Viewer / Generator classes */
     let viewer = new Viewer({
@@ -74,8 +65,8 @@ $(document).bind('gform_post_render', function (e, formId) {
     })
 
     let previewer = new Generator({
-      form: $form,
-      container: $(this),
+      form: form,
+      container: wrapper[0],
       endpoint: PdfPreviewerConstants.pdfGeneratorEndpoint + pdfId + '/' + fieldId + '/',
       viewer: viewer
     })

@@ -1,4 +1,3 @@
-import $ from 'jquery'
 import debounce from 'debounce'
 import inViewport from 'in-viewport'
 import Spinner from './Spinner'
@@ -35,26 +34,26 @@ import Refresh from './Refresh'
  * @since 0.1
  */
 export default class {
-
   /**
    * @param args
-   *            .form jQuery form object
-   *            .container jQuery PDF Preview object
-   *            .viewer object The Viewer.js initialised class
-   *            .endpoint string The PDF generator REST API endpoint
+   * .form form object
+   * .container element wrapper of PDF Previewer
+   * .viewer object The Viewer.js initialised class
+   * .endpoint string The PDF generator REST API endpoint
+   * .spinner object initialised spinner
+   * .formUpdated boolean
+   * .updateInProgress boolean
    *
    * @since 0.1
    */
   constructor (args) {
-    this.$form = args.form
-    this.$container = args.container
+    this.form = args.form
+    this.container = args.container
     this.viewer = args.viewer
+    this.endpoint = args.endpoint
     this.spinner = new Spinner()
-
     this.formUpdated = false
     this.updateInProgress = false
-
-    this.endpoint = args.endpoint
   }
 
   /**
@@ -63,22 +62,24 @@ export default class {
    * @since 0.1
    */
   init () {
-
     /* Add listener to track any form change events (events bubble up the DOM) */
-    this.$form.change(() => this.trackFormChanges())
+    this.form.addEventListener('change', () => {
+      this.trackFormChanges()
+      return false
+    })
 
     /* Register our manual PDF previewer loader */
     const manualLoader = new Refresh()
-    manualLoader.add(this.$container, () => {
+    manualLoader.add(this.container, () => {
       this.generatePreview()
       return false
     })
 
     /* Add listener to the scroll event to trigger a reload */
-    $(window).scroll(() => debounce(this.maybeReloadPreview(), 1000))
+    window.addEventListener('scroll', () => debounce(this.maybeReloadPreview(), 1000))
 
     /* Trigger the viewer if there is no scrollbar */
-    if( window.innerWidth <= document.documentElement.clientWidth ) {
+    if (window.innerWidth <= document.documentElement.clientWidth) {
       this.maybeReloadPreview()
     }
   }
@@ -91,7 +92,7 @@ export default class {
    * @since 0.1
    */
   isContainerInViewpoint () {
-    return inViewport(this.$container[0])
+    return inViewport(this.container)
   }
 
   /**
@@ -100,13 +101,12 @@ export default class {
    * @since 0.1
    */
   maybeReloadPreview () {
-
     /*
      * If the viewer hasn't already been initialised, OR
      * the form has been updated AND the previewer container is in the browser viewpoint
      * then we'll generate a new preview
      */
-    if (!this.viewer.doesViewerExist() || (window['gf_submitting_' + this.$form.data('fid')] != true && this.formUpdated && this.isContainerInViewpoint())) {
+    if (!this.viewer.doesViewerExist() || this.formUpdated && this.isContainerInViewpoint()) {
       this.generatePreview()
     }
   }
@@ -128,22 +128,23 @@ export default class {
    * @since 0.1
    */
   async generatePreview () {
-
     /*
      * Only reload the PDF if our container isn't currently hidden AND this function isn't already in progress
      */
-    if (this.$container.is(':visible') && !this.updateInProgress) {
+    if (this.container !== null && !this.updateInProgress) {
       /* Remove old PDF Preview */
       this.viewer.remove()
 
       /* Setup our loading environment */
       this.updateInProgress = true
-      this.$container.addClass('gfpdf-loading')
-      this.spinner.add(this.$container)
+      this.container.classList.add('gfpdf-loading')
+      this.spinner.add(this.container)
 
       /* Call our endpoint and catch any promise-related errors that might occur */
+      let response
+
       try {
-        var response = await this.callEndpoint()
+        response = await this.callEndpoint()
       } catch (error) {
         response = {
           error: 'PDF Generation Error'
@@ -169,7 +170,6 @@ export default class {
    * @since 0.1
    */
   handlePdfDisplayError (error) {
-
     /* Log the error to the browser console */
     console.error(error)
 
@@ -178,7 +178,7 @@ export default class {
 
     /* Add a manual loader below the error so the user can try again */
     const manualLoader = new Refresh()
-    manualLoader.add(this.spinner.$spinner, () => {
+    manualLoader.add(this.spinner.spinner, () => {
       this.updateInProgress = false
       this.generatePreview()
       return false
@@ -188,42 +188,64 @@ export default class {
   /**
    * Add our PDF Preview to the DOM
    *
-   * @param id
+   * @param id*-+
    *
    * @since 0.1
    */
   displayPreview (id) {
-    let $iframe = this.viewer.create(id)
+    let iframe = this.viewer.create(id)
 
     /* When the iFrame finishes loading we'll remove the AJAX loading environment */
-    $iframe.on('load', () => {
+    iframe.addEventListener('load', () => {
       this.updateInProgress = false
-      $iframe.show()
+      iframe.style.display = 'inline'
       this.spinner.remove()
-      this.$container.removeClass('gfpdf-loading')
+      this.container.classList.remove('gfpdf-loading')
       this.formUpdated = false
     })
 
     /* Add iFrame to the DOM */
-    this.$container.append($iframe)
+    this.container.appendChild(iframe)
   }
 
   /**
    * Make our REST API call
    *
+   * @returns Object
+   *
    * @since 0.1
    */
-  callEndpoint () {
-    if (typeof(tinyMCE) != 'undefined') {
+  async callEndpoint () {
+    if (typeof (tinyMCE) != 'undefined') {
       tinyMCE.triggerSave()
     }
 
-    return $.ajax({
-      url: this.endpoint,
-      method: "POST",
-      data: this.$form.serializeArray().filter((item) => {
-        return $.inArray(item.name, ['_wpnonce', 'add-to-cart']) === -1
-      })
+    let keypairs = []
+
+    /* Query form */
+    let form = document.querySelector('form')
+
+    /* Creates a list of key-value pairs (name=value) and pushed into the empty array */
+    for ( let i = 0; i < form.elements.length; i++ ) {
+      let e = form.elements[i]
+      keypairs.push(e.name + "=" + e.value)
+    }
+
+    /* Joined together key-value pairs using "&" as a delimiter */
+    let queryString = keypairs.join('&')
+
+    /* Actual API call */
+    const response = await fetch(this.endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/x-www-form-urlencoded'
+      },
+      body: queryString
     })
+
+    /* API response */
+    const result = await response.json()
+
+    return result
   }
 }
