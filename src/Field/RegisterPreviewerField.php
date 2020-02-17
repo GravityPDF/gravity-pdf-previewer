@@ -43,7 +43,7 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 		try {
 			GF_Fields::register( new GFormFieldPreviewer() );
 		} catch ( Exception $e ) {
-			$this->get_logger()->addError( 'Could not register Previewer field with Gravity Forms', [
+			$this->get_logger()->error( 'Could not register Previewer field with Gravity Forms', [
 				'code'    => $e->getCode(),
 				'message' => $e->getMessage(),
 			] );
@@ -71,7 +71,7 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 		/* Only include where our preview field is detected */
 		if ( $this->has_previewer_field( $form ) ) {
 
-			$this->get_logger()->addNotice( 'Including Previewer scripts and styles' );
+			$this->get_logger()->notice( 'Including Previewer scripts and styles' );
 
 			$version = ( defined( 'WP_DEBUG' ) && WP_DEBUG === true ) ? time() : GFPDF_PDF_PREVIEWER_VERSION;
 

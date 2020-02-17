@@ -65,14 +65,14 @@ class PdfViewerApiResponse implements CallableApiResponse {
 		$allow_download = $request->get_param( 'download' );
 		$temp_pdf       = $this->pdf_path . $temp_id . '/' . $temp_id . '.pdf';
 
-		$this->get_logger()->addNotice( 'Begin streaming Preview PDF', [
+		$this->get_logger()->notice( 'Begin streaming Preview PDF', [
 			'id'  => $temp_id,
 			'pdf' => $temp_pdf,
 		] );
 
 		/* No file found. Trigger error */
 		if ( ! is_file( $temp_pdf ) ) {
-			$this->get_logger()->addError( 'PDF Not Found' );
+			$this->get_logger()->error( 'PDF Not Found' );
 			return rest_ensure_response( [ 'error' => 'Requested PDF could not be found' ] );
 		}
 

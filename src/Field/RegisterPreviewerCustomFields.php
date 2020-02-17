@@ -88,7 +88,7 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	 */
 	public function add_pdf_selector( $position, $form_id ) {
 		if ( $position === 25 ) {
-			$this->get_logger()->addNotice( 'Add PDF Selector field to form editor' );
+			$this->get_logger()->notice( 'Add PDF Selector field to form editor' );
 
 			$pdfs              = $this->get_active_pdfs( $form_id );
 			$form_pdf_settings = network_admin_url( 'admin.php?page=gf_edit_forms&view=settings&subview=pdf&id=' . $form_id );
@@ -117,7 +117,7 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 			return $pdf['active'];
 		} );
 
-		$this->get_logger()->addNotice( 'Active PDFs on form', [
+		$this->get_logger()->notice( 'Active PDFs on form', [
 			'pdfs' => $pdfs,
 		] );
 
@@ -133,7 +133,7 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	 */
 	public function add_pdf_preview_height( $position ) {
 		if ( $position === 25 ) {
-			$this->get_logger()->addNotice( 'Add PDF Height selector to form editor' );
+			$this->get_logger()->notice( 'Add PDF Height selector to form editor' );
 
 			include __DIR__ . '/markup/preview-height-setting.php';
 		}
@@ -148,7 +148,7 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	 */
 	public function add_pdf_watermark_support( $position ) {
 		if ( $position === 25 ) {
-			$this->get_logger()->addNotice( 'Add PDF Watermark fields to form editor' );
+			$this->get_logger()->notice( 'Add PDF Watermark fields to form editor' );
 
 			$font_stack = GPDFAPI::get_pdf_fonts();
 			include __DIR__ . '/markup/pdf-watermark-setting.php';
@@ -164,7 +164,7 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	 */
 	public function add_pdf_download_support( $position ) {
 		if ( $position === 25 ) {
-			$this->get_logger()->addNotice( 'Add PDF Download toggle to form editor' );
+			$this->get_logger()->notice( 'Add PDF Download toggle to form editor' );
 			include __DIR__ . '/markup/pdf-download-setting.php';
 		}
 	}
@@ -175,7 +175,7 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 	 * @since 0.1
 	 */
 	public function editor_js() {
-		$this->get_logger()->addNotice( 'Load PDF Preview Editor Javascript' );
+		$this->get_logger()->notice( 'Load PDF Preview Editor Javascript' );
 
 		?>
         <script type="text/javascript">
