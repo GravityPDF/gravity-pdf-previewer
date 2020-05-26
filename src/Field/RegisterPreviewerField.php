@@ -2,11 +2,10 @@
 
 namespace GFPDF\Plugins\Previewer\Field;
 
-use GFPDF\Helper\Helper_Trait_Logger;
-use GFPDF\Helper\Helper_Interface_Actions;
-
-use GF_Fields;
 use Exception;
+use GF_Fields;
+use GFPDF\Helper\Helper_Interface_Actions;
+use GFPDF\Helper\Helper_Trait_Logger;
 
 /**
  * @package     Gravity PDF Previewer
@@ -70,6 +69,7 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 	 * @since 0.1
 	 */
 	public function gravityform_scripts( $form ) {
+		global $wp_rewrite;
 
 		/* Only include where our preview field is detected */
 		if ( $this->has_previewer_field( $form ) ) {
@@ -87,11 +87,21 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 				true
 			);
 
+			/*
+		     * Patch for WPML which can include the default language as a GET parameter
+		     * See https://github.com/GravityPDF/gravity-pdf/issues/550
+		     */
+			$home_url   = untrailingslashit( strtok( home_url(), '?' ) );
+			$viewer_url = $home_url . '/?gpdf-preview=1&gpdf-preview-token={TOKEN}';
+			if ( $wp_rewrite->using_permalinks() ) {
+				$viewer_url = $home_url . '/' . $wp_rewrite->root . 'pdf-preview/{TOKEN}/';
+			}
+
 			wp_localize_script(
 				'gfpdf_previewer',
 				'PdfPreviewerConstants',
 				[
-					'viewerUrl'            => plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/viewer/web/viewer.php',
+					'viewerUrl'            => $viewer_url,
 					'documentUrl'          => rest_url( 'gravity-pdf-previewer/v1/pdf/' ),
 					'pdfGeneratorEndpoint' => rest_url( 'gravity-pdf-previewer/v1/generator/' ),
 

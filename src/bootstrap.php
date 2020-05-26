@@ -3,6 +3,8 @@
 namespace GFPDF\Plugins\Previewer;
 
 use GFPDF\Plugins\Previewer\API\PdfViewerApiResponse;
+use GFPDF\Plugins\Previewer\Endpoint\Process as EndpointProcess;
+use GFPDF\Plugins\Previewer\Endpoint\Register as EndpointRegister;
 use GFPDF\Plugins\Previewer\Field\RegisterPreviewerField;
 use GFPDF\Plugins\Previewer\Field\RegisterPreviewerCustomFields;
 use GFPDF\Plugins\Previewer\Field\CorrectMultiUploadDisplayName;
@@ -75,8 +77,10 @@ class Bootstrap extends Helper_Abstract_Addon {
 				new WooCommerceGravityForms(),
 				new CorrectMultiUploadDisplayName(),
 				new NestedFormsPerk(),
+				new EndpointRegister(),
+				new EndpointProcess(),
 			]
-		);
+		);			
 
 		/* Run the setup */
 		parent::init( $classes );
