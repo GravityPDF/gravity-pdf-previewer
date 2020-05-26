@@ -123,7 +123,7 @@ export default class {
       }
 
       /* Load our newly generated PDF */
-      this.displayPreview(response.id)
+      this.displayPreview(response.token)
     }
   }
 
@@ -155,20 +155,20 @@ export default class {
   /**
    * Add our PDF Preview to the DOM
    *
-   * @param id: string | undefined
+   * @param token: string | undefined
    *
    * @since 0.1
    */
-  displayPreview (id) {
+  displayPreview (token) {
     /* Remove spinner for cancelled requests */
-    if (id === undefined) {
+    if (token === undefined) {
       return this.removeSpinner()
     }
 
     /* Ensure removal of old spinner from previous request */
     this.removeSpinner()
 
-    const iframe = this.viewer.create(id)
+    const iframe = this.viewer.create(token)
 
     /* When the iFrame finishes loading we'll remove the AJAX loading environment */
     iframe.addEventListener('load', () => {

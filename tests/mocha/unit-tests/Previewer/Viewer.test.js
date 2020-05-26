@@ -8,8 +8,7 @@ describe('Viewer Class', () => {
     container = document.querySelector('#karma-test-container')
     viewer = new Viewer({
       viewerHeight: 500,
-      viewer: 'http://localhost/',
-      documentUrl: 'documentUrl',
+      viewer: 'http://localhost/'
     })
   })
 
@@ -20,7 +19,7 @@ describe('Viewer Class', () => {
   it('Test create viewer', () => {
     let iframe = viewer.create('testID')
 
-    expect(iframe.getAttribute('src')).to.equal('http://localhost/?file=documentUrltestID')
+    expect(iframe.getAttribute('src')).to.equal('http://localhost/')
     expect(iframe.getAttribute('height')).to.equal('500')
   })
 
