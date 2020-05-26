@@ -54,6 +54,7 @@ class Process {
 		//@TODO - inject PDF URL into HTML and include URL params
 		//@TODO - fix up viewer paths
 		//@TODO - verify tmp PDF file exists
+		//@TODO - allow viewer settings to be modified
 
 		echo $html;
 		$this->end();
