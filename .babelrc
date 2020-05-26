@@ -1,8 +1,13 @@
 {
-  "plugins": ["transform-runtime"],
   "presets": [
-    ["es2015", { "modules": false }],
-    "stage-2"
+    [
+      "@babel/preset-env",
+      {
+        "targets": "> 0.25%, not dead",
+        "useBuiltIns": "usage",
+        "corejs": "3.6.5"
+      }
+    ]
   ],
   "env": {
     "test": {

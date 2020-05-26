@@ -1,92 +1,36 @@
-const webpack = require('webpack')
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const PROD = (process.env.NODE_ENV === 'production')
+const webpackMerge = require('webpack-merge')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const production = require('./webpack-configs/production')
+const development = require('./webpack-configs/development')
+const PROD = process.env.NODE_ENV === 'production'
+const modeConfig = PROD ? production : development
 
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
-
-const extractSass = new ExtractTextPlugin({
-  filename:  (getPath) => {
-    return getPath('css/[name].min.css').replace('css/js', 'css');
-  },
-});
-
-module.exports = {
-  entry: {
-    'js/previewer': './assets/js/main.js',
-  },
-  output: {
-    path: __dirname + '/dist/',
-    filename: '[name].min.js'
-  },
-  devtool: PROD ? 'source-map' : 'eval-cheap-module-source-map',
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['env']
-          }
-        }
-      },
-
-      {
-        test: /\.scss$/,
-        use: extractSass.extract({
-          use: [{
-            loader: "css-loader",
-            options: {
-              minimize: true,
-              sourceMap: true,
-              autoprefixer: {
-                add: true,
-                cascade: false,
-              },
-            }
-          }, {
-            loader: "sass-loader",
-            options: {
-              sourceMap: true
-            }
-          }]
-        })
-      }
-    ]
-  },
-  externals: {
-    'jquery': 'jQuery',
-  },
-
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }
-    }),
-
-    extractSass,
-
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      },
-      output: {
-        comments: false
-      },
-      sourceMap: false
-    }),
-
-    new CopyWebpackPlugin([{
-      from: 'node_modules/pdfjs-dist-viewer-min/build/minified/',
-      to: __dirname + '/dist/viewer/',
-      ignore: [ '*.pdf' ]
+module.exports = webpackMerge(
+  {
+    entry: { 'previewer': './assets/js/main.js' },
+    output: {
+      path: __dirname + '/dist/',
+      filename: '[name].min.js',
+      publicPath: __dirname + '/dist/'
     },
-      {
-        from: 'assets/viewer.php',
-        to: __dirname + '/dist/viewer/web/viewer.php',
-        force: true
-      }])
-  ]
-}
+    module: {
+      rules: [
+        {
+          test: /\.js$/,
+          loader: 'babel-loader',
+          options: { babelrc: true }
+        },
+        {
+          test: /\.s?css$/,
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            'sass-loader'
+          ]
+        }
+      ]
+    },
+    externals: { 'jquery': 'jQuery' }
+  },
+  modeConfig
+)
