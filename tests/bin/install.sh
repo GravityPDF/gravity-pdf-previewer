@@ -69,7 +69,7 @@ install_wp() {
 
 install_depencency() {
 	#Gravity Forms
-	download https://$GITHUB_TOKEN@codeload.github.com/GravityPDF/gravityforms/tar.gz/master "$TMPDIR/gravityforms.tar.gz"
+	download https://$GITHUB_TOKEN@codeload.github.com/GravityPDF/gravityforms/tar.gz/master "/tmp/gravityforms.tar.gz"
 	mkdir -p "$PWD/tmp/gravityforms"
 	tar --strip-components=1 -zxmf /tmp/gravityforms.tar.gz -C "$PWD/tmp/gravityforms"
 
