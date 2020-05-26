@@ -2,21 +2,20 @@
 
 namespace GFPDF\Plugins\Previewer\API;
 
-use GFPDF\Model\Model_PDF;
+use Exception;
+use GFAPI;
+use GFCache;
+use GFFormsModel;
 use GFPDF\Helper\Helper_PDF;
 use GFPDF\Helper\Helper_Trait_Logger;
+use GFPDF\Model\Model_PDF;
 use GFPDF\Plugins\Previewer\Exceptions\FieldNotFound;
 use GFPDF\Plugins\Previewer\Exceptions\FormNotFound;
 use GFPDF\Plugins\Previewer\Exceptions\PDFConfigNotFound;
 use GFPDF\Plugins\Previewer\Exceptions\PDFNotActive;
-
-use WP_REST_Request;
-use GFFormsModel;
-use GFAPI;
-use GFCache;
+use GFPDF\Plugins\Previewer\Validation\Token;
 use GPDFAPI;
-use Exception;
-use GFCommon;
+use WP_REST_Request;
 
 /**
  * @package     Gravity PDF Previewer
@@ -50,6 +49,13 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 * @since 0.1
 	 */
 	protected $pdf_model;
+
+	/**
+	 * @var Token
+	 *
+	 * @since 2.0
+	 */
+	protected $token;
 
 	/**
 	 * @var string
@@ -89,6 +95,13 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	protected $settings;
 
 	/**
+	 * @var string
+	 *
+	 * @since 2.0
+	 */
+	protected $pdf_name;
+
+	/**
 	 * PdfGeneratorApiResponse constructor.
 	 *
 	 * @param \GFPDF\Model\Model_PDF
@@ -96,8 +109,9 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 *
 	 * @since 0.1
 	 */
-	public function __construct( Model_PDF $pdf_model, $pdf_path ) {
+	public function __construct( Model_PDF $pdf_model, Token $token, $pdf_path ) {
 		$this->pdf_model = $pdf_model;
+		$this->token     = $token;
 		$this->pdf_path  = $pdf_path;
 	}
 
@@ -153,7 +167,20 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 
 			ob_end_clean();
 
-			return rest_ensure_response( [ 'id' => $this->get_unique_id() ] );
+			$unique_id = $this->get_unique_id();
+			$token     = $this->token->create( [
+				$form_id,
+				$field_id,
+				$unique_id,
+				$this->pdf_name,
+			] );
+
+			return rest_ensure_response(
+				[
+					'id'    => $this->get_unique_id(),
+					'token' => $token,
+				]
+			);
 
 		} catch ( FormNotFound $e ) {
 			$this->get_logger()->error(
@@ -275,6 +302,8 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 * @since 0.1
 	 */
 	public function change_pdf_save_location( Helper_PDF $pdf_generator ) {
+		$this->pdf_name = $pdf_generator->get_filename();
+
 		$pdf_generator->set_path( $this->pdf_path . $this->get_unique_id() . '/' );
 		$pdf_generator->set_filename( $this->get_unique_id() );
 

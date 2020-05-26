@@ -37,7 +37,6 @@ jQuery(document).bind('gform_post_render', function (e, formId, currentPage) {
     const fieldId = item.getAttribute('data-field-id')
     const pdfId = item.getAttribute('data-pdf-id')
     const previewerHeight = item.getAttribute('data-previewer-height')
-    const download = item.getAttribute('data-download') != null ? item.getAttribute('data-download') : '0'
 
     /* Continue to next matched element if no PDF ID exists */
     if (pdfId === '0') {
@@ -50,9 +49,7 @@ jQuery(document).bind('gform_post_render', function (e, formId, currentPage) {
     /* Initialise our Viewer / Generator classes */
     const viewer = new Viewer({
       viewerHeight: previewerHeight + 'px',
-      viewer: PdfPreviewerConstants.viewerUrl,
-      documentUrl: PdfPreviewerConstants.documentUrl,
-      download
+      viewer: PdfPreviewerConstants.viewerUrl
     })
 
     const previewer = new Generator({

@@ -18,11 +18,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class RegisterPdfGeneratorAPIEndpoint
+ * Class RegisterPdfViewerAPIEndpointV1
  *
  * @package GFPDF\Plugins\Previewer\API
  */
-class RegisterPdfGeneratorAPIEndpoint implements Helper_Interface_Actions {
+class RegisterPdfViewerAPIEndpointV1 implements Helper_Interface_Actions {
 
 	/**
 	 * @var CallableApiResponse
@@ -32,7 +32,7 @@ class RegisterPdfGeneratorAPIEndpoint implements Helper_Interface_Actions {
 	protected $response;
 
 	/**
-	 * RegisterPdfGeneratorAPIEndpoint constructor.
+	 * RegisterPdfViewerAPIEndpoint constructor.
 	 *
 	 * @param CallableApiResponse $response
 	 *
@@ -59,49 +59,21 @@ class RegisterPdfGeneratorAPIEndpoint implements Helper_Interface_Actions {
 	}
 
 	/**
-	 * Register our PDF generator endpoint.
+	 * Register our PDF Streaming endpoint
 	 *
-	 * @Internal The Field ID is optional and needed when you want Watermark support (or any future settings we add to the PDF Preview field)
+	 * @Internal Use this endpoint instead of giving users a direct link to the PDF document
 	 *
 	 * @since    0.1
 	 */
 	public function register_endpoint() {
 		register_rest_route(
 			'gravity-pdf-previewer/v1',
-			'/generator/(?P<pid>[a-zA-Z0-9]+)',
+			'/pdf/(?P<temp_id>[a-zA-Z0-9]+)',
 			[
-				'methods'  	      => WP_REST_Server::EDITABLE,
+				'methods'  	      => WP_REST_Server::READABLE,
 				'callback' 	      => [ $this->response, 'response' ],
 				'permission_callback' => '__return_true',
 			] 
-		);
-
-		register_rest_route(
-			'gravity-pdf-previewer/v1',
-			'/generator/(?P<pid>[a-zA-Z0-9]+)/(?P<fid>\d+)',
-			[
-				'methods'  	      => WP_REST_Server::EDITABLE,
-				'callback' 	      => [ $this->response, 'response' ],
-				'permission_callback' => '__return_true',
-			] 
-		);
-
-		register_rest_route(
-			'gravity-pdf-previewer/v2',
-			'/generator/(?P<pid>[a-zA-Z0-9]+)',
-			[
-				'methods'  => WP_REST_Server::EDITABLE,
-				'callback' => [ $this->response, 'response' ],
-			]
-		);
-
-		register_rest_route(
-			'gravity-pdf-previewer/v2',
-			'/generator/(?P<pid>[a-zA-Z0-9]+)/(?P<fid>\d+)',
-			[
-				'methods'  => WP_REST_Server::EDITABLE,
-				'callback' => [ $this->response, 'response' ],
-			]
 		);
 	}
 }

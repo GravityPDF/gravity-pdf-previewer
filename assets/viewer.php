@@ -1,3 +1,9 @@
+<?php
+/** $path string */
+/** $options array */
+/** $download bool */
+?>
+
 <!DOCTYPE html>
 <!--
 Copyright 2012 Mozilla Foundation
@@ -20,16 +26,15 @@ Adobe CMap resources are covered by their own copyright but the same license:
 
 See https://github.com/adobe-type-tools/cmap-resources
 -->
-<html dir="ltr" mozdisallowselectionprint moznomarginboxes>
+<html dir="ltr" mozdisallowselectionprint>
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<meta name="google" content="notranslate">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>PDF.js viewer</title>
+	<title>PDF Viewer</title>
 
-
-	<link rel="stylesheet" href="viewer.css">
+	<link rel="stylesheet" href="<?= $path ?>web/viewer.css">
 
 	<style>
 		body {
@@ -51,11 +56,11 @@ See https://github.com/adobe-type-tools/cmap-resources
 		#secondaryToolbar,
 		#sidebarToggle,
 		#viewFind,
-		#toolbarViewerRight > *{
+		#toolbarViewerRight > * {
 			display: none !important;
 		}
 
-		<?php if ( isset( $_GET['download'] ) && (int) $_GET['download'] === 1 ): ?>
+		<?php if ( $download ): ?>
 			#toolbarViewerRight > #download {
 				display: block !important;
 			}
@@ -69,15 +74,20 @@ See https://github.com/adobe-type-tools/cmap-resources
 		#toolbarContainer, .findbar, .secondaryToolbar {
 			box-shadow: none !important;
 		}
-
-		.textLayer {
-			display: none;
-		}
 	</style>
 
 	<!-- This snippet is used in production (included from viewer.html) -->
-	<link rel="resource" type="application/l10n" href="locale/locale.properties">
-	<script src="pdf.viewer.js"></script>
+	<link rel="resource" type="application/l10n" href="<?= $path ?>web/locale/locale.properties">
+	<script src="<?= $path ?>web/pdf.viewer.js"></script>
+	<script type="text/javascript">
+	  window.addEventListener('webviewerloaded', function () {
+			<?php foreach ( $options as $name => $value ): ?>
+				PDFViewerApplicationOptions.set('<?= $name ?>', <?= $value ?>)
+			<?php endforeach; ?>
+
+		console.log( PDFViewerApplicationOptions.getAll() );
+	  })
+	</script>
 </head>
 
 <body tabindex="1" class="loadingInProgress">
@@ -241,7 +251,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 								<span data-l10n-id="next_label">Next</span>
 							</button>
 						</div>
-						<input type="number" id="pageNumber" class="toolbarField pageNumber" title="Page" value="1" size="4" min="1" tabindex="15" data-l10n-id="page">
+						<input type="number" id="pageNumber" class="toolbarField pageNumber" title="Page" value="1" size="4" min="1" tabindex="15" data-l10n-id="page" autocomplete="off">
 						<span id="numPages" class="toolbarLabel"></span>
 					</div>
 					<div id="toolbarViewerRight">
@@ -353,64 +363,80 @@ See https://github.com/adobe-type-tools/cmap-resources
 					<input type="password" id="password" class="toolbarField">
 				</div>
 				<div class="buttonRow">
-					<button id="passwordCancel" class="overlayButton"><span data-l10n-id="password_cancel">Cancel</span></button>
-					<button id="passwordSubmit" class="overlayButton"><span data-l10n-id="password_ok">OK</span></button>
+					<button id="passwordCancel" class="overlayButton"><span data-l10n-id="password_cancel">Cancel</span>
+					</button>
+					<button id="passwordSubmit" class="overlayButton"><span data-l10n-id="password_ok">OK</span>
+					</button>
 				</div>
 			</div>
 		</div>
 		<div id="documentPropertiesOverlay" class="container hidden">
 			<div class="dialog">
 				<div class="row">
-					<span data-l10n-id="document_properties_file_name">File name:</span> <p id="fileNameField">-</p>
+					<span data-l10n-id="document_properties_file_name">File name:</span>
+					<p id="fileNameField">-</p>
 				</div>
 				<div class="row">
-					<span data-l10n-id="document_properties_file_size">File size:</span> <p id="fileSizeField">-</p>
-				</div>
-				<div class="separator"></div>
-				<div class="row">
-					<span data-l10n-id="document_properties_title">Title:</span> <p id="titleField">-</p>
-				</div>
-				<div class="row">
-					<span data-l10n-id="document_properties_author">Author:</span> <p id="authorField">-</p>
-				</div>
-				<div class="row">
-					<span data-l10n-id="document_properties_subject">Subject:</span> <p id="subjectField">-</p>
-				</div>
-				<div class="row">
-					<span data-l10n-id="document_properties_keywords">Keywords:</span> <p id="keywordsField">-</p>
-				</div>
-				<div class="row">
-					<span data-l10n-id="document_properties_creation_date">Creation Date:</span> <p id="creationDateField">-</p>
-				</div>
-				<div class="row">
-					<span data-l10n-id="document_properties_modification_date">Modification Date:</span> <p id="modificationDateField">-</p>
-				</div>
-				<div class="row">
-					<span data-l10n-id="document_properties_creator">Creator:</span> <p id="creatorField">-</p>
+					<span data-l10n-id="document_properties_file_size">File size:</span>
+					<p id="fileSizeField">-</p>
 				</div>
 				<div class="separator"></div>
 				<div class="row">
-					<span data-l10n-id="document_properties_producer">PDF Producer:</span> <p id="producerField">-</p>
+					<span data-l10n-id="document_properties_title">Title:</span>
+					<p id="titleField">-</p>
 				</div>
 				<div class="row">
-					<span data-l10n-id="document_properties_version">PDF Version:</span> <p id="versionField">-</p>
+					<span data-l10n-id="document_properties_author">Author:</span>
+					<p id="authorField">-</p>
 				</div>
 				<div class="row">
-					<span data-l10n-id="document_properties_page_count">Page Count:</span> <p id="pageCountField">-</p>
+					<span data-l10n-id="document_properties_subject">Subject:</span>
+					<p id="subjectField">-</p>
 				</div>
 				<div class="row">
-					<span data-l10n-id="document_properties_page_size">Page Size:</span> <p id="pageSizeField">-</p>
+					<span data-l10n-id="document_properties_keywords">Keywords:</span>
+					<p id="keywordsField">-</p>
+				</div>
+				<div class="row">
+					<span data-l10n-id="document_properties_creation_date">Creation Date:</span>
+					<p id="creationDateField">-</p>
+				</div>
+				<div class="row">
+					<span data-l10n-id="document_properties_modification_date">Modification Date:</span>
+					<p id="modificationDateField">-</p>
+				</div>
+				<div class="row">
+					<span data-l10n-id="document_properties_creator">Creator:</span>
+					<p id="creatorField">-</p>
 				</div>
 				<div class="separator"></div>
 				<div class="row">
-					<span data-l10n-id="document_properties_linearized">Fast Web View:</span> <p id="linearizedField">-</p>
+					<span data-l10n-id="document_properties_producer">PDF Producer:</span>
+					<p id="producerField">-</p>
+				</div>
+				<div class="row">
+					<span data-l10n-id="document_properties_version">PDF Version:</span>
+					<p id="versionField">-</p>
+				</div>
+				<div class="row">
+					<span data-l10n-id="document_properties_page_count">Page Count:</span>
+					<p id="pageCountField">-</p>
+				</div>
+				<div class="row">
+					<span data-l10n-id="document_properties_page_size">Page Size:</span>
+					<p id="pageSizeField">-</p>
+				</div>
+				<div class="separator"></div>
+				<div class="row">
+					<span data-l10n-id="document_properties_linearized">Fast Web View:</span>
+					<p id="linearizedField">-</p>
 				</div>
 				<div class="buttonRow">
-					<button id="documentPropertiesClose" class="overlayButton"><span data-l10n-id="document_properties_close">Close</span></button>
+					<button id="documentPropertiesClose" class="overlayButton">
+						<span data-l10n-id="document_properties_close">Close</span></button>
 				</div>
 			</div>
 		</div>
-		<!--#if !(FIREFOX || MOZCENTRAL)-->
 		<div id="printServiceOverlay" class="container hidden">
 			<div class="dialog">
 				<div class="row">
@@ -421,14 +447,11 @@ See https://github.com/adobe-type-tools/cmap-resources
 					<span data-l10n-id="print_progress_percent" data-l10n-args='{ "progress": 0 }' class="relative-progress">0%</span>
 				</div>
 				<div class="buttonRow">
-					<button id="printCancel" class="overlayButton"><span data-l10n-id="print_progress_close">Cancel</span></button>
+					<button id="printCancel" class="overlayButton">
+						<span data-l10n-id="print_progress_close">Cancel</span></button>
 				</div>
 			</div>
 		</div>
-		<!--#endif-->
-		<!--#if CHROME-->
-		<!--#include viewer-snippet-chrome-overlays.html-->
-		<!--#endif-->
 	</div>  <!-- overlayContainer -->
 
 </div> <!-- outerContainer -->

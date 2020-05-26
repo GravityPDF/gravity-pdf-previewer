@@ -15,33 +15,25 @@ export default class {
    * @param args
    * .viewerHeight string The height of the iFrame
    * .viewer string The URL to the viewer
-   * .documentUrl string The REST API endpoint to stream the generated PDF
-   * .download int
    *
    * @since 0.1
    */
   constructor (args) {
     this.viewerHeight = args.viewerHeight
     this.viewerUrl = args.viewer
-    this.documentUrl = args.documentUrl
-    this.download = args.download
   }
 
   /**
    * Creates our iFrame with the PDF Viewer
    *
-   * @param id
+   * @param token
    *
    * @returns <iframe />
    *
    * @since 0.1
    */
-  create (id) {
-    let pdfUrl = this.viewerUrl + '?file=' + encodeURIComponent(this.documentUrl + id)
-
-    if (this.download === '1') {
-      pdfUrl = this.viewerUrl + '?download=1&file=' + encodeURIComponent(this.documentUrl + id + '?download=1')
-    }
+  create (token) {
+    const pdfUrl = this.viewerUrl.replace('{TOKEN}', encodeURIComponent(token))
 
     this.remove()
     this.iframe = document.createElement('iframe')

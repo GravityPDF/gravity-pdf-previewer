@@ -3,13 +3,14 @@
 namespace GFPDF\Plugins\Previewer\API;
 
 use GFPDF\Helper\Helper_Interface_Actions;
+
 use WP_REST_Server;
 
 /**
  * @package     Gravity PDF Previewer
  * @copyright   Copyright (c) 2020, Blue Liquid Designs
  * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
- * @since       0.1
+ * @since       2.0
  */
 
 /* Exit if accessed directly */
@@ -18,16 +19,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class RegisterPdfViewerAPIEndpoint
+ * Class RegisterPdfViewerAPIEndpointV2
  *
  * @package GFPDF\Plugins\Previewer\API
  */
-class RegisterPdfViewerAPIEndpoint implements Helper_Interface_Actions {
+class RegisterPdfViewerAPIEndpointV2 implements Helper_Interface_Actions {
 
 	/**
 	 * @var CallableApiResponse
 	 *
-	 * @since 0.1
+	 * @since 2.0
 	 */
 	protected $response;
 
@@ -36,7 +37,7 @@ class RegisterPdfViewerAPIEndpoint implements Helper_Interface_Actions {
 	 *
 	 * @param CallableApiResponse $response
 	 *
-	 * @since 0.1
+	 * @since 2.0
 	 */
 	public function __construct( CallableApiResponse $response ) {
 		$this->response = $response;
@@ -45,14 +46,14 @@ class RegisterPdfViewerAPIEndpoint implements Helper_Interface_Actions {
 	/**
 	 * Initialise our module
 	 *
-	 * @since 0.1
+	 * @since 2.0
 	 */
 	public function init() {
 		$this->add_actions();
 	}
 
 	/**
-	 * @since 0.1
+	 * @since 2.0
 	 */
 	public function add_actions() {
 		add_action( 'rest_api_init', [ $this, 'register_endpoint' ] );
@@ -63,17 +64,16 @@ class RegisterPdfViewerAPIEndpoint implements Helper_Interface_Actions {
 	 *
 	 * @Internal Use this endpoint instead of giving users a direct link to the PDF document
 	 *
-	 * @since    0.1
+	 * @since    2.0
 	 */
 	public function register_endpoint() {
 		register_rest_route(
-			'gravity-pdf-previewer/v1',
-			'/pdf/(?P<temp_id>[a-zA-Z0-9]+)',
+			'gravity-pdf-previewer/v2',
+			'/pdf/',
 			[
-				'methods'  	      => WP_REST_Server::READABLE,
-				'callback' 	      => [ $this->response, 'response' ],
-				'permission_callback' => '__return_true',
-			] 
+				'methods'  => WP_REST_Server::READABLE,
+				'callback' => [ $this->response, 'response' ],
+			]
 		);
 	}
 }

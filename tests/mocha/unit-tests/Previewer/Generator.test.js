@@ -13,8 +13,7 @@ describe('Generator Class', () => {
 
     viewer = new Viewer({
       viewerHeight: '600',
-      viewer: 'http://localhost/',
-      documentUrl: 'documentUrl'
+      viewer: 'http://localhost/'
     })
 
     generator = new Generator({
@@ -25,11 +24,9 @@ describe('Generator Class', () => {
     })
 
     /* Mock Api call */
-    generator.callEndpoint = (response) => {
-      return new Promise((resolve, reject) => {
-        resolve({
-          id: '12345abc'
-        })
+    generator.callEndpoint = () => {
+      return new Promise((resolve) => {
+        resolve({ token: '12345bcd' })
       })
     }
   })
@@ -43,7 +40,7 @@ describe('Generator Class', () => {
 
   it('Test endpoint stub', (done) => {
     generator.callEndpoint().then((response) => {
-      expect(response.id).to.equal('12345abc')
+      expect(response.token).to.equal('12345bcd')
       done()
     })
   })
