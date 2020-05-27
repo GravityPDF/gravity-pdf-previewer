@@ -30,6 +30,7 @@ FILES=(
 "${PACKAGE_DIR}/composer.lock"
 "${PACKAGE_DIR}/package.json"
 "${PACKAGE_DIR}/yarn.lock"
+"${PACKAGE_DIR}/phpcs.xml.dist"
 "${PACKAGE_DIR}/gulpfile.js"
 "${PACKAGE_DIR}/.babelrc"
 "${PACKAGE_DIR}/.eslintrc"

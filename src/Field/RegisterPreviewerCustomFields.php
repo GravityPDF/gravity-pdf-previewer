@@ -27,10 +27,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_Interface_Filters {
 
 	/*
-     * Add logging support
-     *
-     * @since 0.2
-     */
+	 * Add logging support
+	 *
+	 * @since 0.2
+	 */
 	use Helper_Trait_Logger;
 
 	/**
@@ -113,13 +113,19 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 		}
 
 		/* Filter the inactive PDFs */
-		$pdfs = array_filter( $pdfs, function( $pdf ) {
-			return $pdf['active'];
-		} );
+		$pdfs = array_filter(
+			$pdfs,
+			function( $pdf ) {
+				return $pdf['active'];
+			}
+		);
 
-		$this->get_logger()->notice( 'Active PDFs on form', [
-			'pdfs' => $pdfs,
-		] );
+		$this->get_logger()->notice(
+			'Active PDFs on form',
+			[
+				'pdfs' => $pdfs,
+			]
+		);
 
 		return $pdfs;
 	}
@@ -178,20 +184,20 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 		$this->get_logger()->notice( 'Load PDF Preview Editor Javascript' );
 
 		?>
-        <script type="text/javascript">
+		<script type="text/javascript">
 
-          /* Setup default values for our PDF Preview field */
-          function SetDefaultValues_pdfpreview (field) {
-            field['label'] = <?php echo json_encode( __( 'PDF Preview', 'gravity-pdf-previewer' ) ); ?>;
-            field['pdfpreviewheight'] = "600";
-            field['pdfwatermarktext'] = <?php echo json_encode( __( 'SAMPLE', 'gravity-pdf-previewer' ) ); ?>;
-            field['pdfwatermarkfont'] = <?php echo json_encode( GPDFAPI::get_plugin_option( 'default_font', 'dejavusanscondensed' ) ); ?>;
+		  /* Setup default values for our PDF Preview field */
+		  function SetDefaultValues_pdfpreview (field) {
+			field['label'] = <?php echo json_encode( __( 'PDF Preview', 'gravity-pdf-previewer' ) ); ?>;
+			field['pdfpreviewheight'] = "600";
+			field['pdfwatermarktext'] = <?php echo json_encode( __( 'SAMPLE', 'gravity-pdf-previewer' ) ); ?>;
+			field['pdfwatermarkfont'] = <?php echo json_encode( GPDFAPI::get_plugin_option( 'default_font', 'dejavusanscondensed' ) ); ?>;
 
-            return field;
-          }
+			return field;
+		  }
 
 		  <?php echo file_get_contents( __DIR__ . '/markup/editor.js' ); ?>
-        </script>
+		</script>
 		<?php
 	}
 }

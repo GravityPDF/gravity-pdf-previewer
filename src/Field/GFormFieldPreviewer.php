@@ -124,7 +124,7 @@ class GFormFieldPreviewer extends GF_Field {
 			'pdf_selector_setting',
 			'pdf_preview_height_setting',
 			'pdf_watermark_setting',
-			'pdf_download_setting'
+			'pdf_download_setting',
 		];
 	}
 

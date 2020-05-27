@@ -2,14 +2,13 @@
 
 namespace GFPDF\Tests\Previewer;
 
+use GFAPI;
 use GFPDF\Helper\Helper_PDF;
 use GFPDF\Plugins\Previewer\API\PdfGeneratorApiResponse;
 use GFPDF\Plugins\Previewer\Exceptions\FieldNotFound;
-
-use WP_UnitTestCase;
-use WP_REST_Request;
-use GFAPI;
 use stdClass;
+use WP_REST_Request;
+use WP_UnitTestCase;
 
 /**
  * @package     Gravity PDF Previewer
@@ -57,7 +56,7 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 
 		foreach ( $fonts as $font ) {
 			$font_name = basename( $font );
-			@copy( $font, $gfpdf->data->template_font_location . $font_name );
+			@copy( $font, $gfpdf->data->template_font_location . $font_name ); //phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
 		}
 	}
 
@@ -68,7 +67,7 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 		$fonts = ( is_array( $fonts ) ) ? $fonts : [];
 
 		foreach ( $fonts as $font ) {
-			@unlink( $font );
+			@unlink( $font ); //phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
 		}
 
 		parent::tearDown();
@@ -84,13 +83,17 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 		$form_id                    = GFAPI::add_form( $form );
 		$request                    = new WP_REST_Request( 'POST', '/' );
 
+		$request->set_header( 'content-type', 'application/json' );
+
 		/* Test for missing Gravity Form error */
 		$response = $this->class->response( $request );
 		$this->assertEquals( 'Could not find Gravity Form', $response->data['error'] );
 
-		$request->set_body_params( [
-			'gform_submit' => $form_id,
-		] );
+		$request->set_body_params(
+			[
+				'gform_submit' => $form_id,
+			]
+		);
 
 		/* Test for missing PDF error */
 		$response = $this->class->response( $request );
@@ -129,6 +132,11 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 
 		$entry    = $this->class->create_entry( $form );
 		$settings = $this->class->get_pdf_config( $form, '555ad84787d7e' );
+
+		$reflection = new \ReflectionClass( $this->class );
+		$property   = $reflection->getProperty( 'form' );
+		$property->setAccessible( true );
+		$property->setValue( $this->class, $form );
 
 		$this->class->set_unique_id();
 		$pdf_path = $this->class->generate_pdf( $entry, $settings );
@@ -260,7 +268,10 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 	 */
 	public function test_change_pdf_save_location() {
 		$helper_pdf = new Helper_PDF(
-			[ 'id' => 0, 'form_id' => 0 ],
+			[
+				'id'      => 0,
+				'form_id' => 0,
+			],
 			[],
 			\GPDFAPI::get_form_class(),
 			\GPDFAPI::get_data_class(),
@@ -290,11 +301,16 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 		$this->assertObjectNotHasAttribute( 'showWatermarkText', $test );
 		$this->assertObjectNotHasAttribute( 'watermark_font', $test );
 
-		$test = $this->class->add_watermark( $test, '', '', [
-			'enable_watermark' => true,
-			'watermark_font'   => '',
-			'watermark_text'   => '',
-		] );
+		$test = $this->class->add_watermark(
+			$test,
+			'',
+			'',
+			[
+				'enable_watermark' => true,
+				'watermark_font'   => '',
+				'watermark_text'   => '',
+			]
+		);
 
 		$this->assertObjectHasAttribute( 'showWatermarkText', $test );
 		$this->assertObjectHasAttribute( 'watermark_font', $test );

@@ -37,8 +37,8 @@ class TestGravityFlow extends WP_UnitTestCase {
 	 */
 	public function setUp() {
 		$this->class = $this->getMockBuilder( 'GFPDF\Plugins\Previewer\ThirdParty\GravityFlow' )
-		                    ->setMethods( [ 'get_form', 'get_entry' ] )
-		                    ->getMock();
+							->setMethods( [ 'get_form', 'get_entry' ] )
+							->getMock();
 
 		$this->class
 			->expects( $this->any() )
@@ -96,15 +96,15 @@ class TestGravityFlow extends WP_UnitTestCase {
 			'id'      => 7,
 			'form_id' => 2,
 
-			'1'   => 'Stored Value 1',
-			'2'   => 'Stored Value 2',
-			'3'   => 'Stored Value 3',
-			'4'   => 'Stored Value 4',
-			'5'   => 'Stored Value 5',
-			'6.3' => 'Stored First 6',
-			'6.6' => 'Stored Last 6',
-			'7.3' => 'Stored First 7',
-			'7.6' => 'Stored Last 7',
+			'1'       => 'Stored Value 1',
+			'2'       => 'Stored Value 2',
+			'3'       => 'Stored Value 3',
+			'4'       => 'Stored Value 4',
+			'5'       => 'Stored Value 5',
+			'6.3'     => 'Stored First 6',
+			'6.6'     => 'Stored Last 6',
+			'7.3'     => 'Stored First 7',
+			'7.6'     => 'Stored Last 7',
 		];
 	}
 
