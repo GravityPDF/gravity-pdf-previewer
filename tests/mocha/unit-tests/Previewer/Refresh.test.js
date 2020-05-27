@@ -1,12 +1,11 @@
-import $ from 'jquery'
 import Refresh from '../../../../assets/js/Previewer/Refresh'
 
 describe('Refresh Class', () => {
 
-  var refresh, $container
+  let refresh, container
 
   beforeEach(function () {
-    $container = $('#karma-test-container')
+    container = document.querySelector('#karma-test-container')
     refresh = new Refresh()
   })
 
@@ -15,30 +14,30 @@ describe('Refresh Class', () => {
   })
 
   it('Test add refresh', () => {
-    refresh.add($container, () => {})
+    refresh.add(container, () => {})
 
-    expect(refresh.$refresh.attr('class')).to.equal('gpdf-manually-load-preview')
-    expect($container.find('.gpdf-manually-load-preview a').attr('title')).to.equal('refresh_title')
-    expect($container.find('.gpdf-manually-load-preview a img').length).to.equal(1)
+    expect(refresh.refresh.getAttribute('class')).to.equal('gpdf-manually-load-preview')
+    expect(container.querySelector('.gpdf-manually-load-preview a').getAttribute('title')).to.equal('refresh_title')
+    expect(container.querySelector('.gpdf-manually-load-preview a img')).to.exist
   })
 
   it('Test callback', (done) => {
-    refresh.add($container, () => {
+    refresh.add(container, () => {
       done()
     })
 
-    refresh.$refresh.find('a').click()
+    refresh.refresh.querySelector('a').click()
   })
 
   it('Test remove', () => {
-    refresh.add($container, () => {})
-    expect($container.find('.gpdf-manually-load-preview a img').length).to.equal(1)
+    refresh.add(container, () => {})
+    expect(container.querySelector('.gpdf-manually-load-preview a img')).to.exist
 
     refresh.remove()
-    expect($container.find('.gpdf-manually-load-preview a img').length).to.equal(0)
+    expect(container.querySelector('.gpdf-manually-load-preview a img')).to.be.null
   })
 
   it('Test loading white icon', () => {
-    refresh.add($container, () => {}, 'white')
+    refresh.add(container, () => {}, 'white')
   })
 })

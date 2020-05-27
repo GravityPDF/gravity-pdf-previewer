@@ -1,40 +1,37 @@
-import $ from 'jquery'
 import Generator from '../../../../assets/js/Previewer/Generator'
 import Viewer from '../../../../assets/js/Previewer/Viewer'
+import 'abortcontroller-polyfill/dist/abortcontroller-polyfill-only'
 
 describe('Generator Class', () => {
 
-  $.ajax = (response) => {
-    return new Promise((resolve, reject) => {
-      resolve({
-        id: '12345abc'
-      })
-    })
-  }
-
-  var generator, $container
+  let container, form, viewer, generator
 
   beforeEach(function () {
-    $container = $('#karma-test-container')
-    let $form = $('<form>')
-    $form.append($('<input>'))
+    container = document.querySelector('#karma-test-container')
+    form = document.createElement('form')
+    form.appendChild(document.createElement('input'))
 
-    let viewer = new Viewer({
+    viewer = new Viewer({
       viewerHeight: '600',
-      viewer: 'viewerUrl',
+      viewer: 'http://localhost/',
       documentUrl: 'documentUrl'
     })
 
     generator = new Generator({
-      form: $form,
-      container: $container,
+      form: form,
+      container: container,
       viewer: viewer,
       endpoint: 'endpointUrl'
     })
-  })
 
-  it('Is container in view', () => {
-    expect(generator.isContainerInViewpoint()).to.be.false
+    /* Mock Api call */
+    generator.callEndpoint = (response) => {
+      return new Promise((resolve, reject) => {
+        resolve({
+          id: '12345abc'
+        })
+      })
+    }
   })
 
   it('Track form changes', () => {
@@ -53,27 +50,25 @@ describe('Generator Class', () => {
 
   it('Test display preview', () => {
     generator.displayPreview('12345abc')
-    expect($container.find('iframe').length).to.equal(1)
+    expect(container.querySelector('iframe')).to.exist
   })
 
   it('Test PDF Display Error', () => {
-
     let errorLog = console.error
     console.error = () => {}
-    generator.spinner.add(generator.$container)
+    generator.spinner.add(generator.container)
     generator.handlePdfDisplayError('My error')
 
-    expect($container.find('.gpdf-spinner').text()).to.equal('loading error')
-    expect($container.find('.gpdf-spinner .gpdf-manually-load-preview a img').length).to.equal(1)
+    expect(container.querySelector('.gpdf-spinner').textContent).to.equal('loading error')
+    expect(container.querySelector('.gpdf-spinner .gpdf-manually-load-preview a img')).to.exist
 
     console.error = errorLog
   })
 
   it('Test PDF Preview Generator', (done) => {
-    generator.generatePreview().then((response) => {
-      expect($container.find('iframe').length).to.equal(1)
+    generator.generatePreview().then(() => {
+      expect(container.querySelector('iframe')).to.exist
       done()
     })
   })
-
 })
