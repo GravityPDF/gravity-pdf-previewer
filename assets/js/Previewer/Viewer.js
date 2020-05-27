@@ -1,5 +1,3 @@
-import $ from 'jquery'
-
 /**
  * @package     Gravity PDF Previewer
  * @copyright   Copyright (c) 2020, Blue Liquid Designs
@@ -13,18 +11,17 @@ import $ from 'jquery'
  * @since 0.1
  */
 export default class {
-
   /**
    * @param args
-   *            .viewerHeight int The height of the iFrame
-   *            .viewer string The URL to the viewer
-   *            .documentUrl string The REST API endpoint to stream the generated PDF
+   * .viewerHeight string The height of the iFrame
+   * .viewer string The URL to the viewer
+   * .documentUrl string The REST API endpoint to stream the generated PDF
+   * .download int
    *
    * @since 0.1
    */
   constructor (args) {
     this.viewerHeight = args.viewerHeight
-
     this.viewerUrl = args.viewer
     this.documentUrl = args.documentUrl
     this.download = args.download
@@ -35,25 +32,25 @@ export default class {
    *
    * @param id
    *
-   * @returns jQuery
+   * @returns <iframe />
    *
    * @since 0.1
    */
   create (id) {
     let pdfUrl = this.viewerUrl + '?file=' + encodeURIComponent(this.documentUrl + id)
 
-    if (this.download === 1) {
+    if (this.download === '1') {
       pdfUrl = this.viewerUrl + '?download=1&file=' + encodeURIComponent(this.documentUrl + id + '?download=1')
     }
 
     this.remove()
-    this.$iframe = $('<iframe>')
-      .attr('src', pdfUrl)
-      .attr('frameborder', 0)
-      .width('100%')
-      .height(this.viewerHeight)
+    this.iframe = document.createElement('iframe')
+    this.iframe.setAttribute('src', pdfUrl)
+    this.iframe.setAttribute('frameborder', '0')
+    this.iframe.setAttribute('width', '100%')
+    this.iframe.setAttribute('height', this.viewerHeight)
 
-    return this.$iframe
+    return this.iframe
   }
 
   /**
@@ -63,8 +60,8 @@ export default class {
    */
   remove () {
     if (this.doesViewerExist()) {
-      this.$iframe.remove()
-      this.$iframe = undefined
+      this.iframe.remove()
+      this.iframe = undefined
     }
   }
 
@@ -76,6 +73,6 @@ export default class {
    * @since 0.1
    */
   doesViewerExist () {
-    return this.$iframe !== undefined
+    return this.iframe !== undefined
   }
 }

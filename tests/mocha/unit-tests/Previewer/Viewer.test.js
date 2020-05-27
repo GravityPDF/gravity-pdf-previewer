@@ -1,15 +1,14 @@
-import $ from 'jquery'
 import Viewer from '../../../../assets/js/Previewer/Viewer'
 
 describe('Viewer Class', () => {
 
-  var viewer, $container
+  let viewer, container
 
   beforeEach(function () {
-    $container = $('#karma-test-container')
+    container = document.querySelector('#karma-test-container')
     viewer = new Viewer({
       viewerHeight: 500,
-      viewer: 'viewerUrl',
+      viewer: 'http://localhost/',
       documentUrl: 'documentUrl',
     })
   })
@@ -19,30 +18,27 @@ describe('Viewer Class', () => {
   })
 
   it('Test create viewer', () => {
+    let iframe = viewer.create('testID')
 
-    let $iframe = viewer.create('testID')
-
-    expect($iframe.attr('src')).to.equal('viewerUrl?file=documentUrltestID')
-    expect($iframe.height()).to.equal(500)
+    expect(iframe.getAttribute('src')).to.equal('http://localhost/?file=documentUrltestID')
+    expect(iframe.getAttribute('height')).to.equal('500')
   })
 
   it('Test remove viewer', () => {
-    let $iframe = viewer.create('testID')
+    let iframe = viewer.create('testID')
 
-    $container.append($iframe)
-    expect($container.find('iframe').length).to.equal(1)
+    container.appendChild(iframe)
+    expect(container.querySelector('iframe')).to.exist
 
-    $iframe.remove()
-    expect($container.find('iframe').length).to.equal(0)
+    iframe.remove()
+    expect(container.querySelector('iframe')).to.be.null
   })
 
   it('Test viewer exists', () => {
-    let $iframe = viewer.create('testID')
-
+    viewer.create('testID')
     expect(viewer.doesViewerExist()).to.be.true
 
     viewer.remove()
     expect(viewer.doesViewerExist()).to.be.false
   })
-
 })

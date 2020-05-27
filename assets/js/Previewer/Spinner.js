@@ -1,5 +1,3 @@
-import $ from 'jquery'
-
 /**
  * @package     Gravity PDF Previewer
  * @copyright   Copyright (c) 2020, Blue Liquid Designs
@@ -13,28 +11,30 @@ import $ from 'jquery'
  * @since 0.1
  */
 export default class {
-
   /**
    * Adds a loading spinner and message to the DOM
    *
-   * @param jQuery $container
+   * @param element container
    *
    * @since 0.1
    */
-  add ($container) {
-    const spinner = require('svg-url-loader?noquotes!../../images/spinner.svg')
+  add (container) {
+    const spinner = require('svg-url-loader?noquotes!../../images/spinner.svg') // eslint-disable-line
 
-    this.remove()
+    this.spinner = document.createElement('div')
+    this.spinner.classList.add('gpdf-spinner')
 
-    this.$spinner = $('<div>').addClass('gpdf-spinner')
+    const img = document.createElement('img')
+    img.setAttribute('src', spinner)
+    img.setAttribute('style', 'height: 50px;')
 
-    this.$spinner.append($('<img>')
-      .attr('src', spinner)
-      .height(50))
+    this.spinner.appendChild(img)
 
-    this.$spinner.append(PdfPreviewerConstants.loadingMessage)
+    const text = document.createTextNode(PdfPreviewerConstants.loadingMessage)
 
-    $container.append(this.$spinner)
+    this.spinner.appendChild(text)
+
+    container.appendChild(this.spinner)
   }
 
   /**
@@ -43,8 +43,8 @@ export default class {
    * @since 0.1
    */
   remove () {
-    if (this.$spinner) {
-      this.$spinner.remove()
+    if (this.spinner) {
+      this.spinner.remove()
     }
   }
 
@@ -54,8 +54,8 @@ export default class {
    * @since 0.1
    */
   showLoadingError () {
-    if (this.$spinner) {
-      this.$spinner.html(PdfPreviewerConstants.errorMessage)
+    if (this.spinner) {
+      this.spinner.innerHTML = PdfPreviewerConstants.errorMessage
     }
   }
 }

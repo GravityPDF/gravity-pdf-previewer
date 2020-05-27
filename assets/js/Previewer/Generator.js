@@ -1,8 +1,8 @@
-import $ from 'jquery'
 import debounce from 'debounce'
-import inViewport from 'in-viewport'
 import Spinner from './Spinner'
 import Refresh from './Refresh'
+import { isInViewport } from './utilities/isInViewport'
+import { serializeFormData } from './utilities/serializeFormData'
 
 /**
  * @package     Gravity PDF Previewer
@@ -17,26 +17,30 @@ import Refresh from './Refresh'
  * @since 0.1
  */
 export default class {
-
   /**
    * @param args
-   *            .form jQuery form object
-   *            .container jQuery PDF Preview object
-   *            .viewer object The Viewer.js initialised class
-   *            .endpoint string The PDF generator REST API endpoint
+   * .form form object
+   * .formId form id integer
+   * .container element wrapper of PDF Previewer
+   * .viewer object The Viewer.js initialised class
+   * .endpoint string The PDF generator REST API endpoint
+   * .formUpdated boolean
+   * .failedRequest boolean
+   * .spinner object initialised spinner
+   * .controller object Initialize fetch abort controller
    *
    * @since 0.1
    */
   constructor (args) {
-    this.$form = args.form
-    this.$container = args.container
+    this.form = args.form
+    this.formId = args.formId
+    this.container = args.container
     this.viewer = args.viewer
-    this.spinner = new Spinner()
-
-    this.formUpdated = false
-    this.updateInProgress = false
-
     this.endpoint = args.endpoint
+    this.formUpdated = false
+    this.failedRequest = false
+    this.spinner = new Spinner()
+    this.controller = new window.AbortController()
   }
 
   /**
@@ -45,35 +49,16 @@ export default class {
    * @since 0.1
    */
   init () {
-
     /* Add listener to track any form change events (events bubble up the DOM) */
-    this.$form.change(() => this.trackFormChanges())
+    jQuery(this.form).on('change input', () => this.trackFormChanges())
 
     /* Register our manual PDF previewer loader */
     const manualLoader = new Refresh()
-    manualLoader.add(this.$container, () => {
-      this.generatePreview()
-      return false
-    })
+    manualLoader.add(this.container, () => this.generatePreview())
 
-    /* Add listener to the scroll event to trigger a reload */
-    $(window).scroll(() => debounce(this.maybeReloadPreview(), 1000))
-
-    /* Trigger the viewer if there is no scrollbar */
-    if( window.innerWidth <= document.documentElement.clientWidth ) {
-      this.maybeReloadPreview()
-    }
-  }
-
-  /**
-   * Check if the PDF Preview container is in the browser viewpoint
-   *
-   * @returns boolean
-   *
-   * @since 0.1
-   */
-  isContainerInViewpoint () {
-    return inViewport(this.$container[0])
+    /* Add listener to the onload and scroll event to trigger a reload */
+    window.addEventListener('load', () => this.generatePreview())
+    window.addEventListener('scroll', () => debounce(this.maybeReloadPreview(), 1000))
   }
 
   /**
@@ -82,13 +67,10 @@ export default class {
    * @since 0.1
    */
   maybeReloadPreview () {
-
     /*
-     * If the viewer hasn't already been initialised, OR
-     * the form has been updated AND the previewer container is in the browser viewpoint
-     * then we'll generate a new preview
+     * If the form has been updated and not in submitting process then we'll generate a new preview
      */
-    if (!this.viewer.doesViewerExist() || (window['gf_submitting_' + this.$form.data('fid')] != true && this.formUpdated && this.isContainerInViewpoint())) {
+    if (window['gf_submitting_' + this.formId] !== true && this.formUpdated && isInViewport(this.container)) {
       this.generatePreview()
     }
   }
@@ -110,32 +92,34 @@ export default class {
    * @since 0.1
    */
   async generatePreview () {
-
     /*
-     * Only reload the PDF if our container isn't currently hidden AND this function isn't already in progress
+     * Only reload if the previous request is resolved
      */
-    if (this.$container.is(':visible') && !this.updateInProgress) {
+    if (!this.failedRequest) {
+      /* Take only the new request and abort the previous request */
+      this.controller.abort()
+      this.controller = new window.AbortController()
+
       /* Remove old PDF Preview */
       this.viewer.remove()
 
       /* Setup our loading environment */
-      this.updateInProgress = true
-      this.$container.addClass('gfpdf-loading')
-      this.spinner.add(this.$container)
+      this.formUpdated = false
+      this.container.classList.add('gfpdf-loading')
+      this.spinner.add(this.container)
 
       /* Call our endpoint and catch any promise-related errors that might occur */
+      let response
+
       try {
-        var response = await this.callEndpoint()
+        response = await this.callEndpoint()
       } catch (error) {
-        response = {
-          error: 'PDF Generation Error'
-        }
+        response = { error: error.message ? undefined : 'PDF Generation Error' }
       }
 
       /* Display error to end user */
       if (response.error) {
-        this.handlePdfDisplayError(response.error)
-        return
+        return this.handlePdfDisplayError(response.error)
       }
 
       /* Load our newly generated PDF */
@@ -146,11 +130,12 @@ export default class {
   /**
    * Display an error to the end user when there was a problem generating the PDF
    *
-   * @param error
+   * @param error: string
    *
    * @since 0.1
    */
   handlePdfDisplayError (error) {
+    this.failedRequest = true
 
     /* Log the error to the browser console */
     console.error(error)
@@ -160,52 +145,64 @@ export default class {
 
     /* Add a manual loader below the error so the user can try again */
     const manualLoader = new Refresh()
-    manualLoader.add(this.spinner.$spinner, () => {
-      this.updateInProgress = false
+    manualLoader.add(this.spinner.spinner, () => {
+      this.failedRequest = false
       this.generatePreview()
-      return false
+      this.container.querySelector('.gpdf-spinner').remove()
     }, 'white')
   }
 
   /**
    * Add our PDF Preview to the DOM
    *
-   * @param id
+   * @param id: string | undefined
    *
    * @since 0.1
    */
   displayPreview (id) {
-    let $iframe = this.viewer.create(id)
+    /* Remove spinner for cancelled requests */
+    if (id === undefined) {
+      this.container.querySelector('.gpdf-spinner').remove()
+
+      return
+    }
+
+    const iframe = this.viewer.create(id)
 
     /* When the iFrame finishes loading we'll remove the AJAX loading environment */
-    $iframe.on('load', () => {
-      this.updateInProgress = false
-      $iframe.show()
+    iframe.addEventListener('load', () => {
+      iframe.style.display = 'inline'
       this.spinner.remove()
-      this.$container.removeClass('gfpdf-loading')
-      this.formUpdated = false
+      this.container.classList.remove('gfpdf-loading')
     })
 
     /* Add iFrame to the DOM */
-    this.$container.append($iframe)
+    this.container.appendChild(iframe)
   }
 
   /**
    * Make our REST API call
    *
+   * @returns { result: Object }
+   *
    * @since 0.1
    */
-  callEndpoint () {
-    if (typeof(tinyMCE) != 'undefined') {
+  async callEndpoint () {
+    if (typeof (tinyMCE) !== 'undefined') {
       tinyMCE.triggerSave()
     }
 
-    return $.ajax({
-      url: this.endpoint,
-      method: "POST",
-      data: this.$form.serializeArray().filter((item) => {
-        return $.inArray(item.name, ['_wpnonce', 'add-to-cart']) === -1
-      })
+    /* Actual API call */
+    const response = await window.fetch(this.endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      signal: this.controller.signal,
+      body: serializeFormData(this.form)
     })
+
+    /* API response */
+    const result = await response.json()
+
+    return result
   }
 }

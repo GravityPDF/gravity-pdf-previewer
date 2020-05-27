@@ -1,5 +1,3 @@
-import $ from 'jquery'
-
 // setup global defaults that our tests expect is present
 window.PdfPreviewerConstants = {
   loadingMessage: 'Loading',
@@ -9,15 +7,17 @@ window.PdfPreviewerConstants = {
 
 // setup global before and after code
 beforeEach(function () {
-  $('body')
-    .append('<div id="karma-test-container">')
+  let body = document.querySelector('body')
+  let container = document.createElement('div')
+  container.setAttribute('id', 'karma-test-container')
+  body.appendChild(container)
 })
 
 afterEach(function () {
-  $('#karma-test-container').remove()
+  document.querySelector('#karma-test-container').remove()
 })
 
 // require all modules ending in ".test.js" from the
 // current directory and all subdirectories
-var testsContext = require.context(".", true, /.+\.test\.js?$/)
+let testsContext = require.context('.', true, /.+\.test\.js?$/)
 testsContext.keys().forEach(testsContext)

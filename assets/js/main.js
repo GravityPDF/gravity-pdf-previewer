@@ -1,7 +1,6 @@
-import $ from 'jquery'
 import Generator from './Previewer/Generator'
 import Viewer from './Previewer/Viewer'
-
+import { previewerWrapper } from './Previewer/utilities/previewerWrapper'
 require('../scss/previewer.scss')
 
 /**
@@ -16,48 +15,50 @@ require('../scss/previewer.scss')
  *
  * @since 0.1
  */
-$(document).bind('gform_post_render', function (e, formId) {
+jQuery(document).bind('gform_post_render', function (e, formId, currentPage) {
   /* Don't run if currently submitting the form */
   if (window['gf_submitting_' + formId]) {
-    return
+    return false
   }
 
-  let $form = $('#gform_' + formId)
+  let form = document.getElementById('gform_' + formId)
 
   /* Try match a slightly different mark-up */
-  if ($form.length == 0) {
-    $form = $('#gform_wrapper_' + formId).closest('form')
+  if (form.length === 0) {
+    form = document.querySelector(`#gform_wrapper_${formId}`).closest('form')
   }
 
-  $form.data('fid', formId)
-
   /* Find each PDF Preview container in the form and initialise */
-  $form.find('.gpdf-previewer-wrapper').each(function () {
+  const multipleFormPages = form.querySelector(`#gform_page_${formId}_${currentPage}`)
+  const container = previewerWrapper(multipleFormPages, form)
+  const elem = [].slice.call(container)
 
-    let fieldId = parseInt($(this).data('field-id'))
-    let pdfId = $(this).data('pdf-id')
-    let previewerHeight = parseInt($(this).data('previewer-height'))
-    let download = (typeof $(this).data('download') !== 'undefined') ? parseInt($(this).data('download')) : 0;
+  elem.map(item => {
+    const fieldId = item.getAttribute('data-field-id')
+    const pdfId = item.getAttribute('data-pdf-id')
+    const previewerHeight = item.getAttribute('data-previewer-height')
+    const download = item.getAttribute('data-download') != null ? item.getAttribute('data-download') : '0'
 
     /* Continue to next matched element if no PDF ID exists */
-    if (pdfId == 0) {
+    if (pdfId === '0') {
       return true
     }
 
     /* Set the minimum wrapper height to the size of the PDF Previewer height */
-    $(this).css('min-height', previewerHeight + 'px')
+    item.setAttribute('style', `min-height:${previewerHeight}px`)
 
     /* Initialise our Viewer / Generator classes */
-    let viewer = new Viewer({
+    const viewer = new Viewer({
       viewerHeight: previewerHeight + 'px',
       viewer: PdfPreviewerConstants.viewerUrl,
       documentUrl: PdfPreviewerConstants.documentUrl,
       download
     })
 
-    let previewer = new Generator({
-      form: $form,
-      container: $(this),
+    const previewer = new Generator({
+      form: form,
+      formId: formId,
+      container: item,
       endpoint: PdfPreviewerConstants.pdfGeneratorEndpoint + pdfId + '/' + fieldId + '/',
       viewer: viewer
     })
