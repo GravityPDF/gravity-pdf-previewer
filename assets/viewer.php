@@ -79,7 +79,6 @@ See https://github.com/adobe-type-tools/cmap-resources
 
 	<!-- This snippet is used in production (included from viewer.html) -->
 	<link rel="resource" type="application/l10n" href="<?= $path ?>web/locale/locale.properties">
-	<script src="<?= $path ?>build/pdf.js"></script>
 	<script src="<?= $path ?>web/pdf.viewer.js"></script>
 	<script type="text/javascript">
 	  window.addEventListener('webviewerloaded', function () {
