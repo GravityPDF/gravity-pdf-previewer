@@ -35,8 +35,8 @@ class Register {
 		global $wp_rewrite;
 
 		/* Create two regex rules to account for users with "index.php" in the URL */
-		$permalink  = 'pdf-preview/([A-Za-z0-9]+)/?';
-		$rewrite_to = 'index.php?gpdf-preview=1&gpdf-preview-token=$matches[1]';
+		$permalink  = 'pdf-viewer/([A-Za-z0-9]+)/?';
+		$rewrite_to = 'index.php?gpdf-viewer=1&gpdf-viewer-token=$matches[1]';
 
 		$query = [
 			'^' . $permalink,
@@ -64,11 +64,11 @@ class Register {
 
 		/* Conditionally register rewrite tags to prevent conflict with other plugins */
 		if (
-			! empty( $_GET['gpdf-preview'] ) ||
-			strpos( $wp->matched_query, 'gpdf-preview=1' ) === 0
+			! empty( $_GET['gpdf-viewer'] ) ||
+			strpos( $wp->matched_query, 'gpdf-viewer=1' ) === 0
 		) {
-			$tags[] = 'gpdf-preview';
-			$tags[] = 'gpdf-preview-token';
+			$tags[] = 'gpdf-viewer';
+			$tags[] = 'gpdf-viewer-token';
 		}
 
 		return $tags;

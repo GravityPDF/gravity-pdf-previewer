@@ -2,8 +2,6 @@
 
 namespace GFPDF\Plugins\Previewer\Endpoint;
 
-use GFPDF\Helper\Helper_Form;
-
 /**
  * @package     Gravity PDF Previewer
  * @copyright   Copyright (c) 2020, Blue Liquid Designs
@@ -37,8 +35,8 @@ class Process {
 	public function endpoint_handler() {
 		/* exit early if all the required URL parameters aren't met */
 		$params = [
-			'gpdf-preview',
-			'gpdf-preview-token',
+			'gpdf-viewer',
+			'gpdf-viewer-token',
 		];
 
 		foreach ( $params as $param ) {
@@ -49,21 +47,25 @@ class Process {
 
 		$this->prevent_index();
 
-		$html = file_get_contents( __DIR__ . '/../../dist/viewer/web/viewer.html');
+		ob_start();
+		include plugin_dir_path( GFPDF_PDF_PREVIEWER_FILE ) . '/dist/viewer/web/viewer.php';
+		$html = ob_get_clean();
+
+		$html = str_replace( '{$PATH}', plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . '/dist/viewer/web/', $html );
 
 		//@TODO - inject PDF URL into HTML and include URL params
-		//@TODO - fix up viewer paths
 		//@TODO - verify tmp PDF file exists
 		//@TODO - allow viewer settings to be modified
 
 		echo $html;
+
 		$this->end();
 	}
 
 	/**
 	 * @Internal For Unit Testing
 	 *
-	 * @since 2.0
+	 * @since    2.0
 	 */
 	protected function end() {
 		exit;
