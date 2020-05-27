@@ -88,13 +88,13 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 			);
 
 			/*
-		     * Patch for WPML which can include the default language as a GET parameter
-		     * See https://github.com/GravityPDF/gravity-pdf/issues/550
-		     */
+			 * Patch for WPML which can include the default language as a GET parameter
+			 * See https://github.com/GravityPDF/gravity-pdf/issues/550
+			 */
 			$home_url   = untrailingslashit( strtok( home_url(), '?' ) );
-			$viewer_url = $home_url . '/?gpdf-preview=1&gpdf-preview-token={TOKEN}';
+			$viewer_url = $home_url . '/?gpdf-viewer=1&gpdf-preview-token={TOKEN}';
 			if ( $wp_rewrite->using_permalinks() ) {
-				$viewer_url = $home_url . '/' . $wp_rewrite->root . 'pdf-preview/{TOKEN}/';
+				$viewer_url = $home_url . '/' . $wp_rewrite->root . 'pdf-viewer/{TOKEN}/';
 			}
 
 			wp_localize_script(
@@ -102,7 +102,6 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 				'PdfPreviewerConstants',
 				[
 					'viewerUrl'            => $viewer_url,
-					'documentUrl'          => rest_url( 'gravity-pdf-previewer/v1/pdf/' ),
 					'pdfGeneratorEndpoint' => rest_url( 'gravity-pdf-previewer/v1/generator/' ),
 
 					'refreshTitle'         => __( 'Refresh PDF', 'gravity-pdf-previewer' ),

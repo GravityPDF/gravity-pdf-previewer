@@ -45,19 +45,38 @@ class Process {
 			}
 		}
 
+		/* @TODO - validate TOKEN IS VALID */
+		$token = $GLOBALS['wp']->query_vars['gpdf-viewer-token'];
+
+		$pdf_url = rest_url( 'gravity-pdf-previewer/v1/pdf/' ) . urlencode( $token ) . '/';
+
+		// @TODO - download option
+		// @TODO - set pdf filename?
+
 		$this->prevent_index();
 
+		$path = plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/viewer/';
+
+		/**
+		 * Control the PDF Viewer default settings
+		 *
+		 * Available settings can be found at https://github.com/mozilla/pdf.js/blob/master/web/app_options.js#L29
+		 *
+		 * @Internal these options are output into JavaScript. Strings need to be explicitly wrapped in quotes
+		 */
+		$options = apply_filters(
+			'gfpdf_previewer_pdfjs_default_settings',
+			[
+				'workerSrc'          => '"' . $path . 'build/pdf.worker.js' . '"',
+				'disablePreferences' => 'true',
+				'defaultUrl'         => '"' . $pdf_url . '"',
+				'textLayerMode'      => '0',
+			]
+		);
+
 		ob_start();
-		include plugin_dir_path( GFPDF_PDF_PREVIEWER_FILE ) . '/dist/viewer/web/viewer.php';
-		$html = ob_get_clean();
-
-		$html = str_replace( '{$PATH}', plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . '/dist/viewer/web/', $html );
-
-		//@TODO - inject PDF URL into HTML and include URL params
-		//@TODO - verify tmp PDF file exists
-		//@TODO - allow viewer settings to be modified
-
-		echo $html;
+		include plugin_dir_path( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/viewer/web/viewer.php';
+		ob_end_flush();
 
 		$this->end();
 	}

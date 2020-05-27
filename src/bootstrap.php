@@ -80,7 +80,7 @@ class Bootstrap extends Helper_Abstract_Addon {
 				new EndpointRegister(),
 				new EndpointProcess(),
 			]
-		);			
+		);
 
 		/* Run the setup */
 		parent::init( $classes );
