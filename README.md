@@ -29,12 +29,10 @@ Before beginning, ensure you have [Git](https://git-scm.com/), [Composer](https:
 
 We use PHPUnit to test out all the PHP we write. The tests are located in `tests/phpunit/unit-tests/`
 
-Installing the testing environment is best done using a flavour of Vagrant (try [Varying Vagrant Vagrants](https://github.com/Varying-Vagrant-Vagrants/VVV)).
+To create the testing environment you'll need to use a unix-style CLI, and have the following commands available: unzip, tar, curl/wget, svn, mysqladmin
 
-1. From your terminal SSH into your Vagrant box using the `vagrant ssh` command
-2. `cd` into the root of your Gravity PDF Previewer directory
-3. Run `bash tests/bin/install.sh gravitypdf_test root root localhost` where `root root` is substituted for your mysql username and password (VVV users can run the command as is).
-4. Upon success you can run `vendor/bin/phpunit`
+1. Run `bash ./bin/install-wp-tests.sh gravitypdf_test root root localhost` where `root root` is substituted for your mysql username and password, and `localhost` is your database address.
+2. Upon success you can run `vendor/bin/phpunit` to fire off the testing suite
 
 #### Mocha (JS)
 

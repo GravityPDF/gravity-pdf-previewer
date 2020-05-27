@@ -65,10 +65,13 @@ class PdfViewerApiResponse implements CallableApiResponse {
 		$allow_download = $request->get_param( 'download' );
 		$temp_pdf       = $this->pdf_path . $temp_id . '/' . $temp_id . '.pdf';
 
-		$this->get_logger()->notice( 'Begin streaming Preview PDF', [
-			'id'  => $temp_id,
-			'pdf' => $temp_pdf,
-		] );
+		$this->get_logger()->notice(
+			'Begin streaming Preview PDF',
+			[
+				'id'  => $temp_id,
+				'pdf' => $temp_pdf,
+			]
+		);
 
 		/* No file found. Trigger error */
 		if ( ! is_file( $temp_pdf ) ) {
@@ -143,9 +146,9 @@ class PdfViewerApiResponse implements CallableApiResponse {
 	 * @return int
 	 */
 	protected function get_access_limit( $path ) {
-		$access_limit = (int) date( 'i', fileatime( $path ) );
+		$access_limit = (int) gmdate( 'i', fileatime( $path ) );
 
-		return ( in_array( $access_limit, [ 0, 1, 2 ] ) ) ? $access_limit : 0;
+		return ( in_array( $access_limit, [ 0, 1, 2 ], true ) ) ? $access_limit : 0;
 	}
 
 	/**

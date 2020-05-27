@@ -36,7 +36,7 @@ class NestedFormsPerk {
 	 * @since 1.2.6
 	 */
 	public function add_action() {
-		add_action( 'gfpdf_previewer_start_pdf_generation', [ $this, 'remove_entry_validation_for_previewer'] );
+		add_action( 'gfpdf_previewer_start_pdf_generation', [ $this, 'remove_entry_validation_for_previewer' ] );
 	}
 
 	/**

@@ -45,6 +45,15 @@ class TestWooCommerceGravityForms extends WP_UnitTestCase {
 	 */
 	public function test_set_form_id() {
 		$this->assertSame( 5, $this->class->set_form_id( 5, [] ) );
-		$this->assertSame( 8, $this->class->set_form_id( 5, [ 'gform_form_id' => 8, 'product_id' => 60 ] ) );
+		$this->assertSame(
+			8,
+			$this->class->set_form_id(
+				5,
+				[
+					'gform_form_id' => 8,
+					'product_id'    => 60,
+				]
+			)
+		);
 	}
 }

@@ -43,10 +43,13 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 		try {
 			GF_Fields::register( new GFormFieldPreviewer() );
 		} catch ( Exception $e ) {
-			$this->get_logger()->error( 'Could not register Previewer field with Gravity Forms', [
-				'code'    => $e->getCode(),
-				'message' => $e->getMessage(),
-			] );
+			$this->get_logger()->error(
+				'Could not register Previewer field with Gravity Forms',
+				[
+					'code'    => $e->getCode(),
+					'message' => $e->getMessage(),
+				]
+			);
 		}
 
 		$this->add_actions();
@@ -92,9 +95,9 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 					'documentUrl'          => rest_url( 'gravity-pdf-previewer/v1/pdf/' ),
 					'pdfGeneratorEndpoint' => rest_url( 'gravity-pdf-previewer/v1/generator/' ),
 
-					'refreshTitle'   => __( 'Refresh PDF', 'gravity-pdf-previewer' ),
-					'loadingMessage' => __( 'Loading PDF Preview', 'gravity-pdf-previewer' ),
-					'errorMessage'   => sprintf( __( 'There was a problem%sloading the preview.', 'gravity-pdf-previewer' ), '<br>' ),
+					'refreshTitle'         => __( 'Refresh PDF', 'gravity-pdf-previewer' ),
+					'loadingMessage'       => __( 'Loading PDF Preview', 'gravity-pdf-previewer' ),
+					'errorMessage'         => sprintf( __( 'There was a problem%sloading the preview.', 'gravity-pdf-previewer' ), '<br>' ),
 				]
 			);
 

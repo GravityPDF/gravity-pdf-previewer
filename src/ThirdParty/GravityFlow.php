@@ -247,9 +247,12 @@ class GravityFlow implements Helper_Interface_Filters, Helper_Interface_Actions 
 				}
 			}
 
-			$choices = array_filter( $choices, function( $choice ) use ( $previewer_field_ids ) {
-				return ! in_array( $choice['value'], $previewer_field_ids );
-			} );
+			$choices = array_filter(
+				$choices,
+				function( $choice ) use ( $previewer_field_ids ) {
+					return ! in_array( $choice['value'], $previewer_field_ids, true );
+				}
+			);
 		}
 
 		return $choices;
@@ -357,7 +360,7 @@ class GravityFlow implements Helper_Interface_Filters, Helper_Interface_Actions 
 	 */
 	protected function entry_merge( $db_entry, $raw_entry, $fields, $editable_fields ) {
 		foreach ( $fields as $field ) {
-			if ( in_array( $field->id, $editable_fields ) ) {
+			if ( in_array( $field->id, $editable_fields, true ) ) {
 				$inputs = $field->get_entry_inputs();
 
 				if ( is_array( $inputs ) ) {
