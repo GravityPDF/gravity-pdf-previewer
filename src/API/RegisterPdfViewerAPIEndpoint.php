@@ -66,10 +66,14 @@ class RegisterPdfViewerAPIEndpoint implements Helper_Interface_Actions {
 	 * @since    0.1
 	 */
 	public function register_endpoint() {
-		register_rest_route( 'gravity-pdf-previewer/v1', '/pdf/(?P<temp_id>[a-zA-Z0-9]+)', [
-			'methods'             => WP_REST_Server::READABLE,
-			'callback'            => [ $this->response, 'response' ],
-			'permission_callback' => '__return_true',
-		] );
+		register_rest_route(
+			'gravity-pdf-previewer/v1',
+			'/pdf/(?P<temp_id>[a-zA-Z0-9]+)',
+			[
+				'methods'  	      => WP_REST_Server::READABLE,
+				'callback' 	      => [ $this->response, 'response' ],
+				'permission_callback' => '__return_true',
+			] 
+		);
 	}
 }

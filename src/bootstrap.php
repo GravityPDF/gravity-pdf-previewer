@@ -61,19 +61,22 @@ class Bootstrap extends Helper_Abstract_Addon {
 		$pdf_generator_api = new PdfGeneratorApiResponse( GPDFAPI::get_mvc_class( 'Model_PDF' ), $pdf_save_path );
 		$pdf_viewer_api    = new PdfViewerApiResponse( $pdf_save_path );
 
-		$classes = array_merge( $classes, [
-			$pdf_generator_api,
-			$pdf_viewer_api,
-			new RegisterPreviewerCustomFields(),
-			new RegisterPreviewerField(),
-			new RegisterPdfGeneratorAPIEndpoint( $pdf_generator_api ),
-			new RegisterPdfViewerAPIEndpoint( $pdf_viewer_api ),
-			new SkipPdfPreviewerField(),
-			new GravityFlow(),
-			new WooCommerceGravityForms(),
-			new CorrectMultiUploadDisplayName(),
-			new NestedFormsPerk(),
-		] );
+		$classes = array_merge(
+			$classes,
+			[
+				$pdf_generator_api,
+				$pdf_viewer_api,
+				new RegisterPreviewerCustomFields(),
+				new RegisterPreviewerField(),
+				new RegisterPdfGeneratorAPIEndpoint( $pdf_generator_api ),
+				new RegisterPdfViewerAPIEndpoint( $pdf_viewer_api ),
+				new SkipPdfPreviewerField(),
+				new GravityFlow(),
+				new WooCommerceGravityForms(),
+				new CorrectMultiUploadDisplayName(),
+				new NestedFormsPerk(),
+			]
+		);
 
 		/* Run the setup */
 		parent::init( $classes );
@@ -109,18 +112,21 @@ class Bootstrap extends Helper_Abstract_Addon {
 $name = 'Gravity PDF Previewer';
 $slug = 'gravity-pdf-previewer';
 
-$plugin = apply_filters( 'gfpdf_previewer_initialise', new Bootstrap(
-	$slug,
-	$name,
-	'Gravity PDF',
-	GFPDF_PDF_PREVIEWER_VERSION,
-	GFPDF_PDF_PREVIEWER_FILE,
-	GPDFAPI::get_data_class(),
-	GPDFAPI::get_options_class(),
-	new Helper_Singleton(),
-	new Helper_Logger( $slug, $name ),
-	new Helper_Notices()
-) );
+$plugin = apply_filters(
+	'gfpdf_previewer_initialise',
+	new Bootstrap(
+		$slug,
+		$name,
+		'Gravity PDF',
+		GFPDF_PDF_PREVIEWER_VERSION,
+		GFPDF_PDF_PREVIEWER_FILE,
+		GPDFAPI::get_data_class(),
+		GPDFAPI::get_options_class(),
+		new Helper_Singleton(),
+		new Helper_Logger( $slug, $name ),
+		new Helper_Notices()
+	)
+);
 
 $plugin->set_edd_download_id( '14971' );
 $plugin->set_addon_documentation_slug( 'shop-plugin-previewer-add-on' );

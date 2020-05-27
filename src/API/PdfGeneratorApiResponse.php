@@ -124,12 +124,15 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		$form_id = ( isset( $input['gform_submit'] ) ) ? (int) $input['gform_submit'] : 0;
 		$form_id = apply_filters( 'gfpdf_previewer_form_id', $form_id, $input, $request );
 
-		$this->get_logger()->notice( 'Begin generating sample PDF', [
-			'input'    => $input,
-			'form_id'  => $form_id,
-			'pdf_id'   => $pdf_id,
-			'field_id' => $field_id,
-		] );
+		$this->get_logger()->notice(
+			'Begin generating sample PDF',
+			[
+				'input'    => $input,
+				'form_id'  => $form_id,
+				'pdf_id'   => $pdf_id,
+				'field_id' => $field_id,
+			]
+		);
 
 		/* Assign a unique ID to this request */
 		$this->set_unique_id();
@@ -153,37 +156,49 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 			return rest_ensure_response( [ 'id' => $this->get_unique_id() ] );
 
 		} catch ( FormNotFound $e ) {
-			$this->get_logger()->error( 'Gravity Form not found', [
-				'code'    => $e->getCode(),
-				'message' => $e->getMessage(),
-			] );
+			$this->get_logger()->error(
+				'Gravity Form not found',
+				[
+					'code'    => $e->getCode(),
+					'message' => $e->getMessage(),
+				]
+			);
 
 			ob_end_clean();
 
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
 		} catch ( PDFConfigNotFound $e ) {
-			$this->get_logger()->error( 'PDF Configuration Not Found', [
-				'code'    => $e->getCode(),
-				'message' => $e->getMessage(),
-			] );
+			$this->get_logger()->error(
+				'PDF Configuration Not Found',
+				[
+					'code'    => $e->getCode(),
+					'message' => $e->getMessage(),
+				]
+			);
 
 			ob_end_clean();
 
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
 		} catch ( PDFNotActive $e ) {
-			$this->get_logger()->error( 'PDF Configuration Not Active', [
-				'code'    => $e->getCode(),
-				'message' => $e->getMessage(),
-			] );
+			$this->get_logger()->error(
+				'PDF Configuration Not Active',
+				[
+					'code'    => $e->getCode(),
+					'message' => $e->getMessage(),
+				]
+			);
 
 			ob_end_clean();
 
 			return rest_ensure_response( [ 'error' => $e->getMessage() ] );
 		} catch ( Exception $e ) {
-			$this->get_logger()->error( 'Generic Error', [
-				'code'    => $e->getCode(),
-				'message' => $e->getMessage(),
-			] );
+			$this->get_logger()->error(
+				'Generic Error',
+				[
+					'code'    => $e->getCode(),
+					'message' => $e->getMessage(),
+				]
+			);
 
 			ob_end_clean();
 
@@ -226,7 +241,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		$pdf = $this->pdf_model->generate_and_save_pdf( $entry, $settings );
 
 		if ( is_wp_error( $pdf ) ) {
-			throw new Exception ( $pdf->get_error_message() );
+			throw new Exception( $pdf->get_error_message() );
 		}
 
 		return $pdf;
@@ -263,10 +278,13 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		$pdf_generator->set_path( $this->pdf_path . $this->get_unique_id() . '/' );
 		$pdf_generator->set_filename( $this->get_unique_id() );
 
-		$this->get_logger()->notice( 'Change PDF Location / Filename', [
-			'path' => $this->pdf_path,
-			'name' => $this->get_unique_id(),
-		] );
+		$this->get_logger()->notice(
+			'Change PDF Location / Filename',
+			[
+				'path' => $this->pdf_path,
+				'name' => $this->get_unique_id(),
+			]
+		);
 
 		return $pdf_generator;
 	}
@@ -386,7 +404,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 			$settings['privileges']      = [];
 			$settings['format']          = 'Standard';
 		} else {
-			$settings['security']        = 'No';
+			$settings['security'] = 'No';
 		}
 
 		return $settings;
@@ -423,9 +441,12 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		];
 
 		/* Remove ignored fields and display-only fields */
-		$form['fields'] = array_filter( $form['fields'], function( $field ) use ( $ignore_types ) {
-			return ! ( in_array( $field->get_input_type(), $ignore_types ) );
-		} );
+		$form['fields'] = array_filter(
+			$form['fields'],
+			function( $field ) use ( $ignore_types ) {
+				return ! ( in_array( $field->get_input_type(), $ignore_types, true ) );
+			}
+		);
 
 		$form['fields'] = array_values( $form['fields'] );
 
@@ -597,8 +618,8 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 
 		$value = ( ! empty( $db_entry ) && isset( $db_entry[ $field->id ] ) ) ? $db_entry[ $field->id ] : '';
 
-		$input   = 'input_' . $field->id;
-		$uploads = [];
+		$input    = 'input_' . $field->id;
+		$uploads  = [];
 		$override = apply_filters( 'gfpdf_previewer_skip_file_exists_check', false, $entry, $field, $files, $db_entry );
 
 		if ( isset( $files[ $input ] ) ) {
@@ -642,7 +663,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 * @since 1.1
 	 */
 	protected function setup_doing_previewer_constant() {
-		if( ! defined( 'DOING_PDF_PREVIEWER' ) ) {
+		if ( ! defined( 'DOING_PDF_PREVIEWER' ) ) {
 			define( 'DOING_PDF_PREVIEWER', true );
 		}
 	}
@@ -670,7 +691,7 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 	 * @since 0.1
 	 */
 	public function override_entry( $entry ) {
-		remove_filter( 'gfpdf_entry_pre_form_data', [ $this, 'override_entry'] );
+		remove_filter( 'gfpdf_entry_pre_form_data', [ $this, 'override_entry' ] );
 
 		return $this->entry;
 	}

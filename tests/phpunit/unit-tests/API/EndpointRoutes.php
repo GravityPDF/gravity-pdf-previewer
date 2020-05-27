@@ -37,10 +37,10 @@ class TestEndpointRoutes extends WP_UnitTestCase {
 	public function setUp() {
 		$wp_rest_server = rest_get_server();
 
-		$api1 = new RegisterPdfGeneratorAPIEndpoint( new callableResponse() );
+		$api1 = new RegisterPdfGeneratorAPIEndpoint( new CallableResponse() );
 		$api1->init();
 
-		$api2 = new RegisterPdfViewerAPIEndpoint( new callableResponse() );
+		$api2 = new RegisterPdfViewerAPIEndpoint( new CallableResponse() );
 		$api2->init();
 
 		parent::setUp();
@@ -66,7 +66,7 @@ class TestEndpointRoutes extends WP_UnitTestCase {
 
 }
 
-class callableResponse implements CallableApiResponse {
+class CallableResponse implements CallableApiResponse {
 	public function response( WP_REST_Request $request ) {
 	}
 }

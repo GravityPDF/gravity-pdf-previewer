@@ -42,9 +42,9 @@ class TestPDFViewerApiResponse extends WP_UnitTestCase {
 
 		/* Stub our 'stream_pdf' and 'end' methods */
 		$this->class = $this->getMockBuilder( '\GFPDF\Plugins\Previewer\API\PdfViewerApiResponse' )
-		                    ->setConstructorArgs( [ dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/' ] )
-		                    ->setMethods( [ 'stream_pdf', 'end' ] )
-		                    ->getMock();
+							->setConstructorArgs( [ dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/' ] )
+							->setMethods( [ 'stream_pdf', 'end' ] )
+							->getMock();
 
 		$this->class->set_logger( \GPDFAPI::get_log_class() );
 	}
@@ -55,6 +55,7 @@ class TestPDFViewerApiResponse extends WP_UnitTestCase {
 	public function test_response() {
 		$pdf     = dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/12345/12345.pdf';
 		$request = new WP_REST_Request( 'GET' );
+		$request->set_header( 'content-type', 'application/json' );
 
 		/* Test PDF not found */
 		$response = $this->class->response( $request );
@@ -62,16 +63,16 @@ class TestPDFViewerApiResponse extends WP_UnitTestCase {
 
 		/* Create a PDF and test it gets correctly cleaned up */
 		$request->set_param( 'temp_id', '12345' );
-		@mkdir( dirname( $pdf ) );
-		@touch( $pdf, time(), mktime( null, 0, 0 ) );
+		@mkdir( dirname( $pdf ) ); //phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
+		@touch( $pdf, time(), mktime( null, 0, 0 ) ); //phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
 		$this->class->response( $request );
 
 		$this->assertFileNotExists( $pdf );
 
 		/* Create a PDF and test it isn't removed initially when the download option is enabled */
 		$request->set_param( 'download', '1' );
-		@mkdir( dirname( $pdf ) );
-		@touch( $pdf, time(), mktime( null, 0, 0 ) );
+		@mkdir( dirname( $pdf ) ); //phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
+		@touch( $pdf, time(), mktime( null, 0, 0 ) ); //phpcs:disable WordPress.PHP.NoSilencedErrors.Discouraged
 
 		clearstatcache();
 

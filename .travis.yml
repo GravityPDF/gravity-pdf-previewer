@@ -2,13 +2,13 @@ language: php
 
 sudo: false
 
-services:
-  - mysql
-
 cache:
   yarn: true
   directories:
     - $HOME/.composer/cache
+
+services:
+  - mysql
 
 php:
   - 5.6
@@ -23,20 +23,64 @@ env:
 
 matrix:
   include:
-  - php: 7.1
-    env: WP_VERSION=latest WP_MULTISITE=1 PHPUNIT_COVERAGE_TEST=1
+    - php: 5.6
+      env: LINT=1
+    - php: 7.4
+      env: JEST_COVERAGE_TEST=1
+    - php: 7.4
+      env: WP_VERSION=latest WP_MULTISITE=1 PHPUNIT_COVERAGE_TEST=1
 
 before_script:
-  - if [[ ! $PHPUNIT_COVERAGE_TEST ]]; then phpenv config-rm xdebug.ini; fi
-  - if find . -name "*.php" -exec php -l {} \; | grep "unexpected $end"; then exit 1; fi
-  - composer install --prefer-source --optimize-autoloader --no-scripts
-  - bash bin/install-wp-tests.sh gravitypdf_test root '' localhost $WP_VERSION
-  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then nvm install 6.10 && yarn global add karma-cli && yarn; fi
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - |
+    if [[ "$PHPUNIT_COVERAGE_TEST" == "0" ]]; then
+      if [ -f ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ]; then
+        phpenv config-rm xdebug.ini
+      else
+        echo "xdebug.ini does not exist"
+      fi
+    fi
+  - |
+    if [[ "$LINT" == "1" || ! -z "$WP_VERSION" ]] ; then
+      composer install --prefer-source --optimize-autoloader --no-scripts
+    fi
+  - |
+    if [[ ! -z "$WP_VERSION" ]] ; then
+      echo $TRAVIS_BUILD_DIR
+      bash bin/install-wp-tests.sh wordpress_test root '' localhost $WP_VERSION
+    fi
+  - |
+    if [[ "$JEST_COVERAGE_TEST" == "1" || "$LINT" == "1" ]] ; then
+      nvm install 12 && nvm use 12
+      yarn global add karma-cli
+      yarn
+    fi
+  - |
+    if [[ "$LINT" == "1" ]] ; then
+      composer global require wp-coding-standards/wpcs
+      phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
+    fi
 
 script:
-  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then yarn run test:coverage; fi
-  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then ./vendor/bin/phpunit --coverage-clover=coverage/php-coverage1.xml -c phpunit.xml; fi
-  - if [[ ! $PHPUNIT_COVERAGE_TEST ]]; then ./vendor/bin/phpunit -c phpunit.xml; fi
+  - |
+    if [[ "$PHPUNIT_COVERAGE_TEST" == "0" ]] ; then
+      vendor/bin/phpunit
+    fi
+  - |
+    if [[ "$PHPUNIT_COVERAGE_TEST" == "1" ]] ; then
+      vendor/bin/phpunit --coverage-clover=coverage/php-coverage1.xml
+    fi
+  - |
+    if [[ "$JEST_COVERAGE_TEST" == "1" ]] ; then
+      yarn test:js:coverage
+    fi
+  - |
+    if [[ "$LINT" == "1" ]] ; then
+      phpcs
+    fi
 
 after_success:
-  - if [[ $PHPUNIT_COVERAGE_TEST ]]; then bash <(curl -s https://codecov.io/bash); fi
+  - |
+    if [[ "$PHPUNIT_COVERAGE_TEST" == "1" || "$JEST_COVERAGE_TEST" == "1" ]] ; then
+      bash <(curl -s https://codecov.io/bash);
+    fi
