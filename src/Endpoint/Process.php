@@ -84,6 +84,7 @@ class Process {
 					'disablePreferences' => 'true',
 					'defaultUrl'         => '"' . $pdf_url . '"',
 					'textLayerMode'      => '0',
+					'cursorToolOnLoad'   => '1',
 				]
 			);
 
