@@ -2,14 +2,16 @@
 
 namespace GFPDF\Plugins\Previewer;
 
-use GFPDF\Plugins\Previewer\API\PdfViewerApiResponse;
+use GFPDF\Plugins\Previewer\API\PdfViewerApiResponseV1;
+use GFPDF\Plugins\Previewer\API\PdfViewerApiResponseV2;
+use GFPDF\Plugins\Previewer\API\RegisterPdfViewerAPIEndpointV2;
 use GFPDF\Plugins\Previewer\Endpoint\Process as EndpointProcess;
 use GFPDF\Plugins\Previewer\Endpoint\Register as EndpointRegister;
 use GFPDF\Plugins\Previewer\Field\RegisterPreviewerField;
 use GFPDF\Plugins\Previewer\Field\RegisterPreviewerCustomFields;
 use GFPDF\Plugins\Previewer\Field\CorrectMultiUploadDisplayName;
 use GFPDF\Plugins\Previewer\API\RegisterPdfGeneratorAPIEndpoint;
-use GFPDF\Plugins\Previewer\API\RegisterPdfViewerAPIEndpoint;
+use GFPDF\Plugins\Previewer\API\RegisterPdfViewerAPIEndpointV1;
 use GFPDF\Plugins\Previewer\API\PdfGeneratorApiResponse;
 use GFPDF\Plugins\Previewer\Field\SkipPdfPreviewerField;
 use GFPDF\Plugins\Previewer\ThirdParty\GravityFlow;
@@ -22,6 +24,7 @@ use GFPDF\Helper\Helper_Singleton;
 use GFPDF\Helper\Helper_Logger;
 use GFPDF\Helper\Helper_Notices;
 
+use GFPDF\Plugins\Previewer\Validation\Token;
 use GPDFAPI;
 
 /**
@@ -60,25 +63,31 @@ class Bootstrap extends Helper_Abstract_Addon {
 		$pdf_save_path = $data->template_tmp_location . 'previewer/';
 
 		/* Register our classes and pass back up to the parent initialiser */
-		$pdf_generator_api = new PdfGeneratorApiResponse( GPDFAPI::get_mvc_class( 'Model_PDF' ), $pdf_save_path );
-		$pdf_viewer_api    = new PdfViewerApiResponse( $pdf_save_path );
+		$token_validator = new Token($pdf_save_path);
+
+		$pdf_generator_api = new PdfGeneratorApiResponse( GPDFAPI::get_mvc_class( 'Model_PDF' ), $token_validator, $pdf_save_path );
+		$pdf_viewer_api_v1    = new PdfViewerApiResponseV1( $pdf_save_path );
+		$pdf_viewer_api_v2    = new PdfViewerApiResponseV2( $token_validator, $pdf_save_path );
 
 		$classes = array_merge(
 			$classes,
 			[
+				$token_validator,
 				$pdf_generator_api,
-				$pdf_viewer_api,
+				$pdf_viewer_api_v1,
+				$pdf_viewer_api_v2,
 				new RegisterPreviewerCustomFields(),
 				new RegisterPreviewerField(),
 				new RegisterPdfGeneratorAPIEndpoint( $pdf_generator_api ),
-				new RegisterPdfViewerAPIEndpoint( $pdf_viewer_api ),
+				new RegisterPdfViewerAPIEndpointV1( $pdf_viewer_api_v1 ),
+				new RegisterPdfViewerAPIEndpointV2( $pdf_viewer_api_v2 ),
 				new SkipPdfPreviewerField(),
 				new GravityFlow(),
 				new WooCommerceGravityForms(),
 				new CorrectMultiUploadDisplayName(),
 				new NestedFormsPerk(),
 				new EndpointRegister(),
-				new EndpointProcess(),
+				new EndpointProcess( GPDFAPI::get_form_class(), $token_validator ),
 			]
 		);
 

@@ -1,6 +1,7 @@
 <?php
 /** $path string */
 /** $options array */
+/** $download bool */
 ?>
 
 <!DOCTYPE html>
@@ -33,7 +34,6 @@ See https://github.com/adobe-type-tools/cmap-resources
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title>PDF Viewer</title>
 
-
 	<link rel="stylesheet" href="<?= $path ?>web/viewer.css">
 
 	<style>
@@ -60,11 +60,10 @@ See https://github.com/adobe-type-tools/cmap-resources
 			display: none !important;
 		}
 
-		<?php if ( isset( $_GET['download'] ) && (int) $_GET['download'] === 1 ): ?>
-		#toolbarViewerRight > #download {
-			display: block !important;
-		}
-
+		<?php if ( $download ): ?>
+			#toolbarViewerRight > #download {
+				display: block !important;
+			}
 		<?php endif; ?>
 
 		#toolbarViewerMiddle {
@@ -83,7 +82,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 	<script type="text/javascript">
 	  window.addEventListener('webviewerloaded', function () {
 			<?php foreach ( $options as $name => $value ): ?>
-		PDFViewerApplicationOptions.set('<?= $name ?>', <?= $value ?>)
+				PDFViewerApplicationOptions.set('<?= $name ?>', <?= $value ?>)
 			<?php endforeach; ?>
 
 		console.log( PDFViewerApplicationOptions.getAll() );

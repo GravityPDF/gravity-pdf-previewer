@@ -35,8 +35,8 @@ class Register {
 		global $wp_rewrite;
 
 		/* Create two regex rules to account for users with "index.php" in the URL */
-		$permalink  = 'pdf-viewer/([A-Za-z0-9]+)/?';
-		$rewrite_to = 'index.php?gpdf-viewer=1&gpdf-viewer-token=$matches[1]';
+		$permalink  = 'pdf-viewer/?';
+		$rewrite_to = 'index.php?gpdf-viewer=1';
 
 		$query = [
 			'^' . $permalink,
@@ -68,7 +68,6 @@ class Register {
 			strpos( $wp->matched_query, 'gpdf-viewer=1' ) === 0
 		) {
 			$tags[] = 'gpdf-viewer';
-			$tags[] = 'gpdf-viewer-token';
 		}
 
 		return $tags;

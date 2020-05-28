@@ -4,7 +4,7 @@ namespace GFPDF\Tests\Previewer;
 
 use GFPDF\Plugins\Previewer\API\CallableApiResponse;
 use GFPDF\Plugins\Previewer\API\RegisterPdfGeneratorAPIEndpoint;
-use GFPDF\Plugins\Previewer\API\RegisterPdfViewerAPIEndpoint;
+use GFPDF\Plugins\Previewer\API\RegisterPdfViewerAPIEndpointV1;
 use WP_UnitTestCase;
 use WP_REST_Request;
 
@@ -40,7 +40,7 @@ class TestEndpointRoutes extends WP_UnitTestCase {
 		$api1 = new RegisterPdfGeneratorAPIEndpoint( new CallableResponse() );
 		$api1->init();
 
-		$api2 = new RegisterPdfViewerAPIEndpoint( new CallableResponse() );
+		$api2 = new RegisterPdfViewerAPIEndpointV1( new CallableResponse() );
 		$api2->init();
 
 		parent::setUp();

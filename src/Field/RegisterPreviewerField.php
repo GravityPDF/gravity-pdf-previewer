@@ -92,9 +92,9 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 			 * See https://github.com/GravityPDF/gravity-pdf/issues/550
 			 */
 			$home_url   = untrailingslashit( strtok( home_url(), '?' ) );
-			$viewer_url = $home_url . '/?gpdf-viewer=1&gpdf-preview-token={TOKEN}';
+			$viewer_url = $home_url . '/?gpdf-viewer=1&token={TOKEN}';
 			if ( $wp_rewrite->using_permalinks() ) {
-				$viewer_url = $home_url . '/' . $wp_rewrite->root . 'pdf-viewer/{TOKEN}/';
+				$viewer_url = $home_url . '/' . $wp_rewrite->root . 'pdf-viewer/?token={TOKEN}';
 			}
 
 			wp_localize_script(

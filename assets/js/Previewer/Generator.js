@@ -139,7 +139,7 @@ export default class {
       }
 
       /* Load our newly generated PDF */
-      this.displayPreview(response.id)
+      this.displayPreview(response.token)
     }
   }
 

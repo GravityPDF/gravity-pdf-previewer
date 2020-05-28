@@ -19,11 +19,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class RegisterPdfViewerAPIEndpoint
+ * Class RegisterPdfViewerAPIEndpointV1
  *
  * @package GFPDF\Plugins\Previewer\API
  */
-class RegisterPdfViewerAPIEndpoint implements Helper_Interface_Actions {
+class RegisterPdfViewerAPIEndpointV1 implements Helper_Interface_Actions {
 
 	/**
 	 * @var CallableApiResponse

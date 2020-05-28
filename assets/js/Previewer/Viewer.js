@@ -40,7 +40,7 @@ export default class {
    * @since 0.1
    */
   create (id) {
-    let pdfUrl = this.viewerUrl.replace('{TOKEN}', id)
+    let pdfUrl = this.viewerUrl.replace('{TOKEN}', encodeURIComponent(id))
 
     this.remove()
     this.$iframe = $('<iframe>')
