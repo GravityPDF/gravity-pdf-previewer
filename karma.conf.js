@@ -14,10 +14,7 @@ module.exports = function (config) {
     frameworks: [ 'mocha', 'chai' ],
 
     // list of files / patterns to load in the browser
-    files: [
-      'node_modules/jquery/dist/jquery.min.js',
-      'tests/mocha/tests.bundle.js'
-    ],
+    files: [ 'tests/mocha/tests.bundle.js' ],
 
     // list of files to exclude
     exclude: [],
