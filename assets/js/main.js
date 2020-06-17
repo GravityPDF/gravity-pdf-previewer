@@ -21,11 +21,11 @@ jQuery(document).bind('gform_post_render', function (e, formId, currentPage) {
     return false
   }
 
-  let form = document.getElementById('gform_' + formId)
+  const form = document.getElementById('gform_' + formId)
 
-  /* Try match a slightly different mark-up */
-  if (form.length === 0) {
-    form = document.querySelector(`#gform_wrapper_${formId}`).closest('form')
+  /* Exit if no form found */
+  if (form === null) {
+    return
   }
 
   /* Find each PDF Preview container in the form and initialise */

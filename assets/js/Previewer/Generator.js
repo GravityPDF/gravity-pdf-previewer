@@ -59,6 +59,22 @@ export default class {
     /* Add listener to the onload and scroll event to trigger a reload */
     window.addEventListener('load', () => this.generatePreview())
     window.addEventListener('scroll', () => debounce(this.maybeReloadPreview(), 1000))
+
+    /* Determine if the PDF preview should be generated for nested form plugin */
+    if (!this.viewer.doesViewerExist() && isInViewport(this.gpNestedFormModal())) {
+      this.generatePreview()
+    }
+  }
+
+  /**
+   * Add support to Gravity Perks - Nested Form plugin
+   *
+   * @returns { HTML element }
+   *
+   * @since 2.0
+   */
+  gpNestedFormModal () {
+    return document.querySelector('.tingle-modal--visible')
   }
 
   /**
