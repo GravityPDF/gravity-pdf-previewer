@@ -148,7 +148,7 @@ export default class {
     manualLoader.add(this.spinner.spinner, () => {
       this.failedRequest = false
       this.generatePreview()
-      this.container.querySelector('.gpdf-spinner').remove()
+      this.removeSpinner()
     }, 'white')
   }
 
@@ -162,10 +162,11 @@ export default class {
   displayPreview (id) {
     /* Remove spinner for cancelled requests */
     if (id === undefined) {
-      this.container.querySelector('.gpdf-spinner').remove()
-
-      return
+      return this.removeSpinner()
     }
+
+    /* Ensure removal of old spinner from previous request */
+    this.removeSpinner()
 
     const iframe = this.viewer.create(id)
 
@@ -204,5 +205,14 @@ export default class {
     const result = await response.json()
 
     return result
+  }
+
+  /**
+   * Remove Spinner
+   *
+   * @since 2.0
+   */
+  removeSpinner () {
+    this.container.querySelector('.gpdf-spinner').remove()
   }
 }

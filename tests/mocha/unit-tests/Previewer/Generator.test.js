@@ -49,6 +49,7 @@ describe('Generator Class', () => {
   })
 
   it('Test display preview', () => {
+    generator.spinner.add(generator.container)
     generator.displayPreview('12345abc')
     expect(container.querySelector('iframe')).to.exist
   })
