@@ -18,11 +18,11 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Class PdfViewerApiResponse
+ * Class PdfViewerApiResponseV1
  *
  * @package GFPDF\Plugins\Previewer\API
  */
-class PdfViewerApiResponse implements CallableApiResponse {
+class PdfViewerApiResponseV1 implements CallableApiResponse {
 
 	/*
 	 * Add logging support
@@ -61,6 +61,8 @@ class PdfViewerApiResponse implements CallableApiResponse {
 	 * @since    0.1
 	 */
 	public function response( WP_REST_Request $request ) {
+
+		_doing_it_wrong( __METHOD__, 'The v1 API has been deprecated. Use the v2 API.', '2.0' );
 		$temp_id        = $request->get_param( 'temp_id' );
 		$allow_download = $request->get_param( 'download' );
 		$temp_pdf       = $this->pdf_path . $temp_id . '/' . $temp_id . '.pdf';

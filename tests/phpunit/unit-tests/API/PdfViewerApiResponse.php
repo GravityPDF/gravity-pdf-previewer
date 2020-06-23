@@ -2,7 +2,7 @@
 
 namespace GFPDF\Tests\Previewer;
 
-use GFPDF\Plugins\Previewer\API\PdfViewerApiResponse;
+use GFPDF\Plugins\Previewer\API\PdfViewerApiResponseV1;
 
 use WP_UnitTestCase;
 use WP_REST_Request;
@@ -29,7 +29,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 class TestPDFViewerApiResponse extends WP_UnitTestCase {
 
 	/**
-	 * @var PdfViewerApiResponse
+	 * @var PdfViewerApiResponseV1
 	 *
 	 * @since 0.1
 	 */
@@ -41,7 +41,7 @@ class TestPDFViewerApiResponse extends WP_UnitTestCase {
 	public function setUp() {
 
 		/* Stub our 'stream_pdf' and 'end' methods */
-		$this->class = $this->getMockBuilder( '\GFPDF\Plugins\Previewer\API\PdfViewerApiResponse' )
+		$this->class = $this->getMockBuilder( '\GFPDF\Plugins\Previewer\API\PdfViewerApiResponseV1' )
 							->setConstructorArgs( [ dirname( GFPDF_PDF_PREVIEWER_FILE ) . '/tmp/' ] )
 							->setMethods( [ 'stream_pdf', 'end' ] )
 							->getMock();
