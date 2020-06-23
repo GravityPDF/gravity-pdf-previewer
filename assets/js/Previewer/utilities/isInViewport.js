@@ -15,6 +15,10 @@
  * @since 2.0
  */
 export const isInViewport = elem => {
+  if (!elem) {
+    return false
+  }
+
   let top = elem.offsetTop
   let left = elem.offsetLeft
   const width = elem.offsetWidth
