@@ -2,6 +2,7 @@
 
 namespace GFPDF\Plugins\Previewer\API;
 
+use GFAPI;
 use GFPDF\Helper\Helper_Trait_Logger;
 use GFPDF\Plugins\Previewer\Validation\Token;
 use WP_REST_Request;
@@ -77,8 +78,8 @@ class PdfViewerApiResponseV2 implements CallableApiResponse {
 
 			/* @TODO - download */
 
-			$tmp_pdf = $this->pdf_path . "$tmp_id/$tmp_id.pdf";
-
+			$tmp_pdf        = $this->pdf_path . "$tmp_id/$tmp_id.pdf";
+			$allow_download = $this->get_field_settings( $this->get_form( $form_id ), $field_id, 'pdfdownload' );
 			$this->get_logger()->notice(
 				'Begin streaming Preview PDF',
 				[
@@ -86,6 +87,7 @@ class PdfViewerApiResponseV2 implements CallableApiResponse {
 					'pdf' => $tmp_pdf,
 				]
 			);
+
 
 			$access_number = $this->get_access_limit( $tmp_pdf );
 			$this->stream_pdf( $tmp_pdf, $pdf_name );
@@ -98,7 +100,7 @@ class PdfViewerApiResponseV2 implements CallableApiResponse {
 			 *
 			 * If the access policy doesn't work, the PDF will be cleaned up as part of our clean-up cron.
 			 */
-			if ( empty( $allow_download ) || $access_number === 2 ) {
+			if ( empty( $allow_download ) || $allow_download === false || $access_number === 2 ) {
 				$this->delete_pdf( $tmp_pdf );
 			}
 		} catch ( Exception $e ) {
@@ -186,4 +188,49 @@ class PdfViewerApiResponseV2 implements CallableApiResponse {
 
 		return $limit;
 	}
+
+	/**
+	 * Get the form information
+	 *
+	 * @param int $form_id Form Id
+	 *
+	 * @return array
+	 *
+	 * @since 1.1
+	 */
+	protected function get_form( $form_id ) {
+		return GFAPI::get_form( $form_id );
+
+	}
+
+	/**
+	 * Get the field settings
+	 *
+	 * @param array  $form     Form settings.
+	 *
+	 * @param int    $field_id Field ID.
+	 *
+	 * @param string $key      Setting's key name
+	 *
+	 * @return mixed
+	 *
+	 * @since 1.1
+	 */
+	protected function get_field_settings( $form, $field_id, $key = "" ) {
+
+		$field_key  = array_search( $field_id, array_column( $form['fields'], 'id' ) );
+		$field_settings = $form['fields'][$field_key];
+
+		if ( $key === "" ) {
+			return $field_settings; /* Return's the whole settings array if no key was specified*/
+		}
+
+		if ( empty( $field_settings[ $key ] ) ) { /* Check if the specified key exists ,if not set return to NULL*/
+			return NULL;
+		} else {
+			return $field_settings[ $key ]; /* Return's specified key's value. */
+		}
+
+	}
+
 }

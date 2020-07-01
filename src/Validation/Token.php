@@ -46,7 +46,7 @@ class Token {
 		$tmp_id   = preg_replace( '/[^A-Za-z0-9]/', '', $token_array[2] );
 		$pdf_name = $token_array[3];
 
-		if ( ! is_file( $this->pdf_path . "$tmp_id/$tmp_id.pdf" ) ) {
+		if ( ! is_file( $this->pdf_path . "$tmp_id/$tmp_id.pdf" )) {
 			throw new \InvalidArgumentException( 'Invalid Request' );
 		}
 
