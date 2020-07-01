@@ -2,10 +2,10 @@
 
 namespace GFPDF\Plugins\Previewer\API;
 
-use GFAPI;
 use GFPDF\Helper\Helper_Trait_Logger;
 use GFPDF\Plugins\Previewer\Validation\Token;
 use WP_REST_Request;
+use GPDFAPI;
 
 /**
  * @package     Gravity PDF Previewer
@@ -100,7 +100,7 @@ class PdfViewerApiResponseV2 implements CallableApiResponse {
 			 *
 			 * If the access policy doesn't work, the PDF will be cleaned up as part of our clean-up cron.
 			 */
-			if ( empty( $allow_download ) || $allow_download === false || $access_number === 2 ) {
+			if ( empty( $allow_download ) || $access_number === 2 ) {
 				$this->delete_pdf( $tmp_pdf );
 			}
 		} catch ( Exception $e ) {
@@ -199,8 +199,7 @@ class PdfViewerApiResponseV2 implements CallableApiResponse {
 	 * @since 1.1
 	 */
 	protected function get_form( $form_id ) {
-		return GFAPI::get_form( $form_id );
-
+		return GPDFAPI::get_form_class()->get_form( $form_id );
 	}
 
 	/**
@@ -217,20 +216,46 @@ class PdfViewerApiResponseV2 implements CallableApiResponse {
 	 * @since 1.1
 	 */
 	protected function get_field_settings( $form, $field_id, $key = "" ) {
+		$field_settings = $this->get_settings( $form['fields'], $field_id );
 
-		$field_key  = array_search( $field_id, array_column( $form['fields'], 'id' ) );
-		$field_settings = $form['fields'][$field_key];
+		if ( $field_settings === null ) { /* Returns Null if the field id doesn't exsits */
+			return null;
+		}
 
-		if ( $key === "" ) {
-			return $field_settings; /* Return's the whole settings array if no key was specified*/
+		if ( $key === '' ) { /* Return's the whole settings array if no key was specified*/
+			return $field_settings;
 		}
 
 		if ( empty( $field_settings[ $key ] ) ) { /* Check if the specified key exists ,if not set return to NULL*/
-			return NULL;
+			return null;
 		} else {
 			return $field_settings[ $key ]; /* Return's specified key's value. */
 		}
-
 	}
 
+	/**
+	 * Get the field settings
+	 *
+	 * @param array $fields Form fields.
+	 *
+	 * @param int   $id     Field ID.
+	 *
+	 * @return array
+	 *
+	 * @since 1.1
+	 */
+	protected function get_settings( $fields, $id ) {
+
+		if ( empty( $fields ) || (int) $id == 0 ) { /* Check if the passed fields is not empty Or id is empty or 0, return NULL if true.*/
+			return null;
+		}
+
+		$field_key = array_search( $id, array_column( $fields, 'id' ), true );
+
+		if ( $field_key !== false ) { /* Check if array search doesn't returns false, return NULL if it does.*/
+			return $fields[ $field_key ];
+		} else {
+			return null;
+		}
+	}
 }
