@@ -222,7 +222,7 @@ class PdfViewerApiResponseV2 implements CallableApiResponse {
 			return null;
 		}
 
-		if ( $key === '' ) { /* Return's the whole settings array if no key was specified*/
+		if ( $key === '' ) { /* Returns the whole settings array if no key was specified*/
 			return $field_settings;
 		}
 
