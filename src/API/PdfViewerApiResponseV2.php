@@ -221,16 +221,17 @@ class PdfViewerApiResponseV2 implements CallableApiResponse {
 		if ( $field_settings === null ) { /* Returns Null if the field id doesn't exsits */
 			return null;
 		}
-
-		if ( $key === '' ) { /* Returns the whole settings array if no key was specified*/
+		/* Returns the whole settings array if no key was specified */
+		if ( $key === '' ) {
 			return $field_settings;
 		}
 
-		if ( empty( $field_settings[ $key ] ) ) { /* Check if the specified key exists ,if not set return to NULL*/
-			return null;
-		} else {
+		/* Check if the specified key exists ,if not set return to NULL */
+		if ( !empty( $field_settings[ $key ] ) ) {
 			return $field_settings[ $key ]; /* Return's specified key's value. */
 		}
+
+		return null;
 	}
 
 	/**
@@ -245,17 +246,18 @@ class PdfViewerApiResponseV2 implements CallableApiResponse {
 	 * @since 1.1
 	 */
 	protected function get_settings( $fields, $id ) {
-
-		if ( empty( $fields ) || (int) $id == 0 ) { /* Check if the passed fields is not empty Or id is empty or 0, return NULL if true.*/
+		/* Check if the passed fields is not empty Or id is empty or 0, return NULL if true. */
+		if ( empty( $fields ) || $id === 0 ) {
 			return null;
 		}
 
 		$field_key = array_search( $id, array_column( $fields, 'id' ), true );
 
-		if ( $field_key !== false ) { /* Check if array search doesn't returns false, return NULL if it does.*/
-			return $fields[ $field_key ];
-		} else {
+		/* Check if array search doesn't returns false, return NULL if it does. */
+		if ( $field_key === false ) {
 			return null;
 		}
+
+		return $fields[ $field_key ];
 	}
 }
