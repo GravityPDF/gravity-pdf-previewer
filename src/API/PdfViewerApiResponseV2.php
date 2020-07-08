@@ -5,6 +5,7 @@ namespace GFPDF\Plugins\Previewer\API;
 use GFPDF\Helper\Helper_Trait_Logger;
 use GFPDF\Plugins\Previewer\Validation\Token;
 use WP_REST_Request;
+use GPDFAPI;
 
 /**
  * @package     Gravity PDF Previewer
@@ -77,8 +78,8 @@ class PdfViewerApiResponseV2 implements CallableApiResponse {
 
 			/* @TODO - download */
 
-			$tmp_pdf = $this->pdf_path . "$tmp_id/$tmp_id.pdf";
-
+			$tmp_pdf        = $this->pdf_path . "$tmp_id/$tmp_id.pdf";
+			$allow_download = $this->get_field_settings( $this->get_form( $form_id ), $field_id, 'pdfdownload' );
 			$this->get_logger()->notice(
 				'Begin streaming Preview PDF',
 				[
@@ -86,6 +87,7 @@ class PdfViewerApiResponseV2 implements CallableApiResponse {
 					'pdf' => $tmp_pdf,
 				]
 			);
+
 
 			$access_number = $this->get_access_limit( $tmp_pdf );
 			$this->stream_pdf( $tmp_pdf, $pdf_name );
@@ -185,5 +187,77 @@ class PdfViewerApiResponseV2 implements CallableApiResponse {
 		touch( $path, time(), mktime( null, ++$limit, 0 ) );
 
 		return $limit;
+	}
+
+	/**
+	 * Get the form information
+	 *
+	 * @param int $form_id Form Id
+	 *
+	 * @return array
+	 *
+	 * @since 1.1
+	 */
+	protected function get_form( $form_id ) {
+		return GPDFAPI::get_form_class()->get_form( $form_id );
+	}
+
+	/**
+	 * Get the field settings
+	 *
+	 * @param array  $form     Form settings.
+	 *
+	 * @param int    $field_id Field ID.
+	 *
+	 * @param string $key      Setting's key name
+	 *
+	 * @return mixed
+	 *
+	 * @since 1.1
+	 */
+	protected function get_field_settings( $form, $field_id, $key = "" ) {
+		$field_settings = $this->get_settings( $form['fields'], $field_id );
+
+		if ( $field_settings === null ) { /* Returns Null if the field id doesn't exsits */
+			return null;
+		}
+		/* Returns the whole settings array if no key was specified */
+		if ( $key === '' ) {
+			return $field_settings;
+		}
+
+		/* Check if the specified key exists ,if not set return to NULL */
+		if ( !empty( $field_settings[ $key ] ) ) {
+			return $field_settings[ $key ]; /* Return's specified key's value. */
+		}
+
+		return null;
+	}
+
+	/**
+	 * Get the field settings
+	 *
+	 * @param array $fields Form fields.
+	 *
+	 * @param int   $id     Field ID.
+	 *
+	 * @return array
+	 *
+	 * @since 1.1
+	 */
+	protected function get_settings( $fields, $id ) {
+		/* Check if the passed fields is not empty Or id is empty or 0, return NULL if true. */
+		if ( empty( $fields ) || $id === 0 ) {
+			return null;
+		}
+
+		$field_key = array_search( $id, array_column( $fields, 'id' ), true );
+
+		/* Check if array search doesn't returns false, return NULL if it does. */
+		if ( $field_key === false ) {
+			return null;
+		}
+
+		return $fields[ $field_key ];
 	}
 }
