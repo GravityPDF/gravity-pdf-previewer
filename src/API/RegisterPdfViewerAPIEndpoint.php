@@ -3,7 +3,6 @@
 namespace GFPDF\Plugins\Previewer\API;
 
 use GFPDF\Helper\Helper_Interface_Actions;
-
 use WP_REST_Server;
 
 /**
@@ -86,8 +85,9 @@ class RegisterPdfViewerAPIEndpoint implements Helper_Interface_Actions {
 	 */
 	public function register_endpoint() {
 		register_rest_route( 'gravity-pdf-previewer/v1', '/pdf/(?P<temp_id>[a-zA-Z0-9]+)', [
-			'methods'  => WP_REST_Server::READABLE,
-			'callback' => [ $this->response, 'response' ],
+			'methods'             => WP_REST_Server::READABLE,
+			'callback'            => [ $this->response, 'response' ],
+			'permission_callback' => '__return_true',
 		] );
 	}
 }
