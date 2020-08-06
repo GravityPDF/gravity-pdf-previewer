@@ -33,7 +33,7 @@ Installing the testing environment is best done using a flavour of Vagrant (try 
 
 1. From your terminal SSH into your Vagrant box using the `vagrant ssh` command
 2. `cd` into the root of your Gravity PDF Previewer directory
-3. Run `bash tests/bin/install.sh gravitypdf_test root root localhost` where `root root` is substituted for your mysql username and password (VVV users can run the command as is).
+3. Run `bash bin/install-wp-tests.sh gravitypdf_test root root localhost` where `root root` is substituted for your mysql username and password (VVV users can run the command as is).
 4. Upon success you can run `vendor/bin/phpunit`
 
 #### Mocha (JS)
@@ -47,7 +47,7 @@ Running the tests can easily be done with one of the following commands:
 * `yarn run test` – runs all the tests once in PhantomJS
 * `yarn run test:watch` – watches for changes to the tests and runs in PhantomJS
 * `yarn run test:all` – runs all tests in Firefox, Chrome and Internet Explorer
- 
+
 ### Building JS
 
 We use Webpack to compile our Javascript from ES6 to ES5. If you want to modify the Javascript then take advantage of `yarn run watch` to automatically re-build the JS when changes are made.
