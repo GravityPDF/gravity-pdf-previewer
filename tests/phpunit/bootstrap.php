@@ -74,8 +74,8 @@ class GravityPDF_Previewer_Unit_Tests_Bootstrap {
 
 		/* Setup testing logger */
 		require $this->plugin_dir . '/tmp/gravity-forms-pdf-extended/vendor/autoload.php';
-		$this->log = new \Monolog\Logger( 'test' );
-		$this->log->pushHandler( new \Monolog\Handler\NullHandler( \Monolog\Logger::INFO ) ); /* throw logs away */
+		$this->log = new \GFPDF\Vendor\Monolog\Logger( 'test' );
+		$this->log->pushHandler( new \GFPDF\Vendor\Monolog\Handler\NullHandler( \GFPDF\Vendor\Monolog\Logger::INFO ) ); /* throw logs away */
 	}
 }
 
