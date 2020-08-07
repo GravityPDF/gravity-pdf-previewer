@@ -2,14 +2,13 @@
 
 namespace GFPDF\Tests\Previewer;
 
+use GFAPI;
 use GFPDF\Helper\Helper_PDF;
 use GFPDF\Plugins\Previewer\API\PdfGeneratorApiResponse;
 use GFPDF\Plugins\Previewer\Exceptions\FieldNotFound;
-
-use WP_UnitTestCase;
-use WP_REST_Request;
-use GFAPI;
 use stdClass;
+use WP_REST_Request;
+use WP_UnitTestCase;
 
 /**
  * @package     Gravity PDF Previewer
@@ -149,6 +148,11 @@ class TestPDFGeneratorApiResponse extends WP_UnitTestCase {
 
 		$entry    = $this->class->create_entry( $form );
 		$settings = $this->class->get_pdf_config( $form, '555ad84787d7e' );
+
+		$reflection = new \ReflectionClass( '\GFPDF\Plugins\Previewer\API\PdfGeneratorApiResponse' );
+		$property   = $reflection->getProperty( 'form' );
+		$property->setAccessible( true );
+		$property->setValue( $this->class, $form );
 
 		$this->class->set_unique_id();
 		$pdf_path = $this->class->generate_pdf( $entry, $settings );
