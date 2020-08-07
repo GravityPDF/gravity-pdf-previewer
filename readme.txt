@@ -7,6 +7,8 @@
 User's with a valid, active license key can receive support for this plugin by filling out the form at [GravityPDF.com](https://gravitypdf.com/support/).
 
 == Changelog ==
+= Version 1.2.7, August 10, 2020 =
+* Bug: Fix PHP notice in WordPress 5.5
 
 = Version 1.2.6, September 18, 2019 =
 * Bug: Fix the file upload display in Core / Universal templates so the filenames are correctly displayed in the Previewer
