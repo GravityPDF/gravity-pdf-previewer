@@ -4,12 +4,13 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "debounce": "^1.2.0",
-    "pdfjs-dist-viewer-min": "^2.4.456"
+    "pdfjs-dist-viewer-min": "^2.6.347"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
+    "abortcontroller-polyfill": "^1.4.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.2.0",
@@ -38,8 +39,7 @@
     "terser-webpack-plugin": "^3.0.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
-    "webpack-merge": "^4.2.2",
-    "abortcontroller-polyfill": "^1.4.0"
+    "webpack-merge": "^4.2.2"
   },
   "scripts": {
     "lint:js": "standard assets/**/*.js",

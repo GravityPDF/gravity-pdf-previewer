@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <!--
 Copyright 2012 Mozilla Foundation
 
@@ -6,7 +6,7 @@ Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 You may obtain a copy of the License at
 
-	http://www.apache.org/licenses/LICENSE-2.0
+    http://www.apache.org/licenses/LICENSE-2.0
 
 Unless required by applicable law or agreed to in writing, software
 distributed under the License is distributed on an "AS IS" BASIS,
@@ -16,11 +16,11 @@ limitations under the License.
 
 Adobe CMap resources are covered by their own copyright but the same license:
 
-	Copyright 1990-2015 Adobe Systems Incorporated.
+    Copyright 1990-2015 Adobe Systems Incorporated.
 
 See https://github.com/adobe-type-tools/cmap-resources
 -->
-<html dir="ltr" mozdisallowselectionprint moznomarginboxes>
+<html dir="ltr" mozdisallowselectionprint>
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -32,52 +32,55 @@ See https://github.com/adobe-type-tools/cmap-resources
 	<link rel="stylesheet" href="viewer.css">
 
 	<style>
-		body {
-			background-color: #7b7b7b;
-		}
+        body {
+            background-color: #7b7b7b;
+        }
 
-		#toolbarSidebar,
-		#toolbarContainer, .findbar, .secondaryToolbar {
-			background-color: #4a4a4a;
-			background-image: none;
-		}
+        #toolbarSidebar,
+        #toolbarContainer, .findbar, .secondaryToolbar {
+            background-color: #4a4a4a;
+            background-image: none;
+        }
 
-		#loadingBar {
-			display: none;
-		}
+        #loadingBar {
+            display: none;
+        }
 
-		#sidebarContainer,
-		#findbar,
-		#secondaryToolbar,
-		#sidebarToggle,
-		#viewFind,
-		#toolbarViewerRight > *{
-			display: none !important;
-		}
+        #sidebarContainer,
+        #findbar,
+        #secondaryToolbar,
+        #sidebarToggle,
+        #viewFind,
+        #toolbarViewerRight > *{
+            display: none !important;
+        }
 
 		<?php if ( isset( $_GET['download'] ) && (int) $_GET['download'] === 1 ): ?>
-			#toolbarViewerRight > #download {
-				display: block !important;
-			}
+        #toolbarViewerRight > #download {
+            display: block !important;
+        }
 		<?php endif; ?>
 
-		#toolbarViewerMiddle {
-			float: right;
-			padding-right: 30px;
-		}
+        #toolbarViewerMiddle {
+            float: right;
+            padding-right: 30px;
+        }
 
-		#toolbarContainer, .findbar, .secondaryToolbar {
-			box-shadow: none !important;
-		}
+        #toolbarContainer, .findbar, .secondaryToolbar {
+            box-shadow: none !important;
+        }
 
-		.textLayer {
-			display: none;
-		}
+        .textLayer {
+            display: none;
+        }
 	</style>
+
 
 	<!-- This snippet is used in production (included from viewer.html) -->
 	<link rel="resource" type="application/l10n" href="locale/locale.properties">
 	<script src="pdf.viewer.js"></script>
+
+
 </head>
 
 <body tabindex="1" class="loadingInProgress">
@@ -95,6 +98,9 @@ See https://github.com/adobe-type-tools/cmap-resources
 				<button id="viewAttachments" class="toolbarButton" title="Show Attachments" tabindex="4" data-l10n-id="attachments">
 					<span data-l10n-id="attachments_label">Attachments</span>
 				</button>
+				<button id="viewLayers" class="toolbarButton" title="Show Layers (double-click to reset all layers to the default state)" tabindex="5" data-l10n-id="layers">
+					<span data-l10n-id="layers_label">Layers</span>
+				</button>
 			</div>
 		</div>
 		<div id="sidebarContent">
@@ -103,6 +109,8 @@ See https://github.com/adobe-type-tools/cmap-resources
 			<div id="outlineView" class="hidden">
 			</div>
 			<div id="attachmentsView" class="hidden">
+			</div>
+			<div id="layersView" class="hidden">
 			</div>
 		</div>
 		<div id="sidebarResizer" class="hidden"></div>
@@ -241,7 +249,7 @@ See https://github.com/adobe-type-tools/cmap-resources
 								<span data-l10n-id="next_label">Next</span>
 							</button>
 						</div>
-						<input type="number" id="pageNumber" class="toolbarField pageNumber" title="Page" value="1" size="4" min="1" tabindex="15" data-l10n-id="page">
+						<input type="number" id="pageNumber" class="toolbarField pageNumber" title="Page" value="1" size="4" min="1" tabindex="15" data-l10n-id="page" autocomplete="off">
 						<span id="numPages" class="toolbarLabel"></span>
 					</div>
 					<div id="toolbarViewerRight">
@@ -281,22 +289,22 @@ See https://github.com/adobe-type-tools/cmap-resources
 							</button>
 						</div>
 						<span id="scaleSelectContainer" class="dropdownToolbarButton">
-				  <select id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="zoom">
-					<option id="pageAutoOption" title="" value="auto" selected="selected" data-l10n-id="page_scale_auto">Automatic Zoom</option>
-					<option id="pageActualOption" title="" value="page-actual" data-l10n-id="page_scale_actual">Actual Size</option>
-					<option id="pageFitOption" title="" value="page-fit" data-l10n-id="page_scale_fit">Page Fit</option>
-					<option id="pageWidthOption" title="" value="page-width" data-l10n-id="page_scale_width">Page Width</option>
-					<option id="customScaleOption" title="" value="custom" disabled="disabled" hidden="true"></option>
-					<option title="" value="0.5" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 50 }'>50%</option>
-					<option title="" value="0.75" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 75 }'>75%</option>
-					<option title="" value="1" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 100 }'>100%</option>
-					<option title="" value="1.25" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 125 }'>125%</option>
-					<option title="" value="1.5" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 150 }'>150%</option>
-					<option title="" value="2" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 200 }'>200%</option>
-					<option title="" value="3" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 300 }'>300%</option>
-					<option title="" value="4" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 400 }'>400%</option>
-				  </select>
-				</span>
+                  <select id="scaleSelect" title="Zoom" tabindex="23" data-l10n-id="zoom">
+                    <option id="pageAutoOption" title="" value="auto" selected="selected" data-l10n-id="page_scale_auto">Automatic Zoom</option>
+                    <option id="pageActualOption" title="" value="page-actual" data-l10n-id="page_scale_actual">Actual Size</option>
+                    <option id="pageFitOption" title="" value="page-fit" data-l10n-id="page_scale_fit">Page Fit</option>
+                    <option id="pageWidthOption" title="" value="page-width" data-l10n-id="page_scale_width">Page Width</option>
+                    <option id="customScaleOption" title="" value="custom" disabled="disabled" hidden="true"></option>
+                    <option title="" value="0.5" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 50 }'>50%</option>
+                    <option title="" value="0.75" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 75 }'>75%</option>
+                    <option title="" value="1" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 100 }'>100%</option>
+                    <option title="" value="1.25" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 125 }'>125%</option>
+                    <option title="" value="1.5" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 150 }'>150%</option>
+                    <option title="" value="2" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 200 }'>200%</option>
+                    <option title="" value="3" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 300 }'>300%</option>
+                    <option title="" value="4" data-l10n-id="page_scale_percent" data-l10n-args='{ "scale": 400 }'>400%</option>
+                  </select>
+                </span>
 					</div>
 				</div>
 				<div id="loadingBar">
@@ -310,13 +318,13 @@ See https://github.com/adobe-type-tools/cmap-resources
 
 		<menu type="context" id="viewerContextMenu">
 			<menuitem id="contextFirstPage" label="First Page"
-					  data-l10n-id="first_page"></menuitem>
+			          data-l10n-id="first_page"></menuitem>
 			<menuitem id="contextLastPage" label="Last Page"
-					  data-l10n-id="last_page"></menuitem>
+			          data-l10n-id="last_page"></menuitem>
 			<menuitem id="contextPageRotateCw" label="Rotate Clockwise"
-					  data-l10n-id="page_rotate_cw"></menuitem>
+			          data-l10n-id="page_rotate_cw"></menuitem>
 			<menuitem id="contextPageRotateCcw" label="Rotate Counter-Clockwise"
-					  data-l10n-id="page_rotate_ccw"></menuitem>
+			          data-l10n-id="page_rotate_ccw"></menuitem>
 		</menu>
 
 		<div id="viewerContainer" tabindex="0">
@@ -410,7 +418,6 @@ See https://github.com/adobe-type-tools/cmap-resources
 				</div>
 			</div>
 		</div>
-		<!--#if !(FIREFOX || MOZCENTRAL)-->
 		<div id="printServiceOverlay" class="container hidden">
 			<div class="dialog">
 				<div class="row">
@@ -425,13 +432,10 @@ See https://github.com/adobe-type-tools/cmap-resources
 				</div>
 			</div>
 		</div>
-		<!--#endif-->
-		<!--#if CHROME-->
-		<!--#include viewer-snippet-chrome-overlays.html-->
-		<!--#endif-->
 	</div>  <!-- overlayContainer -->
 
 </div> <!-- outerContainer -->
 <div id="printContainer"></div>
 </body>
 </html>
+
