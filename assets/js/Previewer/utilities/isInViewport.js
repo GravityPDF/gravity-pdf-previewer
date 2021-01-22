@@ -1,7 +1,7 @@
 /**
  * @package     Gravity PDF Previewer
- * @copyright   Copyright (c) 2020, Blue Liquid Designs
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @copyright   Copyright (c) 2021, Blue Liquid Designs
+ * @license     https://opensource.org/licenses/GPL-3.0 GNU Public License
  * @since       2.0
  */
 
