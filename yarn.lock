@@ -1839,9 +1839,9 @@ camelcase@^5.0.0, camelcase@^5.3.1:
   integrity sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==
 
 caniuse-lite@^1.0.30001173:
-  version "1.0.30001178"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001178.tgz#3ad813b2b2c7d585b0be0a2440e1e233c6eabdbc"
-  integrity sha512-VtdZLC0vsXykKni8Uztx45xynytOi71Ufx9T8kHptSw9AL4dpqailUJJHavttuzUe1KYuBYtChiWv+BAb7mPmQ==
+  version "1.0.30001179"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001179.tgz#b0803883b4471a6c62066fb1752756f8afc699c8"
+  integrity sha512-blMmO0QQujuUWZKyVrD1msR4WNDAqb/UPO1Sw2WWsQ7deoM5bJiicKnWJ1Y0NS/aGINSnKPIWBMw5luX+NDUCA==
 
 caseless@~0.12.0:
   version "0.12.0"
@@ -5939,10 +5939,10 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-pdfjs-dist-viewer-min@^2.6.347:
-  version "2.6.347"
-  resolved "https://registry.yarnpkg.com/pdfjs-dist-viewer-min/-/pdfjs-dist-viewer-min-2.6.347.tgz#65a22253cb4d26d14a9d7087e0bc0786c71fc7c8"
-  integrity sha512-c5uyr0sTmu1tQuoljXiXw7ebqEPZkYTIHvqzw3JOh0nm40AQ2muOE7nusMmOLTHhytLfSIMF/WwFlse1fyzhjQ==
+pdfjs-dist-viewer-min@2.5.207:
+  version "2.5.207"
+  resolved "https://registry.yarnpkg.com/pdfjs-dist-viewer-min/-/pdfjs-dist-viewer-min-2.5.207.tgz#cf39942f98643207b73b9eb4f17b55c32ce04d61"
+  integrity sha512-34IUqranIjbFMTK60CjMMMy27ZlsYuTjBg9v+SjXXeksohTZsqFTQtyALul38CsstIq/VtGqLp9HNEWxDvdvLQ==
 
 pend@~1.2.0:
   version "1.2.0"

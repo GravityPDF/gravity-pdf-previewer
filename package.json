@@ -4,7 +4,7 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "debounce": "^1.2.0",
-    "pdfjs-dist-viewer-min": "^2.6.347"
+    "pdfjs-dist-viewer-min": "2.5.207"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
