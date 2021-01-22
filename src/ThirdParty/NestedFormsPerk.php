@@ -5,7 +5,7 @@ namespace GFPDF\Plugins\Previewer\ThirdParty;
 /**
  * @package     Gravity PDF Previewer
  * @copyright   Copyright (c) 2019, Blue Liquid Designs
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @license     https://opensource.org/licenses/GPL-3.0 GNU Public License
  * @since       1.2.6
  */
 

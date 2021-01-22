@@ -1,7 +1,9 @@
 <?php
 
 /**
- * If Xdebug is installed disable stack traces for phpunit
+ * @package     Gravity PDF Previewer
+ * @copyright   Copyright (c) 2021, Blue Liquid Designs
+ * @license     https://opensource.org/licenses/GPL-3.0 GNU Public License
  */
 if ( function_exists( 'xdebug_disable' ) ) {
 	xdebug_disable();
@@ -23,6 +25,7 @@ class GravityPDF_Previewer_Unit_Tests_Bootstrap {
 	/** @var string plugin directory */
 	public $plugin_dir;
 
+	/** @var \Monolog\Logger */
 	public $log;
 
 	/**
@@ -41,17 +44,15 @@ class GravityPDF_Previewer_Unit_Tests_Bootstrap {
 
 		/* load Gravity PDF */
 		tests_add_filter( 'muplugins_loaded', [ $this, 'load' ] );
-
-		tests_add_filter( 'after_setup_theme', [ $this, 'disable_deprecated_warnings' ], 20 );
+		tests_add_filter( 'muplugins_loaded', [ $this, 'disable_deprecated_warnings' ], 20 );
 
 		/* load the WP testing environment */
 		require_once( $this->wp_tests_dir . '/includes/bootstrap.php' );
 	}
 
-
 	public function disable_deprecated_warnings() {
 		/* Disable deprecated warnings */
-		error_reporting(E_ALL ^ E_DEPRECATED);
+		error_reporting( E_ALL ^ E_DEPRECATED );
 	}
 
 	/**
@@ -60,15 +61,12 @@ class GravityPDF_Previewer_Unit_Tests_Bootstrap {
 	 * @since 4.0
 	 */
 	public function load() {
-		/* Disable deprecated warnings */
-		error_reporting(E_ALL ^ E_DEPRECATED);
-
 		require_once $this->plugin_dir . '/tmp/gravityforms/gravityforms.php';
 		require_once $this->plugin_dir . '/tmp/gravity-forms-pdf-extended/pdf.php';
 
 		/* set up Gravity Forms database */
-		RGFormsModel::drop_tables();
-		( function_exists( 'gf_upgrade' ) ) ? gf_upgrade()->maybe_upgrade() : @GFForms::setup( true );
+		\RGFormsModel::drop_tables();
+		( function_exists( 'gf_upgrade' ) ) ? gf_upgrade()->maybe_upgrade() : \GFForms::setup( true );
 
 		require $this->plugin_dir . '/gravity-pdf-previewer.php';
 
