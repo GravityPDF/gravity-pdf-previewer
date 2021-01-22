@@ -89,7 +89,7 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 				'PdfPreviewerConstants',
 				[
 					'viewerUrl'            => plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/viewer/web/viewer.php',
-					'documentUrl'          => rest_url( 'gravity-pdf-previewer/v1/pdf/' ),
+					'documentUrl'          => str_replace( get_home_url(), '', rest_url( 'gravity-pdf-previewer/v1/pdf/' ) ),
 					'pdfGeneratorEndpoint' => rest_url( 'gravity-pdf-previewer/v1/generator/' ),
 
 					'refreshTitle'   => __( 'Refresh PDF', 'gravity-pdf-previewer' ),
