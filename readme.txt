@@ -7,6 +7,10 @@
 User's with a valid, active license key can receive support for this plugin by filling out the form at [GravityPDF.com](https://gravitypdf.com/support/).
 
 == Changelog ==
+= Version 1.3.0 =
+* Feature: Update PDF.js to version 2.5.207
+* Bug: Use relative URL when loading PDF to reduce likelihood of Windows Defender in Edge throwing a security warning
+
 = Version 1.2.7, August 10, 2020 =
 * Bug: Fix PHP notice in WordPress 5.5
 
