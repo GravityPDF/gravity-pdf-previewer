@@ -22,7 +22,8 @@ tar -zxf ${PACKAGE_DIR}/package.tar.gz --directory ${PACKAGE_DIR} && rm ${PACKAG
 composer install --quiet --no-dev  --prefer-dist --optimize-autoloader --working-dir ${PACKAGE_DIR}
 
 # Cleanup Node JS
-rm -R ${PACKAGE_DIR}/node_modules
+rm -Rf ${PACKAGE_DIR}/node_modules
+rm -Rf ${PACKAGE_DIR}/webpack-configs
 
 # Cleanup additional build files
 FILES=(
@@ -33,7 +34,6 @@ FILES=(
 "${PACKAGE_DIR}/phpcs.xml.dist"
 "${PACKAGE_DIR}/gulpfile.js"
 "${PACKAGE_DIR}/.babelrc"
-"${PACKAGE_DIR}/.eslintrc"
 "${PACKAGE_DIR}/karma.conf.js"
 "${PACKAGE_DIR}/webpack.config.js"
 )
