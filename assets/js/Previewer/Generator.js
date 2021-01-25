@@ -57,8 +57,12 @@ export default class {
     manualLoader.add(this.container, () => this.generatePreview())
 
     /* Add listener to the onload and scroll event to trigger a reload */
-    window.addEventListener('load', () => this.generatePreview())
     window.addEventListener('scroll', () => debounce(this.maybeReloadPreview(), 1000))
+
+    /* Load current viewer right away if the parent container isn't hidden */
+    if(this.container.offsetParent !== null) {
+      this.generatePreview()
+    }
   }
 
   /**
