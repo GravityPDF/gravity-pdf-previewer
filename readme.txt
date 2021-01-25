@@ -7,6 +7,9 @@
 User's with a valid, active license key can receive support for this plugin by filling out the form at [GravityPDF.com](https://gravitypdf.com/support/).
 
 == Changelog ==
+= Version 1.3.1 =
+* Bug: fix PDF Previewer auto-loading on multi-page AJAX-enabled forms
+
 = Version 1.3.0 =
 * Feature: Update PDF.js to version 2.5.207
 * Bug: Fix string-to-number type conversion bug that can cause entry data loss under some circumstances.
