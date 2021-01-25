@@ -9,6 +9,7 @@ User's with a valid, active license key can receive support for this plugin by f
 == Changelog ==
 = Version 1.3.0 =
 * Feature: Update PDF.js to version 2.5.207
+* Bug: Fix string-to-number type conversion bug that can cause entry data loss under some circumstances.
 * Bug: Use relative URL when loading PDF to reduce likelihood of Windows Defender in Edge throwing a security warning
 
 = Version 1.2.7, August 10, 2020 =
