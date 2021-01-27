@@ -10,7 +10,7 @@ User's with a valid, active license key can receive support for this plugin by f
 
 = Version 1.3.0 =
 * Feature: Load the Previewer on page load when not in viewport (previously loaded on scroll as it came into viewport)
-* Feature: Add icon support for Gravity Forms 2.5
+* Feature: Add icon support for Previewer field in Gravity Forms 2.5
 * Housekeeping: Rewrite vast majority of front-end jQuery code in native JavaScript
 * Bug: Fix string-to-number type conversion bug that can cause entry data loss under some circumstances.
 * Bug: Use relative URL when loading PDF to reduce likelihood of Windows Defender in Edge throwing a security warning
