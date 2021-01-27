@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'GFPDF_PDF_PREVIEWER_FILE', __FILE__ );
-define( 'GFPDF_PDF_PREVIEWER_VERSION', '1.3.1' );
+define( 'GFPDF_PDF_PREVIEWER_VERSION', '1.3.0' );
 
 /**
  * Class GPDF_Previewer_Checks
