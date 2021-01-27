@@ -8,7 +8,7 @@
  * Author URI:      https://gravitypdf.com
  * Text Domain:     gravity-pdf-previewer
  * Domain Path:     /languages
- * Version:         1.3.1
+ * Version:         1.3.0
  */
 
 /**
