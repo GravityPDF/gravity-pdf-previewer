@@ -59,12 +59,8 @@ export default class {
     /* Add listener to the onload and scroll event to trigger a reload */
     window.addEventListener('scroll', () => debounce(this.maybeReloadPreview(), 1000))
 
-    /* Load current viewer right away if the parent container isn't hidden */
-    window.addEventListener('load', function () {
-      if (this.container.parentElement.style.display !== 'none') {
-        this.generatePreview()
-      }
-    }.bind(this))
+    /* Load current viewer during page load */
+    this.generatePreview()
   }
 
   /**
