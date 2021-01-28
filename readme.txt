@@ -9,6 +9,7 @@ User's with a valid, active license key can receive support for this plugin by f
 == Changelog ==
 
 = Version 1.3.0 =
+* Feature: Update PDF.js to 2.3.200
 * Feature: Load the Previewer on page load when not in viewport (previously loaded on scroll as it came into viewport)
 * Feature: Add icon support for Previewer field in Gravity Forms 2.5
 * Housekeeping: Rewrite vast majority of front-end jQuery code in native JavaScript
