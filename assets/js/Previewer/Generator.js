@@ -60,7 +60,7 @@ export default class {
     window.addEventListener('scroll', () => debounce(this.maybeReloadPreview(), 1000))
 
     /* Load current viewer right away if the parent container isn't hidden */
-    window.addEventListener('load', function() {
+    window.addEventListener('load', function () {
       if (this.container.parentElement.style.display !== 'none') {
         this.generatePreview()
       }
