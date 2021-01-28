@@ -8,12 +8,12 @@
  * Author URI:      https://gravitypdf.com
  * Text Domain:     gravity-pdf-previewer
  * Domain Path:     /languages
- * Version:         1.2.7
+ * Version:         1.2.8
  */
 
 /**
  * @package     Gravity PDF Previewer
- * @copyright   Copyright (c) 2020, Blue Liquid Designs
+ * @copyright   Copyright (c) 2021, Blue Liquid Designs
  * @license     https://opensource.org/licenses/GPL-3.0 GNU Public License
  * @since       0.1
  */
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 define( 'GFPDF_PDF_PREVIEWER_FILE', __FILE__ );
-define( 'GFPDF_PDF_PREVIEWER_VERSION', '1.2.7' );
+define( 'GFPDF_PDF_PREVIEWER_VERSION', '1.2.8' );
 
 /**
  * Class GPDF_Previewer_Checks

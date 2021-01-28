@@ -7,6 +7,10 @@
 User's with a valid, active license key can receive support for this plugin by filling out the form at [GravityPDF.com](https://gravitypdf.com/support/).
 
 == Changelog ==
+= Version 1.2.8, January 28, 2020 =
+* Bug: Fix string-to-number type conversion bug that can cause random entry data loss under specific conditions.
+* Bug: Use relative URL when loading PDF previews to reduce the chance Windows Defender in Edge throws a security warning
+
 = Version 1.2.7, August 10, 2020 =
 * Bug: Fix PHP notice in WordPress 5.5
 

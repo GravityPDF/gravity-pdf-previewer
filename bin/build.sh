@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 
 if [ $# -lt 1 ]; then
-	echo "usage: $0 <version> [branch]"
+	echo "usage: $0 <version>"
 	exit 1
 fi
 
 VERSION=$1
-BRANCH=${2-development}
 TMP_DIR="./tmp/package/"
 PACKAGE_DIR="${TMP_DIR}${VERSION}"
 PACKAGE_NAME="gravity-pdf-previewer"
@@ -15,7 +14,7 @@ PACKAGE_NAME="gravity-pdf-previewer"
 mkdir -p ${PACKAGE_DIR}
 
 # Get an archive of our plugin
-git archive ${BRANCH} --output ${PACKAGE_DIR}/package.tar.gz
+git archive HEAD --output ${PACKAGE_DIR}/package.tar.gz
 tar -zxf ${PACKAGE_DIR}/package.tar.gz --directory ${PACKAGE_DIR} && rm ${PACKAGE_DIR}/package.tar.gz
 
 # Run Composer

@@ -20,8 +20,8 @@ use GFCommon;
 
 /**
  * @package     Gravity PDF Previewer
- * @copyright   Copyright (c) 2020, Blue Liquid Designs
- * @license     http://opensource.org/licenses/gpl-2.0.php GNU Public License
+ * @copyright   Copyright (c) 2021, Blue Liquid Designs
+ * @license     https://opensource.org/licenses/GPL-3.0 GNU Public License
  * @since       0.1
  */
 
@@ -492,8 +492,9 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		$entry['date_created'] = current_time( 'mysql', true );
 		$entry['id']           = $this->get_unique_id();
 
-		gform_delete_meta( $entry['id'] );
 		GFCache::flush();
+
+		$this->cache_product_data( $entry, $form );
 
 		return $entry;
 	}
@@ -645,6 +646,26 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 		if( ! defined( 'DOING_PDF_PREVIEWER' ) ) {
 			define( 'DOING_PDF_PREVIEWER', true );
 		}
+	}
+
+	/**
+	 * Store the product data in a temporary cache for the request
+	 *
+	 * @param array $entry
+	 * @param array $form
+	 *
+	 * @since 1.3
+	 */
+	protected function cache_product_data( $entry, $form ) {
+		global $_gform_lead_meta;
+
+		$entry_id = $entry['id'];
+		unset( $entry['id'] );
+
+		$products = GFCommon::get_product_fields( $form, $entry, true );
+
+		$cache_key                      = get_current_blog_id() . '_' . $entry_id . '_gform_product_info_1_';
+		$_gform_lead_meta[ $cache_key ] = maybe_serialize( $products );
 	}
 
 	/**
