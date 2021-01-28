@@ -2,7 +2,7 @@
  * @package     Gravity PDF Previewer
  * @copyright   Copyright (c) 2021, Blue Liquid Designs
  * @license     https://opensource.org/licenses/GPL-3.0 GNU Public License
- * @since       2.0
+ * @since       1.3
  */
 
 /**
@@ -12,7 +12,7 @@
  *
  * @returns { result: string }
  *
- * @since 2.0
+ * @since 1.3
  */
 export const serializeFormData = form => {
   /* Setup our serialized data */

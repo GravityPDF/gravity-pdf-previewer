@@ -60,9 +60,12 @@ export default class {
     window.addEventListener('scroll', () => debounce(this.maybeReloadPreview(), 1000))
 
     /* Load current viewer right away if the parent container isn't hidden */
-    if(this.container.offsetParent !== null) {
-      this.generatePreview()
-    }
+    window.addEventListener('load', () => {
+      if(this.container.offsetParent !== null) {
+        this.generatePreview()
+      }
+    })
+
   }
 
   /**
@@ -214,7 +217,7 @@ export default class {
   /**
    * Remove Spinner
    *
-   * @since 2.0
+   * @since 1.3
    */
   removeSpinner () {
     this.container.querySelector('.gpdf-spinner').remove()
