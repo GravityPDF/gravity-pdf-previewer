@@ -4,13 +4,15 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "debounce": "^1.2.0",
-    "pdfjs-dist-viewer-min": "2.3.200"
+    "element-remove": "^1.0.4",
+    "pdfjs-dist-viewer-min": "2.3.200",
+    "whatwg-fetch": "^3.5.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
-    "abortcontroller-polyfill": "^1.4.0",
+    "abortcontroller-polyfill": "^1.7.1",
     "babel-loader": "^8.1.0",
     "babel-plugin-istanbul": "^6.0.0",
     "chai": "^4.2.0",

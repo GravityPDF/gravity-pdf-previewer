@@ -1,3 +1,8 @@
+//IE11 only
+import 'whatwg-fetch'
+import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
+import 'element-remove'
+
 import Generator from './Previewer/Generator'
 import Viewer from './Previewer/Viewer'
 import { previewerWrapper } from './Previewer/utilities/previewerWrapper'
