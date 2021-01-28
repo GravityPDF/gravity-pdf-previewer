@@ -107,7 +107,7 @@ class PdfViewerApiResponse implements CallableApiResponse {
 	protected function stream_pdf( $file ) {
 		/* Stream PDF */
 		header( 'Content-type: application/pdf' );
-		header( 'Content-Disposition: inline; filename="' . apply_filters( 'gfpdf_previewer_pdf_name', basename( $file ) ) . '"' );
+		header( 'Content-Disposition: inline; filename="' . apply_filters( 'gfpdf_previewer_pdf_name', 'document.pdf' ) . '"' );
 		header( 'Content-Transfer-Encoding: binary' );
 		header( 'Accept-Ranges: none' );
 		readfile( $file );
