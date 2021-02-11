@@ -1,3 +1,8 @@
+/* IE11 only */
+import 'promise-polyfill/src/polyfill'
+import { fetch as fetchPolyfill } from 'whatwg-fetch'
+import 'abortcontroller-polyfill'
+
 import debounce from 'debounce'
 import Spinner from './Spinner'
 import Refresh from './Refresh'
@@ -196,7 +201,7 @@ export default class {
     }
 
     /* Actual API call */
-    const response = await window.fetch(this.endpoint, {
+    const response = await fetchPolyfill(this.endpoint, {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       signal: this.controller.signal,
