@@ -5944,10 +5944,10 @@ pbkdf2@^3.0.3:
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
-pdfjs-dist-viewer-min@1.8.188:
-  version "1.8.188"
-  resolved "https://registry.yarnpkg.com/pdfjs-dist-viewer-min/-/pdfjs-dist-viewer-min-1.8.188.tgz#7d29a06a8f2a7830b0d4df7c873bab47ac2954c9"
-  integrity sha1-fSmgao8qeDCw1N98hzurR6wpVMk=
+pdfjs-dist-viewer-min@2.2.228:
+  version "2.2.228"
+  resolved "https://registry.yarnpkg.com/pdfjs-dist-viewer-min/-/pdfjs-dist-viewer-min-2.2.228.tgz#72c576acdf836c3d61131377b81dde63f51a4d1e"
+  integrity sha512-Ofw4ja4S5MN52sjrmx2iD1fmBX+9v5SurmJ3e9vfd6xFHxCZ1ZUWWnqqAPRbPDDDkRWEOP/bnSubB6TvrZ0peg==
 
 pend@~1.2.0:
   version "1.2.0"

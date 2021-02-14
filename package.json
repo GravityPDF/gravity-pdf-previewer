@@ -6,7 +6,7 @@
     "core-js": "^3.6.5",
     "debounce": "^1.2.0",
     "element-remove": "^1.0.4",
-    "pdfjs-dist-viewer-min": "1.8.188",
+    "pdfjs-dist-viewer-min": "2.2.228",
     "promise-polyfill": "8.1.0",
     "whatwg-fetch": "^3.5.0"
   },
