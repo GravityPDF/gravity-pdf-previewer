@@ -12,7 +12,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         {
-          from: 'node_modules/pdfjs-dist-viewer-min/build/minified/',
+          from: 'node_modules/pdfjs-dist-viewer-min-es5/build/minified-es5/',
           to: '../dist/viewer/',
           globOptions: {
             ignore: ['**/**/*.pdf']

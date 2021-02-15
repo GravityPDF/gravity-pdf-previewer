@@ -1,9 +1,3 @@
-<?php
-/** $path string */
-/** $options array */
-/** $download bool */
-?>
-
 <!DOCTYPE html>
 <!--
 Copyright 2012 Mozilla Foundation
