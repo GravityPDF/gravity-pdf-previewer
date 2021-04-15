@@ -88,8 +88,8 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 			 * Get the current site's relative path/query
 			 * Note: wp_make_link_relative() doesn't work with non-standard port numbers, and why parse_url() is used instead
 			 */
-			$rest_endpoint_url = parse_url( rest_url( 'gravity-pdf-previewer/v1/pdf/' ) );
-			$document_url      = implode( '?', array_filter( [ $rest_endpoint_url['path'], $rest_endpoint_url['query'] ] ) );
+			$rest_endpoint_url = rest_url( 'gravity-pdf-previewer/v1/pdf/' );
+			$document_url      = implode( '?', array_filter( [ (string) parse_url( $rest_endpoint_url, PHP_URL_PATH ), (string) parse_url( $rest_endpoint_url, PHP_URL_QUERY ) ] ) );
 
 			wp_localize_script(
 				'gfpdf_previewer',
