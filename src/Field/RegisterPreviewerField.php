@@ -84,12 +84,19 @@ class RegisterPreviewerField implements Helper_Interface_Actions {
 				true
 			);
 
+			/*
+			 * Get the current site's relative path/query
+			 * Note: wp_make_link_relative() doesn't work with non-standard port numbers, and why parse_url() is used instead
+			 */
+			$rest_endpoint_url = rest_url( 'gravity-pdf-previewer/v1/pdf/' );
+			$document_url      = implode( '?', array_filter( [ (string) parse_url( $rest_endpoint_url, PHP_URL_PATH ), (string) parse_url( $rest_endpoint_url, PHP_URL_QUERY ) ] ) );
+
 			wp_localize_script(
 				'gfpdf_previewer',
 				'PdfPreviewerConstants',
 				[
 					'viewerUrl'            => plugin_dir_url( GFPDF_PDF_PREVIEWER_FILE ) . 'dist/viewer/web/viewer.php',
-					'documentUrl'          => str_replace( get_home_url(), '', rest_url( 'gravity-pdf-previewer/v1/pdf/' ) ),
+					'documentUrl'          => $document_url,
 					'pdfGeneratorEndpoint' => rest_url( 'gravity-pdf-previewer/v1/generator/' ),
 
 					'refreshTitle'   => __( 'Refresh PDF', 'gravity-pdf-previewer' ),
