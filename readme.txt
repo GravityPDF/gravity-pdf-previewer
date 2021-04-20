@@ -8,10 +8,12 @@ User's with a valid, active license key can receive support for this plugin by f
 
 == Changelog ==
 
-= Version 1.2.9 =
+= Version 1.2.10, April 20, 2021 =
 * Feature: Add field icon support in the Form Editor for Gravity Forms 2.5
-* Bug: Adjust relative PDF URL to account for Multisite subdirectory usage
 * Bug: Fix PHP Notice about an undefined array value
+
+= Version 1.2.9, February 15, 2021 =
+* Bug: Adjust relative PDF URL to account for Multisite subdirectory usage
 
 = Version 1.2.8, January 28, 2020 =
 * Bug: Fix string-to-number type conversion bug that can cause random entry data loss under specific conditions.
