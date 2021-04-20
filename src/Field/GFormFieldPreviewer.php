@@ -141,4 +141,17 @@ class GFormFieldPreviewer extends GF_Field {
 			'text'  => $this->get_form_editor_field_title(),
 		];
 	}
+
+	/**
+	 * Returns the field's form editor icon.
+	 *
+	 * This could be an icon url or a gform-icon class.
+	 *
+	 * @since 1.2.9
+	 *
+	 * @return string
+	 */
+	public function get_form_editor_field_icon() {
+		return version_compare( $GLOBALS['wp_version'], '5.5', '>=' ) ? 'dashicons-pdf' : 'dashicons-media-document';
+	}
 }
