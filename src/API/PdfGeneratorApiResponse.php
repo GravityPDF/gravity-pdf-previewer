@@ -429,6 +429,9 @@ class PdfGeneratorApiResponse implements CallableApiResponse {
 
 		$form['fields'] = array_values( $form['fields'] );
 
+		$form = apply_filters( 'gform_pre_process', $form );
+		$form = apply_filters( 'gform_pre_process_' . $form['id'], $form );
+
 		return $form;
 	}
 
