@@ -67,7 +67,7 @@ class GravityFlow implements Helper_Interface_Filters, Helper_Interface_Actions 
 		add_filter( 'gfpdf_previewer_created_entry', [ $this, 'merge_gravityflow_entry_data' ], 10, 4 );
 		add_filter( 'gfpdf_previewer_form_id', [ $this, 'set_form_id' ], 10, 2 );
 		add_filter( 'gfpdf_previewer_entry_id', [ $this, 'set_entry_id' ], 10, 3 );
-		add_filter( 'gravityflow_workflow_detail_display_field', [ $this, 'override_previewer_field_display' ], 10, 2 );
+		add_filter( 'gravityflow_workflow_detail_display_field', [ $this, 'override_previewer_field_display' ], 10, 5 );
 		add_filter( 'gravityflow_display_field_choices', [ $this, 'remove_previewer_form_display_fields' ], 10, 3 );
 	}
 
@@ -204,19 +204,34 @@ class GravityFlow implements Helper_Interface_Filters, Helper_Interface_Actions 
 	 * Ensure the Previewer field isn't removed from the Gravity Flow list when there's conditional logic on the field
 	 * and the Display Fields option is set to "All fields"
 	 *
-	 * @param bool     $display
-	 * @param GF_Field $field
+	 * @param bool                    $display_field
+	 * @param \GF_Field               $field
+	 * @param array                   $form
+	 * @param array                   $entry
+	 * @param \Gravity_Flow_Step|null $current_step
 	 *
 	 * @return bool
 	 *
 	 * @since 1.1
 	 */
-	public function override_previewer_field_display( $display, $field ) {
-		if ( $field->type === 'pdfpreview' ) {
+	public function override_previewer_field_display( $display_field, $field, $form, $entry, $current_step ) {
+		if ( $field->type !== 'pdfpreview' ) {
+			return $display_field;
+		}
+
+		$display_fields_mode = $current_step ? $current_step->display_fields_mode : 'all_fields';
+		if ( $display_fields_mode === 'all_fields' ) {
 			return true;
 		}
 
-		return $display;
+		$display_fields_selected = $current_step && is_array( $current_step->display_fields_selected ) ? $current_step->display_fields_selected : [];
+		$is_selected_field       = in_array( $field->id, $display_fields_selected );
+
+		if ( ( ! $is_selected_field && $display_fields_mode === 'selected_fields' ) || ( $is_selected_field && $display_fields_mode === 'all_fields_except' ) ) {
+			return false;
+		}
+
+		return true;
 	}
 
 	/**
