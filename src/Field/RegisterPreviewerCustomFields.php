@@ -91,7 +91,8 @@ class RegisterPreviewerCustomFields implements Helper_Interface_Actions, Helper_
 			$this->get_logger()->notice( 'Add PDF Selector field to form editor' );
 
 			$pdfs              = $this->get_active_pdfs( $form_id );
-			$form_pdf_settings = network_admin_url( 'admin.php?page=gf_edit_forms&view=settings&subview=pdf&id=' . $form_id );
+			$subview           = version_compare( PDF_EXTENDED_VERSION, '6.0.0', '>=' ) ? 'PDF' : 'pdf';
+			$form_pdf_settings = network_admin_url( 'admin.php?page=gf_edit_forms&view=settings&subview=' . $subview . '&id=' . $form_id );
 			include __DIR__ . '/markup/pdf-selector-setting.php';
 		}
 	}

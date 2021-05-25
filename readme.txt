@@ -8,9 +8,10 @@ User's with a valid, active license key can receive support for this plugin by f
 
 == Changelog ==
 
-= Version 1.2.11 =
+= Version 1.2.11, May 25, 2021 =
 * Bug: Fix Gravity Flow User Input step display problems with the Previewer
 * Bug: Fix edge-case bug with GP Read Only plugin
+* Bug: Fix invalid link to PDF list page running Gravity PDF 6+
 
 = Version 1.2.10, April 20, 2021 =
 * Feature: Add field icon support in the Form Editor for Gravity Forms 2.5
