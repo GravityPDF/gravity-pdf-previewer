@@ -202,10 +202,10 @@ class TestGravityFlow extends WP_UnitTestCase {
 	 */
 	public function test_override_previewer_field_display() {
 		$field = new Field();
-		$this->assertFalse( $this->class->override_previewer_field_display( false, $field ) );
+		$this->assertFalse( $this->class->override_previewer_field_display( false, $field, [], [], null ) );
 
 		$field->type = 'pdfpreview';
-		$this->assertTrue( $this->class->override_previewer_field_display( false, $field ) );
+		$this->assertTrue( $this->class->override_previewer_field_display( false, $field, [], [], null ) );
 	}
 
 	/**
