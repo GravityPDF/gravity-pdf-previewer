@@ -8,6 +8,10 @@ User's with a valid, active license key can receive support for this plugin by f
 
 == Changelog ==
 
+= Version 1.2.11 =
+* Bug: Fix Gravity Flow User Input step display problems with the Previewer
+* Bug: Fix edge-case bug with GP Read Only plugin
+
 = Version 1.2.10, April 20, 2021 =
 * Feature: Add field icon support in the Form Editor for Gravity Forms 2.5
 * Bug: Fix PHP Notice about an undefined array value
